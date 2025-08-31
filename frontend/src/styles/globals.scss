@@ -1,5 +1,6 @@
 @forward "pill-item";
 @forward "movies-table";
+@forward "backup/backup-window";
 
 * {
   margin: 0;
@@ -127,6 +128,10 @@ body {
     &:hover {
       background: rgba(0, 0, 255, 0.4);
       border-color: rgba(255, 255, 255, 0.7);
+
+      &:disabled {
+        background: rgba(0, 0, 0, 0.1);
+      }
     }
   }
 }

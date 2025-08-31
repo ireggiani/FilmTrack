@@ -17,6 +17,7 @@ app.use('/api/genres', require('./routes/genres'));
 app.use('/api/countries', require('./routes/countries'));
 app.use('/api/directors', require('./routes/directors'));
 app.use('/api/actors', require('./routes/actors'));
+app.use('/api/database', require('./routes/database'));
 
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running!' });

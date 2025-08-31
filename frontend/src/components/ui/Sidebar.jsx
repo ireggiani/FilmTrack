@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const Sidebar = ({ onOpenGenres, onOpenWallpaper, onOpenCountries, onOpenDirectors, onOpenActors, onOpenMovies }) => {
+const Sidebar = ({ onOpenGenres, onOpenWallpaper, onOpenCountries, onOpenDirectors, onOpenActors, onOpenMovies, onOpenBackup }) => {
   return (
     <div className="sidebar">
       <div className="sidebar-content">
@@ -22,6 +22,9 @@ const Sidebar = ({ onOpenGenres, onOpenWallpaper, onOpenCountries, onOpenDirecto
         <button className="sidebar-btn" onClick={onOpenWallpaper}>
           🎨 Wallpaper
         </button>
+        <button className="sidebar-btn" onClick={onOpenBackup}>
+          💾 Backup/Restore
+        </button>
       </div>
     </div>
   );
@@ -33,7 +36,8 @@ Sidebar.propTypes = {
   onOpenCountries: PropTypes.func.isRequired,
   onOpenDirectors: PropTypes.func.isRequired,
   onOpenActors: PropTypes.func.isRequired,
-  onOpenMovies: PropTypes.func.isRequired
+  onOpenMovies: PropTypes.func.isRequired,
+  onOpenBackup: PropTypes.func.isRequired
 };
 
 export default Sidebar;
