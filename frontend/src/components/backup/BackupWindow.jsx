@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import Draggable from "react-draggable";
 
 const BackupWindow = ({
-  isVisible,
+  isOpen,
   isMinimized,
   onClose,
   onMinimize,
@@ -31,7 +31,7 @@ const BackupWindow = ({
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      setMessage("Backup downloaded successfully.");
+      setMessage("Backup downloaded successfully. ");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -70,16 +70,22 @@ const BackupWindow = ({
     }
   };
 
-  if (!isVisible) {
+  if (!isOpen) {
     return null;
   }
 
   return (
-    <Draggable handle=".window-titlebar" onStart={onFocus} nodeRef={nodeRef}>
+    <Draggable handle=".window-titlebar" nodeRef={nodeRef}>
       <div
         ref={nodeRef}
-        className="glass-window backup-window" 
-        style={{ width: "350px", height: "400px", zIndex, ...(isMinimized && { display: 'none' }) }}
+        className="glass-window backup-window"
+        onClick={onFocus}
+        style={{
+          width: "350px",
+          height: "400px",
+          zIndex,
+          ...(isMinimized && { display: "none" }),
+        }}
       >
         <div className="window-titlebar">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -92,7 +98,7 @@ const BackupWindow = ({
               }}
               title="Double-click to close"
             >
-              🎨
+              💾
             </span>
             <span>Backup & Restore</span>
           </div>
@@ -111,13 +117,18 @@ const BackupWindow = ({
         </div>
         <div className="window-content">
           <div className="backup-section" style={{ marginBottom: "15px" }}>
-            <p>Download a copy of the current database.</p>
+            <p>
+              Here you can download a backup copy of the current database, as a
+              SQLite file.
+            </p>
             <button className="btn btn-primary" onClick={handleBackup}>
               Backup Database
             </button>
           </div>
           <div className="restore-section">
-            <p>Restore the database from a backup file.</p>
+            <p>
+              Restore the database from a previously saved backup SQLite file.
+            </p>
             <input
               type="file"
               onChange={handleFileChange}
@@ -130,11 +141,7 @@ const BackupWindow = ({
             >
               Select File
             </button>
-            <button
-              className="btn btn-primary"
-              onClick={handleRestore}
-              disabled={!file}
-            >
+            <button className="btn" onClick={handleRestore} disabled={!file}>
               Restore Database
             </button>
           </div>

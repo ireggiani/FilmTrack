@@ -40,6 +40,7 @@ function App() {
   const [actorMinimized, setActorMinimized] = useState(false);
   const [moviesMinimized, setMoviesMinimized] = useState(false);
   const [backupMinimized, setBackupMinimized] = useState(false);
+  const [windowStack, setWindowStack] = useState([]);
 
   const handleGenreAdded = useCallback(() => {
     setRefreshGenres((prev) => prev + 1);
@@ -107,63 +108,35 @@ function App() {
 
   const handleWindowFocus = useCallback(
     (windowId) => {
+      setWindowStack((prevStack) => {
+        const newStack = prevStack.filter((id) => id !== windowId);
+        newStack.push(windowId);
+        return newStack;
+      });
+      setFocusedWindow(windowId);
+
       if (windowId === "genres") {
-        if (genreMinimized) {
-          setGenreMinimized(false);
-        }
-        setFocusedWindow(windowId);
-        setTimeout(() => {
-          const input = document.querySelector("#genreName");
-          input?.focus();
-        }, 10);
+        if (genreMinimized) setGenreMinimized(false);
+        setTimeout(() => document.querySelector("#genreName")?.focus(), 10);
       } else if (windowId === "wallpaper") {
-        if (wallpaperMinimized) {
-          setWallpaperMinimized(false);
-        }
-        setFocusedWindow(windowId);
-        setTimeout(() => {
-          const firstButton = document.querySelector(
-            '.glass-window input[type="radio"]'
-          );
-          firstButton?.focus();
-        }, 10);
+        if (wallpaperMinimized) setWallpaperMinimized(false);
+        setTimeout(
+          () => document.querySelector('.glass-window input[type="radio"]')?.focus(),
+          10
+        );
       } else if (windowId === "countries") {
-        if (countryMinimized) {
-          setCountryMinimized(false);
-        }
-        setFocusedWindow(windowId);
-        setTimeout(() => {
-          const input = document.querySelector("#countryName");
-          input?.focus();
-        }, 10);
+        if (countryMinimized) setCountryMinimized(false);
+        setTimeout(() => document.querySelector("#countryName")?.focus(), 10);
       } else if (windowId === "directors") {
-        if (directorMinimized) {
-          setDirectorMinimized(false);
-        }
-        setFocusedWindow(windowId);
-        setTimeout(() => {
-          const input = document.querySelector("#directorName");
-          input?.focus();
-        }, 10);
+        if (directorMinimized) setDirectorMinimized(false);
+        setTimeout(() => document.querySelector("#directorName")?.focus(), 10);
       } else if (windowId === "actors") {
-        if (actorMinimized) {
-          setActorMinimized(false);
-        }
-        setFocusedWindow(windowId);
-        setTimeout(() => {
-          const input = document.querySelector("#actorName");
-          input?.focus();
-        }, 10);
+        if (actorMinimized) setActorMinimized(false);
+        setTimeout(() => document.querySelector("#actorName")?.focus(), 10);
       } else if (windowId === "movies") {
-        if (moviesMinimized) {
-          setMoviesMinimized(false);
-        }
-        setFocusedWindow(windowId);
+        if (moviesMinimized) setMoviesMinimized(false);
       } else if (windowId === "backup") {
-        if (backupMinimized) {
-          setBackupMinimized(false);
-        }
-        setFocusedWindow(windowId);
+        if (backupMinimized) setBackupMinimized(false);
       }
     },
     [
@@ -212,53 +185,93 @@ function App() {
     ]
   );
 
-  const handleOpenGenres = useCallback(() => {
-    setGenreWindowOpen(true);
-    setFocusedWindow("genres");
-  }, []);
+  const openWindow = useCallback(
+    (windowId) => {
+      switch (windowId) {
+        case "genres":
+          setGenreWindowOpen(true);
+          break;
+        case "wallpaper":
+          setWallpaperWindowOpen(true);
+          break;
+        case "countries":
+          setCountryWindowOpen(true);
+          break;
+        case "directors":
+          setDirectorWindowOpen(true);
+          break;
+        case "actors":
+          setActorWindowOpen(true);
+          break;
+        case "movies":
+          setMoviesWindowOpen(true);
+          break;
+        case "backup":
+          setBackupWindowOpen(true);
+          break;
+        default:
+          break;
+      }
+      handleWindowFocus(windowId);
+    },
+    [handleWindowFocus]
+  );
 
-  const handleOpenWallpaper = useCallback(() => {
-    setWallpaperWindowOpen(true);
-    setFocusedWindow("wallpaper");
-  }, []);
+  const handleOpenGenres = useCallback(() => openWindow("genres"), [openWindow]);
+  const handleOpenWallpaper = useCallback(
+    () => openWindow("wallpaper"),
+    [openWindow]
+  );
+  const handleOpenCountries = useCallback(
+    () => openWindow("countries"),
+    [openWindow]
+  );
+  const handleOpenDirectors = useCallback(
+    () => openWindow("directors"),
+    [openWindow]
+  );
+  const handleOpenActors = useCallback(() => openWindow("actors"), [openWindow]);
+  const handleOpenMovies = useCallback(() => openWindow("movies"), [openWindow]);
+  const handleOpenBackup = useCallback(() => openWindow("backup"), [openWindow]);
 
-  const handleOpenCountries = useCallback(() => {
-    setCountryWindowOpen(true);
-    setFocusedWindow("countries");
-  }, []);
-
-  const handleOpenDirectors = useCallback(() => {
-    setDirectorWindowOpen(true);
-    setFocusedWindow("directors");
-  }, []);
-
-  const handleOpenActors = useCallback(() => {
-    setActorWindowOpen(true);
-    setFocusedWindow("actors");
-  }, []);
-
-  const handleOpenMovies = useCallback(() => {
-    setMoviesWindowOpen(true);
-    setFocusedWindow("movies");
-  }, []);
-
-  const handleOpenBackup = useCallback(() => {
-    setBackupWindowOpen(true);
-    setFocusedWindow("backup");
+  const closeWindow = useCallback((windowId) => {
+    switch (windowId) {
+      case "genres":
+        setGenreWindowOpen(false);
+        break;
+      case "wallpaper":
+        setWallpaperWindowOpen(false);
+        break;
+      case "countries":
+        setCountryWindowOpen(false);
+        break;
+      case "directors":
+        setDirectorWindowOpen(false);
+        break;
+      case "actors":
+        setActorWindowOpen(false);
+        break;
+      case "movies":
+        setMoviesWindowOpen(false);
+        break;
+      case "backup":
+        setBackupWindowOpen(false);
+        break;
+      default:
+        break;
+    }
+    setWindowStack((prevStack) => prevStack.filter((id) => id !== windowId));
   }, []);
 
   const handleCloseGenreWindow = useCallback(
-    () => setGenreWindowOpen(false),
-    []
+    () => closeWindow("genres"),
+    [closeWindow]
   );
-  const handleMinimizeGenreWindow = useCallback(
-    () => setGenreMinimized(true),
-    []
-  );
+  const handleMinimizeGenreWindow = useCallback(() => setGenreMinimized(true), []);
 
   const handleCloseWallpaperWindow = useCallback(
-    () => setWallpaperWindowOpen(false),
-    []
+    () => closeWindow("wallpaper"),
+    [closeWindow]
   );
   const handleMinimizeWallpaperWindow = useCallback(
     () => setWallpaperMinimized(true),
@@ -266,8 +279,8 @@ function App() {
   );
 
   const handleCloseCountryWindow = useCallback(
-    () => setCountryWindowOpen(false),
-    []
+    () => closeWindow("countries"),
+    [closeWindow]
   );
   const handleMinimizeCountryWindow = useCallback(
     () => setCountryMinimized(true),
@@ -275,8 +288,8 @@ function App() {
   );
 
   const handleCloseDirectorWindow = useCallback(
-    () => setDirectorWindowOpen(false),
-    []
+    () => closeWindow("directors"),
+    [closeWindow]
   );
   const handleMinimizeDirectorWindow = useCallback(
     () => setDirectorMinimized(true),
@@ -284,8 +297,8 @@ function App() {
   );
 
   const handleCloseActorWindow = useCallback(
-    () => setActorWindowOpen(false),
-    []
+    () => closeWindow("actors"),
+    [closeWindow]
   );
   const handleMinimizeActorWindow = useCallback(
     () => setActorMinimized(true),
@@ -293,8 +306,8 @@ function App() {
   );
 
   const handleCloseMoviesWindow = useCallback(
-    () => setMoviesWindowOpen(false),
-    []
+    () => closeWindow("movies"),
+    [closeWindow]
   );
   const handleMinimizeMoviesWindow = useCallback(
     () => setMoviesMinimized(true),
@@ -302,8 +315,8 @@ function App() {
   );
 
   const handleCloseBackupWindow = useCallback(
-    () => setBackupWindowOpen(false),
-    []
+    () => closeWindow("backup"),
+    [closeWindow]
   );
   const handleMinimizeBackupWindow = useCallback(
     () => setBackupMinimized(true),
@@ -341,8 +354,8 @@ function App() {
         onGenreAdded={handleGenreAdded}
         onGenresLoaded={handleGenresLoaded}
         refreshGenres={refreshGenres}
-        onFocus={() => setFocusedWindow("genres")}
-        zIndex={focusedWindow === "genres" ? 250 : 200}
+        onFocus={() => handleWindowFocus("genres")}
+        zIndex={100 + windowStack.indexOf("genres")}
       />
       <WallpaperWindow
         isOpen={wallpaperWindowOpen}
@@ -351,8 +364,8 @@ function App() {
         onMinimize={handleMinimizeWallpaperWindow}
         currentWallpaper={wallpaper}
         onWallpaperChange={handleWallpaperChange}
-        onFocus={() => setFocusedWindow("wallpaper")}
-        zIndex={focusedWindow === "wallpaper" ? 250 : 200}
+        onFocus={() => handleWindowFocus("wallpaper")}
+        zIndex={100 + windowStack.indexOf("wallpaper")}
       />
       <CountryWindow
         isOpen={countryWindowOpen}
@@ -363,8 +376,8 @@ function App() {
         onCountryAdded={handleCountryAdded}
         onCountriesLoaded={handleCountriesLoaded}
         refreshCountries={refreshCountries}
-        onFocus={() => setFocusedWindow("countries")}
-        zIndex={focusedWindow === "countries" ? 250 : 200}
+        onFocus={() => handleWindowFocus("countries")}
+        zIndex={100 + windowStack.indexOf("countries")}
       />
       <DirectorWindow
         isOpen={directorWindowOpen}
@@ -375,8 +388,8 @@ function App() {
         onDirectorAdded={handleDirectorAdded}
         onDirectorsLoaded={handleDirectorsLoaded}
         refreshDirectors={refreshDirectors}
-        onFocus={() => setFocusedWindow("directors")}
-        zIndex={focusedWindow === "directors" ? 250 : 200}
+        onFocus={() => handleWindowFocus("directors")}
+        zIndex={100 + windowStack.indexOf("directors")}
       />
       <ActorWindow
         isOpen={actorWindowOpen}
@@ -387,8 +400,8 @@ function App() {
         onActorAdded={handleActorAdded}
         onActorsLoaded={handleActorsLoaded}
         refreshActors={refreshActors}
-        onFocus={() => setFocusedWindow("actors")}
-        zIndex={focusedWindow === "actors" ? 250 : 200}
+        onFocus={() => handleWindowFocus("actors")}
+        zIndex={100 + windowStack.indexOf("actors")}
       />
       <MoviesWindow
         isOpen={moviesWindowOpen}
@@ -398,16 +411,16 @@ function App() {
         movies={movies}
         onMoviesLoaded={handleMoviesLoaded}
         refreshMovies={refreshMovies}
-        onFocus={() => setFocusedWindow("movies")}
-        zIndex={focusedWindow === "movies" ? 250 : 200}
+        onFocus={() => handleWindowFocus("movies")}
+        zIndex={100 + windowStack.indexOf("movies")}
       />
       <BackupWindow
-        isVisible={backupWindowOpen}
+        isOpen={backupWindowOpen}
         isMinimized={backupMinimized}
         onClose={handleCloseBackupWindow}
         onMinimize={handleMinimizeBackupWindow}
-        onFocus={() => setFocusedWindow("backup")}
-        zIndex={focusedWindow === "backup" ? 250 : 200}
+        onFocus={() => handleWindowFocus("backup")}
+        zIndex={100 + windowStack.indexOf("backup")}
       />
       <Taskbar
         openWindows={memoizedOpenWindows}
