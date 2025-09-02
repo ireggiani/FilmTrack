@@ -121,7 +121,10 @@ function App() {
       } else if (windowId === "wallpaper") {
         if (wallpaperMinimized) setWallpaperMinimized(false);
         setTimeout(
-          () => document.querySelector('.glass-window input[type="radio"]')?.focus(),
+          () =>
+            document
+              .querySelector('.glass-window input[type="radio"]')
+              ?.focus(),
           10
         );
       } else if (windowId === "countries") {
@@ -217,7 +220,10 @@ function App() {
     [handleWindowFocus]
   );
 
-  const handleOpenGenres = useCallback(() => openWindow("genres"), [openWindow]);
+  const handleOpenGenres = useCallback(
+    () => openWindow("genres"),
+    [openWindow]
+  );
   const handleOpenWallpaper = useCallback(
     () => openWindow("wallpaper"),
     [openWindow]
@@ -230,9 +236,18 @@ function App() {
     () => openWindow("directors"),
     [openWindow]
   );
-  const handleOpenActors = useCallback(() => openWindow("actors"), [openWindow]);
-  const handleOpenMovies = useCallback(() => openWindow("movies"), [openWindow]);
-  const handleOpenBackup = useCallback(() => openWindow("backup"), [openWindow]);
+  const handleOpenActors = useCallback(
+    () => openWindow("actors"),
+    [openWindow]
+  );
+  const handleOpenMovies = useCallback(
+    () => openWindow("movies"),
+    [openWindow]
+  );
+  const handleOpenBackup = useCallback(
+    () => openWindow("backup"),
+    [openWindow]
+  );
 
   const closeWindow = useCallback((windowId) => {
     switch (windowId) {
@@ -267,7 +282,10 @@ function App() {
     () => closeWindow("genres"),
     [closeWindow]
   );
-  const handleMinimizeGenreWindow = useCallback(() => setGenreMinimized(true), []);
+  const handleMinimizeGenreWindow = useCallback(
+    () => setGenreMinimized(true),
+    []
+  );
 
   const handleCloseWallpaperWindow = useCallback(
     () => closeWindow("wallpaper"),
@@ -426,6 +444,11 @@ function App() {
         openWindows={memoizedOpenWindows}
         onWindowFocus={handleWindowFocus}
       />
+      <p id="system-watermark">
+        FilmTrack⁰⁶
+        <br />
+        Build 1001
+      </p>
     </div>
   );
 }

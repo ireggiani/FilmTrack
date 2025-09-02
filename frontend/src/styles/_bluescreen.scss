@@ -1,0 +1,29 @@
+@media (max-width: 1119px), (max-height: 574px) {
+  body::before {
+    content: "SYSTEM ERROR: Resolution not supported. Please use a viewport of at least 1120px x 575px.";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0000aa;
+    color: #ffffff;
+    font-family: "TerminalVector", "Courier New", Courier, monospace;
+    font-size: 1.5rem;
+    text-align: center;
+
+    z-index: 99999;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    box-sizing: border-box;
+    padding: 0 1em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #root {
+    display: none;
+  }
+}

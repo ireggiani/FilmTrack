@@ -318,7 +318,12 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
     ]
   );
 
-  if (loading) return <div className="glass">Loading movies...</div>;
+  if (loading)
+    return (
+      <div className="glass loading-container">
+        <span className="loading-text">🎞️ Loading movies... 📽️</span>
+      </div>
+    );
 
   return (
     <>

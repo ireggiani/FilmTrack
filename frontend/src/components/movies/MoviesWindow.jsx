@@ -8,7 +8,6 @@ const MoviesWindow = ({
   isMinimized,
   onClose,
   onMinimize,
-  movies,
   onMoviesLoaded,
   refreshMovies,
   onFocus,
@@ -31,23 +30,27 @@ const MoviesWindow = ({
         className={isMaximized ? "glass-window maximized" : "glass-window"}
         onClick={onFocus}
         style={{
-          ...(isMaximized ? {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "calc(100vh - 32px)",
-            maxHeight: "calc(100vh - 32px)",
-            borderRadius: 0,
-            zIndex: 300,
-          } : { 
-            zIndex,
-            width: "90vw",
-            maxWidth: "1200px"
-          }),
-          ...(isMinimized ? {
-            display: 'none'
-          } : {})
+          ...(isMaximized
+            ? {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "calc(100vh - 32px)",
+                maxHeight: "calc(100vh - 32px)",
+                borderRadius: 0,
+                zIndex: 300,
+              }
+            : {
+                zIndex,
+                width: "90vw",
+                maxWidth: "1200px",
+              }),
+          ...(isMinimized
+            ? {
+                display: "none",
+              }
+            : {}),
         }}
       >
         <div className="window-titlebar">
@@ -99,7 +102,7 @@ const MoviesWindow = ({
                   maxHeight: "calc(100vh - 64px)",
                   height: "calc(100vh - 64px)",
                 }
-              : {})
+              : {}),
           }}
         >
           <MoviesTable

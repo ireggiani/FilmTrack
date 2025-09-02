@@ -46,7 +46,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
     (isEditing) => ({
       control: (base) => ({
         ...base,
-        background: "rgba(255, 255, 255, 0.1)",
+        background: isEditing ? "#338070" : "rgba(255, 255, 255, 0.1)",
         border: "1px solid rgba(255, 255, 255, 0.3)",
         borderRadius: "4px",
         minHeight: "25px",
@@ -57,12 +57,39 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
         display: isEditing ? "block" : "none",
       }),
       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+      option: (base) => ({
+        ...base,
+        fontSize: "0.8rem",
+        // fontFamily: "Arial, sans-serif",
+      }),
+      menu: (base) => ({
+        ...base,
+        fontSize: "0.8rem",
+        // fontFamily: "Arial, sans-serif",
+      }),
+      placeholder: (base) => ({
+        ...base,
+        color: "rgba(255, 255, 255, 0.5)",
+      }),
+      valueContainer: (base) => ({
+        ...base,
+        padding: "0 4px",
+      }),
+      indicatorSeparator: (base) => ({
+        ...base,
+        margin: "0px",
+      }),
+      dropdownIndicator: (base) => ({
+        ...base,
+        color: "rgba(255, 255, 255, 1)",
+        padding: "0 8px",
+      }),
     }),
     []
   );
 
   return (
-    <tr className="movies-table-row">
+    <tr className={`movies-table-row ${isEditing ? "editing" : ""}`}>
       <td
         style={{
           padding: "0.5rem",
@@ -77,7 +104,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onChange={(e) => handleInputChange("title", e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, "title")}
               className="movie-table-input"
-              style={{ width: "100%" }}
+              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
               autoFocus
             />
           ) : (
@@ -103,7 +130,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               }
               onKeyDown={(e) => handleKeyDown(e, "alternativeTitle")}
               className="movie-table-input"
-              style={{ width: "100%" }}
+              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -129,7 +156,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               }
               onKeyDown={(e) => handleKeyDown(e, "releaseYear")}
               className="movie-table-input"
-              style={{ width: "80px" }}
+              style={{ width: "80px", background: isEditing ? "#338070" : "" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -155,7 +182,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onChange={(e) => handleInputChange("rating", e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, "rating")}
               className="movie-table-input"
-              style={{ width: "100%" }}
+              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -179,7 +206,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               value={editedMovie.watchedDate || ""}
               onChange={(e) => handleInputChange("watchedDate", e.target.value)}
               className="movie-table-input"
-              style={{ width: "100%" }}
+              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -298,7 +325,10 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
       >
         <div style={{ display: "flex", gap: "0.25rem" }}>
           {isEditing ? (
-            <button onClick={stopEditing} className="movies-table-btn">
+            <button
+              onClick={stopEditing}
+              className={`movies-table-btn ${isEditing ? "editing" : ""}`}
+            >
               ✅
             </button>
           ) : (
@@ -308,7 +338,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           )}
           <button
             onClick={() => onDelete(movie.id)}
-            className="movies-table-btn"
+            className={`movies-table-btn ${isEditing ? "editing" : ""}`}
           >
             🗑️
           </button>
