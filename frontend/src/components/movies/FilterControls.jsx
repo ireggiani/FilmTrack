@@ -26,6 +26,13 @@ const FilterControls = ({ ...props }) => {
         className="movie-table-input"
       />
       <input
+        type="text"
+        value={props.genreTerm}
+        onChange={(e) => props.setGenreTerm(e.target.value)}
+        placeholder="Genre"
+        className="movie-table-input"
+      />
+      <input
         type="number"
         value={props.minRating}
         onChange={(e) => props.setMinRating(e.target.value)}

@@ -18,6 +18,8 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
   const [debouncedMaxYear, setDebouncedMaxYear] = useState("");
   const [minRating, setMinRating] = useState("");
   const [maxRating, setMaxRating] = useState("");
+  const [genreTerm, setGenreTerm] = useState("");
+  const [debouncedGenreTerm, setDebouncedGenreTerm] = useState("");
 
   // Reference data
   const [genres, setGenres] = useState([]);
@@ -199,6 +201,16 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
     };
   }, [maxYear]);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedGenreTerm(genreTerm);
+    }, 500); // 500ms debounce time
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [genreTerm]);
+
   const filteredMovies = useMemo(() => {
     return movies.filter((movie) => {
       // Search by title or alternative title
@@ -223,6 +235,16 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         return false;
       }
 
+      // Filter by genre
+      if (
+        debouncedGenreTerm &&
+        !movie.Genres.some((g) =>
+          g.name.toLowerCase().includes(debouncedGenreTerm.toLowerCase())
+        )
+      ) {
+        return false;
+      }
+
       // Filter by rating range
       if (minRating && movie.rating < parseFloat(minRating)) {
         return false;
@@ -240,6 +262,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
     debouncedMaxYear,
     minRating,
     maxRating,
+    debouncedGenreTerm,
   ]);
 
   const sortedMovies = useMemo(() => {
@@ -342,6 +365,8 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         setMinYear={setMinYear}
         maxYear={maxYear}
         setMaxYear={setMaxYear}
+        genreTerm={genreTerm}
+        setGenreTerm={setGenreTerm}
         minRating={minRating}
         setMinRating={setMinRating}
         maxRating={maxRating}

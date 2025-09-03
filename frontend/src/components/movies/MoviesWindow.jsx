@@ -92,8 +92,7 @@ const MoviesWindow = ({
           className="window-content"
           style={{
             overflow: "visible",
-            padding: "1.5rem",
-            paddingTop: "1rem",
+            padding: "1rem 0.5rem 0",
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
