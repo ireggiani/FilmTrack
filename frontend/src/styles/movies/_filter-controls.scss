@@ -18,7 +18,8 @@
     label {
       display: inline-block;
       color: black;
-      font-size: 14px;
+      font-size: 0.7em;
+      font-style: italic;
       font-weight: bold;
       font-weight: 400;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
@@ -28,7 +29,7 @@
       position: absolute;
       top: -20px;
 
-      /* background-color: rgba(255, 255, 255, 0.8); */
+      /* background-color: rgba(255, 255, 255, 0.2); */
       padding-right: 5px;
       padding-left: 5px;
       border-radius: 16px;
