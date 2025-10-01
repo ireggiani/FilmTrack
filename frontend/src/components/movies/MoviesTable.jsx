@@ -104,6 +104,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         setMinRating={setMinRating}
         maxRating={maxRating}
         setMaxRating={setMaxRating}
+        memoizedGenreOptions={memoizedGenreOptions}
       />
       <MoviesList
         sortedMovies={sortedMovies}

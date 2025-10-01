@@ -14,6 +14,7 @@ const MovieFilters = ({
   setMinRating,
   maxRating,
   setMaxRating,
+  memoizedGenreOptions,
 }) => {
   return (
     <FilterControls
@@ -29,6 +30,7 @@ const MovieFilters = ({
       setMinRating={setMinRating}
       maxRating={maxRating}
       setMaxRating={setMaxRating}
+      memoizedGenreOptions={memoizedGenreOptions}
     />
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import StyledSelect from "../ui/StyledSelect";
 import "../../styles/movies/_filter-controls.scss";
 
 const FilterControls = ({ ...props }) => {
@@ -29,12 +30,18 @@ const FilterControls = ({ ...props }) => {
         placeholder="Max Year"
         className="movie-table-input year-input"
       />
-      <input
-        type="text"
-        value={props.genreTerm}
-        onChange={(e) => props.setGenreTerm(e.target.value)}
-        placeholder="Genre"
-        className="movie-table-input"
+      <StyledSelect
+        isMulti
+        closeMenuOnScroll={false}
+        closeMenuOnBlur={false}
+        options={props.memoizedGenreOptions}
+        value={props.memoizedGenreOptions.filter((opt) =>
+          props.genreTerm.includes(opt.value)
+        )}
+        onChange={(selected) =>
+          props.setGenreTerm(selected ? selected.map((s) => s.value) : [])
+        }
+        placeholder="Select genres"
       />
       <input
         type="number"

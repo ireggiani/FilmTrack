@@ -12,7 +12,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const [maxYear, setMaxYear] = useState("");
   const [minRating, setMinRating] = useState("");
   const [maxRating, setMaxRating] = useState("");
-  const [genreTerm, setGenreTerm] = useState("");
+  const [genreTerm, setGenreTerm] = useState([]);
 
   // Reference data
   const [genres, setGenres] = useState([]);
@@ -189,10 +189,8 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       }
 
       if (
-        genreTerm &&
-        !movie.Genres.some((g) =>
-          g.name.toLowerCase().includes(genreTerm.toLowerCase())
-        )
+        genreTerm.length > 0 &&
+        !movie.Genres.some((g) => genreTerm.includes(g.id))
       ) {
         return false;
       }

@@ -1,60 +1,53 @@
 .views-manager {
-  width: 100%;
-  background: rgba(100, 100, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
-  margin-bottom: 1rem;
-  padding: 0.5rem;
   display: flex;
-  gap: 1rem;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 1rem;
 
-  .save-view-section, .load-view-section {
+  .save-view-section,
+  .load-view-section {
     display: flex;
     gap: 0.5rem;
     align-items: center;
   }
 
-  .view-name-input, .load-view-select {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    color: white;
-    padding: 0.25rem;
-    font-size: 0.8rem;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-      text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+  .load-view-section {
+    .css-b62m3t-container {
+      flex-grow: 1;
     }
   }
 
-  .load-view-select {
-    min-width: 150px;
+  .view-name-input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
 
-  .save-view-button, .delete-view-button {
-    background-color: rgba(255, 255, 255, 0.2);
+  .save-view-button,
+  .delete-view-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #007bff;
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 4px;
-    padding: 0.25rem 0.5rem;
     cursor: pointer;
-    transition: background-color 0.2s;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: #0056b3;
     }
   }
 
   .delete-view-button {
-    background-color: rgba(255, 100, 100, 0.2);
+    background-color: #dc3545; // A red color for delete buttons
 
     &:hover {
-      background-color: rgba(255, 100, 100, 0.3);
+      background-color: #c82333;
     }
   }
 }

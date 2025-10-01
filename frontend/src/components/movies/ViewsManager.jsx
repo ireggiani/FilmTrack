@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import StyledSelect from "../ui/StyledSelect";
 
 const ViewsManager = ({
   sortConfig,
@@ -19,12 +20,17 @@ const ViewsManager = ({
 }) => {
   const [views, setViews] = useState([]);
   const [viewName, setViewName] = useState("");
-  const [selectedView, setSelectedView] = useState("");
+  const [selectedView, setSelectedView] = useState(null);
 
   useEffect(() => {
     const savedViews = JSON.parse(localStorage.getItem("movieViews")) || [];
     setViews(savedViews);
   }, []);
+
+  const viewOptions = views.map((view) => ({
+    value: view.name,
+    label: view.name,
+  }));
 
   const handleSaveView = () => {
     if (!viewName) {
@@ -51,10 +57,22 @@ const ViewsManager = ({
     setViewName("");
   };
 
-  const handleLoadView = (viewName) => {
-    if (!viewName) return;
+  const handleLoadView = (selectedOption) => {
+    if (!selectedOption) {
+      setSearchTerm("");
+      setMinYear("");
+      setMaxYear("");
+      setMinRating("");
+      setMaxRating("");
+      setGenreTerm([]);
+      setSortConfig({ key: "id", direction: "asc" });
+      setSelectedView(null);
+      return;
+    }
 
+    const viewName = selectedOption.value;
     const view = views.find((v) => v.name === viewName);
+
     if (view) {
       const { filters, sorting } = view;
       setSearchTerm(filters.searchTerm || "");
@@ -62,19 +80,20 @@ const ViewsManager = ({
       setMaxYear(filters.maxYear || "");
       setMinRating(filters.minRating || "");
       setMaxRating(filters.maxRating || "");
-      setGenreTerm(filters.genreTerm || "");
+      setGenreTerm(filters.genreTerm || []);
       setSortConfig(sorting);
-      setSelectedView(viewName);
+      setSelectedView(selectedOption);
     }
   };
 
-  const handleDeleteView = (viewName) => {
+  const handleDeleteView = () => {
+    if (!selectedView) return;
+
+    const viewName = selectedView.value;
     const updatedViews = views.filter((v) => v.name !== viewName);
     setViews(updatedViews);
     localStorage.setItem("movieViews", JSON.stringify(updatedViews));
-    if (selectedView === viewName) {
-      setSelectedView("");
-    }
+    setSelectedView(null);
   };
 
   return (
@@ -87,28 +106,20 @@ const ViewsManager = ({
           placeholder="Enter view name"
           className="view-name-input"
         />
-        <button onClick={handleSaveView} className="save-view-button">
+        <button onClick={handleSaveView} className="btn save-view-button">
           Save Current View
         </button>
       </div>
       <div className="load-view-section">
-        <select
+        <StyledSelect
           value={selectedView}
-          onChange={(e) => handleLoadView(e.target.value)}
-          className="load-view-select"
-        >
-          <option value="">Load a View</option>
-          {views.map((view) => (
-            <option key={view.name} value={view.name}>
-              {view.name}
-            </option>
-          ))}
-        </select>
+          onChange={handleLoadView}
+          options={viewOptions}
+          placeholder="Load a View"
+          isClearable
+        />
         {selectedView && (
-          <button
-            onClick={() => handleDeleteView(selectedView)}
-            className="delete-view-button"
-          >
+          <button onClick={handleDeleteView} className="btn delete-view-button">
             Delete View
           </button>
         )}
@@ -124,7 +135,7 @@ ViewsManager.propTypes = {
   maxYear: PropTypes.string.isRequired,
   minRating: PropTypes.string.isRequired,
   maxRating: PropTypes.string.isRequired,
-  genreTerm: PropTypes.string.isRequired,
+  genreTerm: PropTypes.array.isRequired,
   setSortConfig: PropTypes.func.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
   setMinYear: PropTypes.func.isRequired,
