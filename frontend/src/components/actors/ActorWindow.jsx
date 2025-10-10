@@ -49,25 +49,30 @@ const ActorWindow = ({
       bounds="parent"
       nodeRef={nodeRef}
       disabled={isMaximized}
+      cancel=".titlebar-button"
     >
       <div
         ref={nodeRef}
         className={isMaximized ? "glass-window maximized" : "glass-window"}
         onClick={onFocus}
         style={{
-          ...(isMaximized ? {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "calc(100vh - 32px)",
-            maxHeight: "calc(100vh - 32px)",
-            borderRadius: 0,
-            zIndex: 300,
-          } : { zIndex }),
-          ...(isMinimized ? {
-            display: 'none'
-          } : {})
+          ...(isMaximized
+            ? {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "calc(100vh - 32px)",
+                maxHeight: "calc(100vh - 32px)",
+                borderRadius: 0,
+                zIndex: 300,
+              }
+            : { zIndex }),
+          ...(isMinimized
+            ? {
+                display: "none",
+              }
+            : {}),
         }}
       >
         <div className="window-titlebar">
@@ -87,20 +92,20 @@ const ActorWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="window-minimize"
+              className="titlebar-button window-minimize"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
             <button
-              className="window-maximize"
+              className="titlebar-button window-maximize"
               onClick={() => setIsMaximized(!isMaximized)}
               title={isMaximized ? "Restore" : "Maximize"}
             >
               {isMaximized ? "🗗" : "🗖"}
             </button>
-            <button className="window-close" onClick={onClose}>
+            <button className="titlebar-button window-close" onClick={onClose}>
               🗙
             </button>
           </div>

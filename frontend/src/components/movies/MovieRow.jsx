@@ -103,7 +103,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               value={editedMovie.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, "title")}
-              className="movie-table-input"
+              className="text-field"
               style={{ width: "100%", background: isEditing ? "#338070" : "" }}
               autoFocus
             />
@@ -129,7 +129,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
                 handleInputChange("alternativeTitle", e.target.value)
               }
               onKeyDown={(e) => handleKeyDown(e, "alternativeTitle")}
-              className="movie-table-input"
+              className="text-field"
               style={{ width: "100%", background: isEditing ? "#338070" : "" }}
             />
           ) : (
@@ -155,7 +155,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
                 handleInputChange("releaseYear", parseInt(e.target.value) || "")
               }
               onKeyDown={(e) => handleKeyDown(e, "releaseYear")}
-              className="movie-table-input"
+              className="text-field"
               style={{ width: "80px", background: isEditing ? "#338070" : "" }}
             />
           ) : (
@@ -181,7 +181,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               value={editedMovie.rating || ""}
               onChange={(e) => handleInputChange("rating", e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, "rating")}
-              className="movie-table-input"
+              className="text-field"
               style={{ width: "100%", background: isEditing ? "#338070" : "" }}
             />
           ) : (
@@ -205,7 +205,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               type="text"
               value={editedMovie.watchedDate || ""}
               onChange={(e) => handleInputChange("watchedDate", e.target.value)}
-              className="movie-table-input"
+              className="text-field"
               style={{ width: "100%", background: isEditing ? "#338070" : "" }}
             />
           ) : (

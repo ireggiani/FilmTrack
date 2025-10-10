@@ -4,10 +4,15 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0.25rem;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   margin-bottom: 1rem;
+
+  background: rgba(100, 100, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
 
   .save-view-section,
   .load-view-section {
@@ -19,27 +24,6 @@
   .load-view-section {
     .css-b62m3t-container {
       flex-grow: 1;
-    }
-  }
-
-  .view-name-input {
-    flex-grow: 1;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  .save-view-button,
-  .delete-view-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #0056b3;
     }
   }
 

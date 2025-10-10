@@ -24,6 +24,7 @@ const MoviesWindow = ({
       bounds="parent"
       nodeRef={nodeRef}
       disabled={isMaximized}
+      cancel=".titlebar-button"
     >
       <div
         ref={nodeRef}
@@ -70,20 +71,20 @@ const MoviesWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="window-minimize"
+              className="titlebar-button window-minimize"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
             <button
-              className="window-maximize"
+              className="titlebar-button window-maximize"
               onClick={() => setIsMaximized(!isMaximized)}
               title={isMaximized ? "Restore" : "Maximize"}
             >
               {isMaximized ? "🗗" : "🗖"}
             </button>
-            <button className="window-close" onClick={onClose}>
+            <button className="titlebar-button window-close" onClick={onClose}>
               🗙
             </button>
           </div>

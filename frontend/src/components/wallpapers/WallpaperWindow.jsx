@@ -57,7 +57,12 @@ const WallpaperWindow = ({
   };
 
   return (
-    <Draggable handle=".window-titlebar" bounds="parent" nodeRef={nodeRef}>
+    <Draggable
+      handle=".window-titlebar"
+      bounds="parent"
+      nodeRef={nodeRef}
+      cancel=".titlebar-button"
+    >
       <div
         ref={nodeRef}
         className="glass-window"
@@ -89,13 +94,13 @@ const WallpaperWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="window-minimize"
+              className="titlebar-button window-minimize"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
-            <button className="window-close" onClick={onClose}>
+            <button className="titlebar-button window-close" onClick={onClose}>
               🗙
             </button>
           </div>

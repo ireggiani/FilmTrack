@@ -68,7 +68,7 @@ const AddMovieForm = ({ handleAddMovie, ...props }) => {
         value={newMovie.title}
         onChange={(e) => handleNewMovieChange("title", e.target.value)}
         placeholder="Movie title"
-        className="movie-table-input"
+        className="text-field"
       />
       <input
         type="text"
@@ -77,7 +77,7 @@ const AddMovieForm = ({ handleAddMovie, ...props }) => {
           handleNewMovieChange("alternativeTitle", e.target.value)
         }
         placeholder="Alternative title"
-        className="movie-table-input"
+        className="text-field"
       />
       <input
         type="number"
@@ -86,14 +86,14 @@ const AddMovieForm = ({ handleAddMovie, ...props }) => {
           handleNewMovieChange("releaseYear", parseInt(e.target.value) || "")
         }
         placeholder="Release year"
-        className="movie-table-input"
+        className="text-field"
       />
       <input
         type="text"
         value={newMovie.rating}
         onChange={(e) => handleNewMovieChange("rating", e.target.value)}
         placeholder="Rating"
-        className="movie-table-input"
+        className="text-field"
       />
       <input
         type="text"
@@ -101,7 +101,7 @@ const AddMovieForm = ({ handleAddMovie, ...props }) => {
         onBlur={handleDateBlur}
         onChange={(e) => handleNewMovieChange("watchedDate", e.target.value)}
         placeholder="DD/MM or DD/MM/YYYY"
-        className="movie-table-input"
+        className="text-field"
       />
       <StyledSelect
         isMulti

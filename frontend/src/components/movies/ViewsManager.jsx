@@ -104,9 +104,9 @@ const ViewsManager = ({
           value={viewName}
           onChange={(e) => setViewName(e.target.value)}
           placeholder="Enter view name"
-          className="view-name-input"
+          className="text-field"
         />
-        <button onClick={handleSaveView} className="btn save-view-button">
+        <button onClick={handleSaveView} className="btn">
           Save Current View
         </button>
       </div>
@@ -119,7 +119,7 @@ const ViewsManager = ({
           isClearable
         />
         {selectedView && (
-          <button onClick={handleDeleteView} className="btn delete-view-button">
+          <button onClick={handleDeleteView} className="btn">
             Delete View
           </button>
         )}

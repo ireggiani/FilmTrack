@@ -1,19 +1,25 @@
-import { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
+import "../../styles/genres/_genre-form.scss";
 
-const GenreForm = ({ onGenreAdded, existingGenres = [], editingGenre, onEditComplete }) => {
-  const [name, setName] = useState('');
+const GenreForm = ({
+  onGenreAdded,
+  existingGenres = [],
+  editingGenre,
+  onEditComplete,
+}) => {
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const inputRef = useRef(null);
   const isEditing = !!editingGenre;
 
   useEffect(() => {
     if (editingGenre) {
       setName(editingGenre.name);
-      setError('');
+      setError("");
     } else {
-      setName('');
+      setName("");
     }
   }, [editingGenre]);
 
@@ -22,33 +28,33 @@ const GenreForm = ({ onGenreAdded, existingGenres = [], editingGenre, onEditComp
     if (!name.trim()) return;
 
     const trimmedName = name.trim();
-    
+
     if (!isEditing) {
-      const isDuplicate = existingGenres.some(genre => 
-        genre.name.toLowerCase() === trimmedName.toLowerCase()
+      const isDuplicate = existingGenres.some(
+        (genre) => genre.name.toLowerCase() === trimmedName.toLowerCase()
       );
       if (isDuplicate) {
-        setError('Genre already exists');
+        setError("Genre already exists");
         return;
       }
     }
 
-    setError('');
+    setError("");
     setLoading(true);
     try {
-      const url = isEditing 
+      const url = isEditing
         ? `http://localhost:5000/api/genres/${editingGenre.id}`
-        : 'http://localhost:5000/api/genres';
-      
+        : "http://localhost:5000/api/genres";
+
       const response = await fetch(url, {
-        method: isEditing ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: trimmedName })
+        method: isEditing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmedName }),
       });
 
       if (response.ok) {
         const genre = await response.json();
-        setName('');
+        setName("");
         if (isEditing) {
           onEditComplete?.();
         } else {
@@ -57,32 +63,19 @@ const GenreForm = ({ onGenreAdded, existingGenres = [], editingGenre, onEditComp
         }
       }
     } catch (error) {
-      console.error(`Error ${isEditing ? 'updating' : 'creating'} genre:`, error);
+      console.error(
+        `Error ${isEditing ? "updating" : "creating"} genre:`,
+        error
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form className="glass-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? 'Edit Genre' : 'Add New Genre'}</h2>
-      {isEditing && (
-        <button 
-          type="button" 
-          onClick={() => onEditComplete?.()} 
-          style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: 'rgba(255, 255, 255, 0.7)', 
-            fontSize: '0.8rem', 
-            cursor: 'pointer', 
-            marginBottom: '1rem',
-            textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)'
-          }}
-        >
-          ← Cancel Edit
-        </button>
-      )}
+    <form className="genre-form glass-inner" onSubmit={handleSubmit}>
+      <h2>{isEditing ? "Edit Genre" : "Add New Genre"}</h2>
+
       <div className="form-group">
         <label htmlFor="genreName">Genre Name</label>
         <input
@@ -92,35 +85,65 @@ const GenreForm = ({ onGenreAdded, existingGenres = [], editingGenre, onEditComp
           value={name}
           onChange={(e) => {
             setName(e.target.value);
-            setError('');
+            setError("");
           }}
           placeholder="Enter genre name"
           disabled={loading}
+          className="text-field"
         />
-        {error && <p style={{ color: '#ff6b6b', fontSize: '0.9rem', marginTop: '0.5rem' }}>{error}</p>}
+        {error && (
+          <p
+            style={{
+              color: "#ff6b6b",
+              fontSize: "0.9rem",
+              marginTop: "0.5rem",
+            }}
+          >
+            {error}
+          </p>
+        )}
       </div>
-      <button 
-        type="submit" 
-        className="btn btn-primary"
-        disabled={loading || !name.trim()}
-      >
-        {loading ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Genre' : 'Add Genre')}
-      </button>
+      <div className="buttons">
+        {isEditing && (
+          <button
+            type="button"
+            onClick={() => onEditComplete?.()}
+            className="btn"
+          >
+            ← Cancel Edit
+          </button>
+        )}
+        <button
+          type="submit"
+          className="btn submit"
+          disabled={loading || !name.trim()}
+        >
+          {loading
+            ? isEditing
+              ? "Updating..."
+              : "Adding..."
+            : isEditing
+            ? "Update Genre"
+            : "Add Genre"}
+        </button>
+      </div>
     </form>
   );
 };
 
 GenreForm.propTypes = {
   onGenreAdded: PropTypes.func,
-  existingGenres: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string
-  })),
+  existingGenres: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })
+  ),
   editingGenre: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string
+    name: PropTypes.string,
   }),
-  onEditComplete: PropTypes.func
+  onEditComplete: PropTypes.func,
 };
 
 export default GenreForm;

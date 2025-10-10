@@ -104,13 +104,13 @@ const BackupWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="window-minimize"
+              className="titlebar-button window-minimize"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
-            <button className="window-close" onClick={onClose}>
+            <button className="titlebar-button window-close" onClick={onClose}>
               🗙
             </button>
           </div>

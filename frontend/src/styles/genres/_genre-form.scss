@@ -1,0 +1,35 @@
+.genre-form {
+  padding: 0.25rem;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+
+  h2 {
+    width: 100%;
+    color: rgb(82, 82, 82);
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .form-group {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    margin: auto;
+
+    input {
+      flex-grow: 1;
+    }
+  }
+  .buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .submit {
+      margin-left: auto;
+    }
+  }
+}

@@ -13,7 +13,7 @@ const FilterControls = ({ ...props }) => {
           value={props.searchTerm}
           onChange={(e) => props.setSearchTerm(e.target.value)}
           placeholder="Search by title..."
-          className="movie-table-input"
+          className="text-field"
         />
       </div>
       <input
@@ -21,14 +21,14 @@ const FilterControls = ({ ...props }) => {
         value={props.minYear}
         onChange={(e) => props.setMinYear(e.target.value)}
         placeholder="Min Year"
-        className="movie-table-input year-input"
+        className="text-field year-input"
       />
       <input
         type="number"
         value={props.maxYear}
         onChange={(e) => props.setMaxYear(e.target.value)}
         placeholder="Max Year"
-        className="movie-table-input year-input"
+        className="text-field year-input"
       />
       <StyledSelect
         isMulti
@@ -48,14 +48,14 @@ const FilterControls = ({ ...props }) => {
         value={props.minRating}
         onChange={(e) => props.setMinRating(e.target.value)}
         placeholder="Min Rating"
-        className="movie-table-input rating-input"
+        className="text-field rating-input"
       />
       <input
         type="number"
         value={props.maxRating}
         onChange={(e) => props.setMaxRating(e.target.value)}
         placeholder="Max Rating"
-        className="movie-table-input rating-input"
+        className="text-field rating-input"
       />
     </div>
   );
