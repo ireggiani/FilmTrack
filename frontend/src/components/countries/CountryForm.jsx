@@ -1,11 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, onEditComplete }) => {
-  const [name, setName] = useState('');
-  const [flagEmoji, setFlagEmoji] = useState('');
+const CountryForm = ({
+  onCountryAdded,
+  existingCountries = [],
+  editingCountry,
+  onEditComplete,
+}) => {
+  const [name, setName] = useState("");
+  const [flagEmoji, setFlagEmoji] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const inputRef = useRef(null);
   const isEditing = !!editingCountry;
 
@@ -13,10 +18,10 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
     if (editingCountry) {
       setName(editingCountry.name);
       setFlagEmoji(editingCountry.flagEmoji);
-      setError('');
+      setError("");
     } else {
-      setName('');
-      setFlagEmoji('');
+      setName("");
+      setFlagEmoji("");
     }
   }, [editingCountry]);
 
@@ -26,34 +31,34 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
 
     const trimmedName = name.trim();
     const trimmedFlag = flagEmoji.trim();
-    
+
     if (!isEditing) {
-      const isDuplicate = existingCountries.some(country => 
-        country.name.toLowerCase() === trimmedName.toLowerCase()
+      const isDuplicate = existingCountries.some(
+        (country) => country.name.toLowerCase() === trimmedName.toLowerCase()
       );
       if (isDuplicate) {
-        setError('Country already exists');
+        setError("Country already exists");
         return;
       }
     }
 
-    setError('');
+    setError("");
     setLoading(true);
     try {
-      const url = isEditing 
+      const url = isEditing
         ? `http://localhost:5000/api/countries/${editingCountry.id}`
-        : 'http://localhost:5000/api/countries';
-      
+        : "http://localhost:5000/api/countries";
+
       const response = await fetch(url, {
-        method: isEditing ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: trimmedName, flagEmoji: trimmedFlag })
+        method: isEditing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmedName, flagEmoji: trimmedFlag }),
       });
 
       if (response.ok) {
         const country = await response.json();
-        setName('');
-        setFlagEmoji('');
+        setName("");
+        setFlagEmoji("");
         if (isEditing) {
           onEditComplete?.();
         } else {
@@ -62,7 +67,10 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
         }
       }
     } catch (error) {
-      console.error(`Error ${isEditing ? 'updating' : 'creating'} country:`, error);
+      console.error(
+        `Error ${isEditing ? "updating" : "creating"} country:`,
+        error
+      );
     } finally {
       setLoading(false);
     }
@@ -70,19 +78,19 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
 
   return (
     <form className="glass-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? 'Edit Country' : 'Add New Country'}</h2>
+      <h2>{isEditing ? "Edit Country" : "Add New Country"}</h2>
       {isEditing && (
-        <button 
-          type="button" 
-          onClick={() => onEditComplete?.()} 
-          style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: 'rgba(255, 255, 255, 0.7)', 
-            fontSize: '0.8rem', 
-            cursor: 'pointer', 
-            marginBottom: '1rem',
-            textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)'
+        <button
+          type="button"
+          onClick={() => onEditComplete?.()}
+          style={{
+            background: "none",
+            border: "none",
+            color: "rgba(255, 255, 255, 0.7)",
+            fontSize: "0.8rem",
+            cursor: "pointer",
+            marginBottom: "1rem",
+            textShadow: "0 1px 3px rgba(0, 0, 0, 0.8)",
           }}
         >
           ← Cancel Edit
@@ -97,7 +105,7 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
           value={name}
           onChange={(e) => {
             setName(e.target.value);
-            setError('');
+            setError("");
           }}
           placeholder="Enter country name"
           disabled={loading}
@@ -111,19 +119,31 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
           value={flagEmoji}
           onChange={(e) => {
             setFlagEmoji(e.target.value);
-            setError('');
+            setError("");
           }}
           placeholder="🇺🇸"
           disabled={loading}
         />
       </div>
-      {error && <p style={{ color: '#ff6b6b', fontSize: '0.9rem', marginTop: '0.5rem' }}>{error}</p>}
-      <button 
-        type="submit" 
-        className="btn btn-primary"
+      {error && (
+        <p
+          style={{ color: "#ff6b6b", fontSize: "0.9rem", marginTop: "0.5rem" }}
+        >
+          {error}
+        </p>
+      )}
+      <button
+        type="submit"
+        className="btn"
         disabled={loading || !name.trim() || !flagEmoji.trim()}
       >
-        {loading ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Country' : 'Add Country')}
+        {loading
+          ? isEditing
+            ? "Updating..."
+            : "Adding..."
+          : isEditing
+          ? "Update Country"
+          : "Add Country"}
       </button>
     </form>
   );
@@ -131,17 +151,19 @@ const CountryForm = ({ onCountryAdded, existingCountries = [], editingCountry, o
 
 CountryForm.propTypes = {
   onCountryAdded: PropTypes.func,
-  existingCountries: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    flagEmoji: PropTypes.string
-  })),
+  existingCountries: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      flagEmoji: PropTypes.string,
+    })
+  ),
   editingCountry: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
-    flagEmoji: PropTypes.string
+    flagEmoji: PropTypes.string,
   }),
-  onEditComplete: PropTypes.func
+  onEditComplete: PropTypes.func,
 };
 
 export default CountryForm;

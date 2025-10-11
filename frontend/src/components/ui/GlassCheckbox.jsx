@@ -26,8 +26,6 @@ const GlassCheckbox = ({ checked, onChange, label, ...props }) => {
           padding: "0.1rem 0.25rem",
           background: "rgba(255, 255, 255, 0.05)",
           borderRadius: "2px",
-          boxShadow:
-            "0 1px 2px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
           width: "100%",
         }}
       >

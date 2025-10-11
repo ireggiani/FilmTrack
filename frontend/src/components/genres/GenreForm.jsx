@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import "../../styles/genres/_genre-form.scss";
+import "../../styles/genres/_genre-list.scss";
 
 const GenreForm = ({
   onGenreAdded,
@@ -77,7 +78,7 @@ const GenreForm = ({
       <h2>{isEditing ? "Edit Genre" : "Add New Genre"}</h2>
 
       <div className="form-group">
-        <label htmlFor="genreName">Genre Name</label>
+        <label htmlFor="genreName">Genre Name:</label>
         <input
           ref={inputRef}
           id="genreName"

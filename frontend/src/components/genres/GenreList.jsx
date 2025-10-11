@@ -32,10 +32,7 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
   if (loading) return <div className="glass">Loading genres...</div>;
 
   return (
-    <div
-      className="glass glass-inner"
-      style={{ padding: "1.5rem", marginTop: "1rem" }}
-    >
+    <div className="genre-list glass glass-inner">
       <div
         style={{
           display: "flex",

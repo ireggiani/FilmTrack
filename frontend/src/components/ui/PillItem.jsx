@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const PillItem = ({ id, name, icon, onEdit, onDelete }) => {
   const handleEditClick = (e) => {
@@ -19,7 +19,7 @@ const PillItem = ({ id, name, icon, onEdit, onDelete }) => {
     <div className="pill-item">
       <button
         onClick={handleEditClick}
-        className={`pill-edit-button ${icon ? 'with-icon' : ''}`}
+        className={`pill-edit-button ${icon ? "with-icon" : ""}`}
         title={`Edit ${name}`}
       >
         {icon && <span>{icon}</span>}
@@ -29,12 +29,6 @@ const PillItem = ({ id, name, icon, onEdit, onDelete }) => {
         onClick={handleDeleteClick}
         className="pill-delete-button"
         title={`Delete ${name}`}
-        onMouseEnter={(e) => {
-          e.target.style.background = "rgba(255, 100, 100, 0.5)";
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.background = "rgba(255, 100, 100, 0.3)";
-        }}
       >
         ×
       </button>

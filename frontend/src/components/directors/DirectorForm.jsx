@@ -1,19 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const DirectorForm = ({ onDirectorAdded, existingDirectors = [], editingDirector, onEditComplete }) => {
-  const [name, setName] = useState('');
+const DirectorForm = ({
+  onDirectorAdded,
+  existingDirectors = [],
+  editingDirector,
+  onEditComplete,
+}) => {
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const inputRef = useRef(null);
   const isEditing = !!editingDirector;
 
   useEffect(() => {
     if (editingDirector) {
       setName(editingDirector.name);
-      setError('');
+      setError("");
     } else {
-      setName('');
+      setName("");
     }
   }, [editingDirector]);
 
@@ -22,33 +27,33 @@ const DirectorForm = ({ onDirectorAdded, existingDirectors = [], editingDirector
     if (!name.trim()) return;
 
     const trimmedName = name.trim();
-    
+
     if (!isEditing) {
-      const isDuplicate = existingDirectors.some(director => 
-        director.name.toLowerCase() === trimmedName.toLowerCase()
+      const isDuplicate = existingDirectors.some(
+        (director) => director.name.toLowerCase() === trimmedName.toLowerCase()
       );
       if (isDuplicate) {
-        setError('Director already exists');
+        setError("Director already exists");
         return;
       }
     }
 
-    setError('');
+    setError("");
     setLoading(true);
     try {
-      const url = isEditing 
+      const url = isEditing
         ? `http://localhost:5000/api/directors/${editingDirector.id}`
-        : 'http://localhost:5000/api/directors';
-      
+        : "http://localhost:5000/api/directors";
+
       const response = await fetch(url, {
-        method: isEditing ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: trimmedName })
+        method: isEditing ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: trimmedName }),
       });
 
       if (response.ok) {
         const director = await response.json();
-        setName('');
+        setName("");
         if (isEditing) {
           onEditComplete?.();
         } else {
@@ -57,7 +62,10 @@ const DirectorForm = ({ onDirectorAdded, existingDirectors = [], editingDirector
         }
       }
     } catch (error) {
-      console.error(`Error ${isEditing ? 'updating' : 'creating'} director:`, error);
+      console.error(
+        `Error ${isEditing ? "updating" : "creating"} director:`,
+        error
+      );
     } finally {
       setLoading(false);
     }
@@ -65,19 +73,19 @@ const DirectorForm = ({ onDirectorAdded, existingDirectors = [], editingDirector
 
   return (
     <form className="glass-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? 'Edit Director' : 'Add New Director'}</h2>
+      <h2>{isEditing ? "Edit Director" : "Add New Director"}</h2>
       {isEditing && (
-        <button 
-          type="button" 
-          onClick={() => onEditComplete?.()} 
-          style={{ 
-            background: 'none', 
-            border: 'none', 
-            color: 'rgba(255, 255, 255, 0.7)', 
-            fontSize: '0.8rem', 
-            cursor: 'pointer', 
-            marginBottom: '1rem',
-            textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)'
+        <button
+          type="button"
+          onClick={() => onEditComplete?.()}
+          style={{
+            background: "none",
+            border: "none",
+            color: "rgba(255, 255, 255, 0.7)",
+            fontSize: "0.8rem",
+            cursor: "pointer",
+            marginBottom: "1rem",
+            textShadow: "0 1px 3px rgba(0, 0, 0, 0.8)",
           }}
         >
           ← Cancel Edit
@@ -92,19 +100,31 @@ const DirectorForm = ({ onDirectorAdded, existingDirectors = [], editingDirector
           value={name}
           onChange={(e) => {
             setName(e.target.value);
-            setError('');
+            setError("");
           }}
           placeholder="Enter director name"
           disabled={loading}
         />
-        {error && <p style={{ color: '#ff6b6b', fontSize: '0.9rem', marginTop: '0.5rem' }}>{error}</p>}
+        {error && (
+          <p
+            style={{
+              color: "#ff6b6b",
+              fontSize: "0.9rem",
+              marginTop: "0.5rem",
+            }}
+          >
+            {error}
+          </p>
+        )}
       </div>
-      <button 
-        type="submit" 
-        className="btn btn-primary"
-        disabled={loading || !name.trim()}
-      >
-        {loading ? (isEditing ? 'Updating...' : 'Adding...') : (isEditing ? 'Update Director' : 'Add Director')}
+      <button type="submit" className="btn" disabled={loading || !name.trim()}>
+        {loading
+          ? isEditing
+            ? "Updating..."
+            : "Adding..."
+          : isEditing
+          ? "Update Director"
+          : "Add Director"}
       </button>
     </form>
   );
@@ -112,15 +132,17 @@ const DirectorForm = ({ onDirectorAdded, existingDirectors = [], editingDirector
 
 DirectorForm.propTypes = {
   onDirectorAdded: PropTypes.func,
-  existingDirectors: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string
-  })),
+  existingDirectors: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })
+  ),
   editingDirector: PropTypes.shape({
     id: PropTypes.number,
-    name: PropTypes.string
+    name: PropTypes.string,
   }),
-  onEditComplete: PropTypes.func
+  onEditComplete: PropTypes.func,
 };
 
 export default DirectorForm;

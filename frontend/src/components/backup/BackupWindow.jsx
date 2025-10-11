@@ -75,7 +75,11 @@ const BackupWindow = ({
   }
 
   return (
-    <Draggable handle=".window-titlebar" nodeRef={nodeRef}>
+    <Draggable
+      handle=".window-titlebar"
+      nodeRef={nodeRef}
+      cancel=".titlebar-button"
+    >
       <div
         ref={nodeRef}
         className="glass-window backup-window"
@@ -121,8 +125,8 @@ const BackupWindow = ({
               Here you can download a backup copy of the current database, as a
               SQLite file.
             </p>
-            <button className="btn btn-primary" onClick={handleBackup}>
-              Backup Database
+            <button className="btn" onClick={handleBackup}>
+              💽 Backup Database
             </button>
           </div>
           <div className="restore-section">
@@ -136,13 +140,13 @@ const BackupWindow = ({
               style={{ display: "none" }}
             />
             <button
-              className="btn btn-primary"
+              className="btn"
               onClick={() => fileInputRef.current.click()}
             >
               Select File
             </button>
             <button className="btn" onClick={handleRestore} disabled={!file}>
-              Restore Database
+              🧰 Restore Database
             </button>
           </div>
           {message && (

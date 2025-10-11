@@ -191,7 +191,7 @@ const WallpaperWindow = ({
 
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <button
-              className="btn btn-primary"
+              className="btn"
               onClick={() => fileInputRef.current?.click()}
               style={{ flex: 1 }}
             >
@@ -199,7 +199,7 @@ const WallpaperWindow = ({
             </button>
 
             <button
-              className="btn btn-primary"
+              className="btn"
               onClick={clearWallpaper}
               style={{ flex: 1 }}
             >
