@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
 import StyledSelect from "../ui/StyledSelect";
 
@@ -42,17 +42,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
     setIsEditing(false);
   };
 
-  const getInlineSelectStyles = useCallback(
-    (isEditing) => ({
-      container: (baseStyles) => ({
-        ...baseStyles,
-        display: isEditing ? "block" : "none",
-      }),
-      menuPortal: (baseStyles) => ({ ...baseStyles, zIndex: 9999 }),
-    }),
-    []
-  );
-
   return (
     <tr className={`movies-table-row ${isEditing ? "editing" : ""}`}>
       <td className="cell cell-title">
@@ -68,7 +57,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               autoFocus
             />
           ) : (
-            <span onClick={startEditing} style={{ cursor: "pointer" }}>
+            <span
+              className="value"
+              onClick={startEditing}
+              style={{ cursor: "pointer" }}
+            >
               {movie.title}
             </span>
           )}
@@ -88,7 +81,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               style={{ width: "100%" }}
             />
           ) : (
-            <span onClick={startEditing} style={{ cursor: "pointer" }}>
+            <span
+              className="value"
+              onClick={startEditing}
+              style={{ cursor: "pointer" }}
+            >
               {movie.alternativeTitle || "-"}
             </span>
           )}
@@ -108,7 +105,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               style={{ width: "80px" }}
             />
           ) : (
-            <span onClick={startEditing} style={{ cursor: "pointer" }}>
+            <span
+              className="value"
+              onClick={startEditing}
+              style={{ cursor: "pointer" }}
+            >
               {movie.releaseYear}
             </span>
           )}
@@ -126,7 +127,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               style={{ width: "100%" }}
             />
           ) : (
-            <span onClick={startEditing} style={{ cursor: "pointer" }}>
+            <span
+              className="value"
+              onClick={startEditing}
+              style={{ cursor: "pointer" }}
+            >
               {movie.rating || "-"}
             </span>
           )}
@@ -143,7 +148,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               style={{ width: "100%" }}
             />
           ) : (
-            <span onClick={startEditing} style={{ cursor: "pointer" }}>
+            <span
+              className="value"
+              onClick={startEditing}
+              style={{ cursor: "pointer" }}
+            >
               {props.formatDate(movie.watchedDate)}
             </span>
           )}
@@ -154,7 +163,9 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           <StyledSelect
             isMulti
             isInline
-            options={props.genres.map((g) => ({ value: g.id, label: g.name }))}
+            options={props.genres
+              .map((g) => ({ value: g.id, label: g.name }))
+              .sort((a, b) => a.label.localeCompare(b.label))}
             value={props.genres
               .filter((g) => editedMovie.genreIds.includes(g.id))
               .map((g) => ({ value: g.id, label: g.name }))}
@@ -163,61 +174,86 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           />
         )}
         {!isEditing && (
-          <span onClick={startEditing} style={{ cursor: "pointer" }}>
+          <span
+            className="value"
+            onClick={startEditing}
+            style={{ cursor: "pointer" }}
+          >
             {movie.Genres?.map((g) => g.name).join(", ") || "-"}
           </span>
         )}
       </td>
       <td className="cell cell-director">
-        <Select
-          isMulti
-          options={props.directors.map((d) => ({ value: d.id, label: d.name }))}
-          value={props.directors
-            .filter((d) => editedMovie.directorIds.includes(d.id))
-            .map((d) => ({ value: d.id, label: d.name }))}
-          onChange={(selected) => handleSelectChange("directorIds", selected)}
-          styles={getInlineSelectStyles(isEditing)}
-          menuPortalTarget={document.body}
-        />
+        {isEditing && (
+          <StyledSelect
+            isMulti
+            options={props.directors
+              .map((d) => ({
+                value: d.id,
+                label: d.name,
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label))}
+            value={props.directors
+              .filter((d) => editedMovie.directorIds.includes(d.id))
+              .map((d) => ({ value: d.id, label: d.name }))}
+            onChange={(selected) => handleSelectChange("directorIds", selected)}
+            menuPortalTarget={document.body}
+          />
+        )}
         {!isEditing && (
-          <span onClick={startEditing} style={{ cursor: "pointer" }}>
+          <span
+            className="value"
+            onClick={startEditing}
+            style={{ cursor: "pointer" }}
+          >
             {movie.Directors?.map((d) => d.name).join(", ") || "-"}
           </span>
         )}
       </td>
       <td className="cell cell-actor">
-        <Select
-          isMulti
-          options={props.actors.map((a) => ({ value: a.id, label: a.name }))}
-          value={props.actors
-            .filter((a) => editedMovie.actorIds.includes(a.id))
-            .map((a) => ({ value: a.id, label: a.name }))}
-          onChange={(selected) => handleSelectChange("actorIds", selected)}
-          styles={getInlineSelectStyles(isEditing)}
-          menuPortalTarget={document.body}
-        />
+        {isEditing && (
+          <StyledSelect
+            isMulti
+            options={props.actors
+              .map((a) => ({ value: a.id, label: a.name }))
+              .sort((a, b) => a.label.localeCompare(b.label))}
+            value={props.actors
+              .filter((a) => editedMovie.actorIds.includes(a.id))
+              .map((a) => ({ value: a.id, label: a.name }))}
+            onChange={(selected) => handleSelectChange("actorIds", selected)}
+            menuPortalTarget={document.body}
+          />
+        )}
         {!isEditing && (
-          <span onClick={startEditing} style={{ cursor: "pointer" }}>
+          <span
+            className="value"
+            onClick={startEditing}
+            style={{ cursor: "pointer" }}
+          >
             {movie.Actors?.map((a) => a.name).join(", ") || "-"}
           </span>
         )}
       </td>
       <td className="cell cell-country">
-        <Select
-          isMulti
-          options={props.countries.map((c) => ({
-            value: c.id,
-            label: `${c.flagEmoji} ${c.name}`,
-          }))}
-          value={props.countries
-            .filter((c) => editedMovie.countryIds.includes(c.id))
-            .map((c) => ({ value: c.id, label: `${c.flagEmoji} ${c.name}` }))}
-          onChange={(selected) => handleSelectChange("countryIds", selected)}
-          styles={getInlineSelectStyles(isEditing)}
-          menuPortalTarget={document.body}
-        />
+        {isEditing && (
+          <StyledSelect
+            isMulti
+            options={props.countries
+              .map((c) => ({
+                value: c.id,
+                label: `${c.flagEmoji} ${c.name}`,
+              }))
+              .sort((a, b) => a.label.localeCompare(b.label))}
+            value={props.countries
+              .filter((c) => editedMovie.countryIds.includes(c.id))
+              .map((c) => ({ value: c.id, label: `${c.flagEmoji} ${c.name}` }))}
+            onChange={(selected) => handleSelectChange("countryIds", selected)}
+            menuPortalTarget={document.body}
+          />
+        )}
         {!isEditing && (
           <span
+            className="value"
             onClick={startEditing}
             style={{ cursor: "pointer" }}
             title={movie.Countries?.map((c) => c.name).join(", ") || ""}

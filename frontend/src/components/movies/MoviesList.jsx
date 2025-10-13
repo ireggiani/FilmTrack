@@ -16,36 +16,31 @@ const MoviesList = ({ sortedMovies, getInlineSelectStyles, ...props }) => {
           {/* Movie List Headers */}
           <tr className="movies-table-row header-row">
             <th
-              className="movies-table-header"
+              className="table-header"
               onClick={() => props.requestSort("title")}
             >
               Title{props.getSortIndicator("title")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               onClick={() => props.requestSort("alternativeTitle")}
             >
               Alt Title{props.getSortIndicator("alternativeTitle")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header header-year"
               onClick={() => props.requestSort("releaseYear")}
             >
               Year{props.getSortIndicator("releaseYear")}
             </th>
             <th
-              className="movies-table-header"
-              style={{
-                maxWidth: "100px",
-                width: "100px",
-                textAlign: "center",
-              }}
+              className="table-header header-rating"
               onClick={() => props.requestSort("rating")}
             >
               Rating{props.getSortIndicator("rating")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               style={{
                 maxWidth: "100px",
                 width: "100px",
@@ -55,31 +50,31 @@ const MoviesList = ({ sortedMovies, getInlineSelectStyles, ...props }) => {
               Watched{props.getSortIndicator("watchedDate")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               onClick={() => props.requestSort("Genres")}
             >
               Genres{props.getSortIndicator("Genres")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               onClick={() => props.requestSort("Directors")}
             >
               Directors{props.getSortIndicator("Directors")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               onClick={() => props.requestSort("Actors")}
             >
               Actors{props.getSortIndicator("Actors")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               onClick={() => props.requestSort("Countries")}
             >
               Countries{props.getSortIndicator("Countries")}
             </th>
             <th
-              className="movies-table-header"
+              className="table-header"
               style={{
                 maxWidth: "100px",
                 width: "100px",
