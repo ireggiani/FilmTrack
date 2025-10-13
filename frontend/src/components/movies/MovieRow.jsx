@@ -332,13 +332,13 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               ✅
             </button>
           ) : (
-            <button onClick={startEditing} className="movies-table-btn">
+            <button onClick={startEditing} className="btn">
               📝
             </button>
           )}
           <button
             onClick={() => onDelete(movie.id)}
-            className={`movies-table-btn ${isEditing ? "editing" : ""}`}
+            className={`btn ${isEditing ? "editing" : ""}`}
           >
             🗑️
           </button>

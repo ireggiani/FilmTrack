@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import PropTypes from "prop-types";
 import GlassCheckbox from "../ui/GlassCheckbox";
 import PillItem from "../ui/PillItem";
@@ -37,25 +37,9 @@ const CountryList = ({
   if (loading) return <div className="glass">Loading countries...</div>;
 
   return (
-    <div className="glass" style={{ padding: "1.5rem", marginTop: "2rem" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1rem",
-        }}
-      >
-        <h3
-          style={{
-            color: "white",
-            margin: 0,
-            textShadow:
-              "0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.3)",
-          }}
-        >
-          Existing Countries
-        </h3>
+    <div className="country-list">
+      <div className="list-header">
+        <h3 className="heading-left">Existing Countries</h3>
         <GlassCheckbox
           checked={alphabetical}
           onChange={(e) => setAlphabetical(e.target.checked)}
@@ -67,7 +51,10 @@ const CountryList = ({
           No countries added yet
         </p>
       ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        <div
+          className="list"
+          style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
+        >
           {sortedCountries.map((country) => (
             <PillItem
               key={country.id}
@@ -97,4 +84,4 @@ CountryList.propTypes = {
   onCountryDelete: PropTypes.func,
 };
 
-export default CountryList;
+export default memo(CountryList);

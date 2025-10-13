@@ -32,25 +32,9 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
   if (loading) return <div className="glass">Loading genres...</div>;
 
   return (
-    <div className="genre-list glass glass-inner">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1rem",
-        }}
-      >
-        <h3
-          style={{
-            color: "white",
-            margin: 0,
-            textShadow:
-              "0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.3)",
-          }}
-        >
-          Existing Genres
-        </h3>
+    <div className="genre-list">
+      <div className="list-header">
+        <h3 className="heading-left">Existing Genres</h3>
         <GlassCheckbox
           checked={alphabetical}
           onChange={(e) => setAlphabetical(e.target.checked)}
@@ -60,7 +44,7 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
       {genres.length === 0 ? (
         <p style={{ color: "rgba(255, 255, 255, 0.8)" }}>No genres added yet</p>
       ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        <div className="list">
           {sortedGenres.map((genre) => (
             <PillItem
               key={genre.id}

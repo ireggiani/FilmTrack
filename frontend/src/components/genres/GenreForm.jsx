@@ -74,8 +74,10 @@ const GenreForm = ({
   };
 
   return (
-    <form className="genre-form glass-inner" onSubmit={handleSubmit}>
-      <h2>{isEditing ? "Edit Genre" : "Add New Genre"}</h2>
+    <form className="genre-form" onSubmit={handleSubmit}>
+      <h2 className="heading-centre">
+        {isEditing ? "Edit Genre" : "Add New Genre"}
+      </h2>
 
       <div className="form-group">
         <label htmlFor="genreName">Genre Name:</label>

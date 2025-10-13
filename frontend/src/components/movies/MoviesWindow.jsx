@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import MoviesTable from "./MoviesTable";
+import "../../styles/movies/_movies-table.scss";
 
 const MoviesWindow = ({
   isOpen,

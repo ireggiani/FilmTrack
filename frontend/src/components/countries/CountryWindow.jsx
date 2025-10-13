@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import CountryForm from "./CountryForm";
 import CountryList from "./CountryList";
+import "../../styles/countries/_country-form.scss";
+import "../../styles/countries/_country-list.scss";
 
 const CountryWindow = ({
   isOpen,
@@ -20,14 +22,12 @@ const CountryWindow = ({
   const [editingCountry, setEditingCountry] = useState(null);
   const [isMaximized, setIsMaximized] = useState(false);
 
-  if (!isOpen) return null;
-
-  const handleEditComplete = () => {
+  const handleEditComplete = useCallback(() => {
     setEditingCountry(null);
     onCountryAdded(); // Refresh the list
-  };
+  }, [onCountryAdded]);
 
-  const handleCountryDelete = async (countryId) => {
+  const handleCountryDelete = useCallback(async (countryId) => {
     try {
       const response = await fetch(
         `http://localhost:5000/api/countries/${countryId}`,
@@ -41,7 +41,9 @@ const CountryWindow = ({
     } catch (error) {
       console.error("Error deleting country:", error);
     }
-  };
+  }, [onCountryAdded]);
+
+  if (!isOpen) return null;
 
   return (
     <Draggable

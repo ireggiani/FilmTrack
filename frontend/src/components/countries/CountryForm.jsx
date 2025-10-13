@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import PropTypes from "prop-types";
 
 const CountryForm = ({
@@ -11,6 +11,7 @@ const CountryForm = ({
   const [flagEmoji, setFlagEmoji] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [formId] = useState(() => Math.random().toString(36).substr(2, 9));
   const inputRef = useRef(null);
   const isEditing = !!editingCountry;
 
@@ -77,53 +78,43 @@ const CountryForm = ({
   };
 
   return (
-    <form className="glass-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? "Edit Country" : "Add New Country"}</h2>
-      {isEditing && (
-        <button
-          type="button"
-          onClick={() => onEditComplete?.()}
-          style={{
-            background: "none",
-            border: "none",
-            color: "rgba(255, 255, 255, 0.7)",
-            fontSize: "0.8rem",
-            cursor: "pointer",
-            marginBottom: "1rem",
-            textShadow: "0 1px 3px rgba(0, 0, 0, 0.8)",
-          }}
-        >
-          ← Cancel Edit
-        </button>
-      )}
-      <div className="form-group">
-        <label htmlFor="countryName">Country Name</label>
-        <input
-          ref={inputRef}
-          id="countryName"
-          type="text"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            setError("");
-          }}
-          placeholder="Enter country name"
-          disabled={loading}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="flagEmoji">Flag Emoji</label>
-        <input
-          id="flagEmoji"
-          type="text"
-          value={flagEmoji}
-          onChange={(e) => {
-            setFlagEmoji(e.target.value);
-            setError("");
-          }}
-          placeholder="🇺🇸"
-          disabled={loading}
-        />
+    <form className="country-form glass-inner" onSubmit={handleSubmit}>
+      <h2 className="heading-centre">
+        {isEditing ? "Edit Country" : "Add New Country"}
+      </h2>
+
+      <div className="inputs">
+        <div className="form-group">
+          <label htmlFor={`countryName-${formId}`}>Country Name</label>
+          <input
+            ref={inputRef}
+            id={`countryName-${formId}`}
+            type="text"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setError("");
+            }}
+            placeholder="Enter country name"
+            disabled={loading}
+            className="text-field"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor={`flagEmoji-${formId}`}>Flag Emoji</label>
+          <input
+            id={`flagEmoji-${formId}`}
+            type="text"
+            value={flagEmoji}
+            onChange={(e) => {
+              setFlagEmoji(e.target.value);
+              setError("");
+            }}
+            placeholder="🇺🇸"
+            disabled={loading}
+            className="text-field"
+          />
+        </div>
       </div>
       {error && (
         <p
@@ -132,19 +123,30 @@ const CountryForm = ({
           {error}
         </p>
       )}
-      <button
-        type="submit"
-        className="btn"
-        disabled={loading || !name.trim() || !flagEmoji.trim()}
-      >
-        {loading
-          ? isEditing
-            ? "Updating..."
-            : "Adding..."
-          : isEditing
-          ? "Update Country"
-          : "Add Country"}
-      </button>
+      <div className="buttons">
+        {isEditing && (
+          <button
+            type="button"
+            onClick={() => onEditComplete?.()}
+            className="btn"
+          >
+            ← Cancel Edit
+          </button>
+        )}
+        <button
+          type="submit"
+          className="btn submit"
+          disabled={loading || !name.trim() || !flagEmoji.trim()}
+        >
+          {loading
+            ? isEditing
+              ? "Updating..."
+              : "Adding..."
+            : isEditing
+            ? "Update Country"
+            : "Add Country"}
+        </button>
+      </div>
     </form>
   );
 };
@@ -166,4 +168,4 @@ CountryForm.propTypes = {
   onEditComplete: PropTypes.func,
 };
 
-export default CountryForm;
+export default memo(CountryForm);

@@ -1,0 +1,30 @@
+@use "../ui";
+
+.country-form {
+  @include ui.glass-inner-container;
+
+  padding: 0;
+
+  .inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.25rem;
+
+    .form-group {
+      .text-field {
+        width: 100%;
+      }
+    }
+  }
+  .buttons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem;
+
+    .submit {
+      margin-left: auto;
+    }
+  }
+}
