@@ -44,58 +44,18 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
 
   const getInlineSelectStyles = useCallback(
     (isEditing) => ({
-      control: (base) => ({
-        ...base,
-        background: isEditing ? "#338070" : "rgba(255, 255, 255, 0.1)",
-        border: "1px solid rgba(255, 255, 255, 0.3)",
-        borderRadius: "4px",
-        minHeight: "25px",
-        fontSize: "0.8rem",
-      }),
-      container: (base) => ({
-        ...base,
+      container: (baseStyles) => ({
+        ...baseStyles,
         display: isEditing ? "block" : "none",
       }),
-      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-      option: (base) => ({
-        ...base,
-        fontSize: "0.8rem",
-        // fontFamily: "Arial, sans-serif",
-      }),
-      menu: (base) => ({
-        ...base,
-        fontSize: "0.8rem",
-        // fontFamily: "Arial, sans-serif",
-      }),
-      placeholder: (base) => ({
-        ...base,
-        color: "rgba(255, 255, 255, 0.5)",
-      }),
-      valueContainer: (base) => ({
-        ...base,
-        padding: "0 4px",
-      }),
-      indicatorSeparator: (base) => ({
-        ...base,
-        margin: "0px",
-      }),
-      dropdownIndicator: (base) => ({
-        ...base,
-        color: "rgba(255, 255, 255, 1)",
-        padding: "0 8px",
-      }),
+      menuPortal: (baseStyles) => ({ ...baseStyles, zIndex: 9999 }),
     }),
     []
   );
 
   return (
     <tr className={`movies-table-row ${isEditing ? "editing" : ""}`}>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-        }}
-      >
+      <td className="cell cell-title">
         <div style={{ position: "relative" }}>
           {isEditing ? (
             <input
@@ -104,7 +64,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onChange={(e) => handleInputChange("title", e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, "title")}
               className="text-field"
-              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
+              style={{ width: "100%" }}
               autoFocus
             />
           ) : (
@@ -114,12 +74,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           )}
         </div>
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-        }}
-      >
+      <td className="cell cell-title">
         <div style={{ position: "relative" }}>
           {isEditing ? (
             <input
@@ -130,7 +85,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               }
               onKeyDown={(e) => handleKeyDown(e, "alternativeTitle")}
               className="text-field"
-              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
+              style={{ width: "100%" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -139,13 +94,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           )}
         </div>
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          textAlign: "center",
-        }}
-      >
+      <td className="cell cell-year">
         <div style={{ position: "relative" }}>
           {isEditing ? (
             <input
@@ -156,7 +105,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               }
               onKeyDown={(e) => handleKeyDown(e, "releaseYear")}
               className="text-field"
-              style={{ width: "80px", background: isEditing ? "#338070" : "" }}
+              style={{ width: "80px" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -165,15 +114,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           )}
         </div>
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          maxWidth: "100px",
-          width: "100px",
-          textAlign: "center",
-        }}
-      >
+      <td className="cell cell-rating">
         <div style={{ position: "relative" }}>
           {isEditing ? (
             <input
@@ -182,7 +123,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onChange={(e) => handleInputChange("rating", e.target.value)}
               onKeyDown={(e) => handleKeyDown(e, "rating")}
               className="text-field"
-              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
+              style={{ width: "100%" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -191,14 +132,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           )}
         </div>
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          maxWidth: "100px",
-          width: "100px",
-        }}
-      >
+      <td className="cell cell-watched">
         <div style={{ position: "relative" }}>
           {isEditing ? (
             <input
@@ -206,7 +140,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               value={editedMovie.watchedDate || ""}
               onChange={(e) => handleInputChange("watchedDate", e.target.value)}
               className="text-field"
-              style={{ width: "100%", background: isEditing ? "#338070" : "" }}
+              style={{ width: "100%" }}
             />
           ) : (
             <span onClick={startEditing} style={{ cursor: "pointer" }}>
@@ -215,37 +149,26 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           )}
         </div>
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          fontSize: "0.8rem",
-        }}
-      >
-        <StyledSelect
-          isMulti
-          isInline
-          options={props.genres.map((g) => ({ value: g.id, label: g.name }))}
-          value={props.genres
-            .filter((g) => editedMovie.genreIds.includes(g.id))
-            .map((g) => ({ value: g.id, label: g.name }))}
-          onChange={(selected) => handleSelectChange("genreIds", selected)}
-          menuPortalTarget={document.body}
-          styles={getInlineSelectStyles(isEditing)}
-        />
+      <td className="cell cell-genre">
+        {isEditing && (
+          <StyledSelect
+            isMulti
+            isInline
+            options={props.genres.map((g) => ({ value: g.id, label: g.name }))}
+            value={props.genres
+              .filter((g) => editedMovie.genreIds.includes(g.id))
+              .map((g) => ({ value: g.id, label: g.name }))}
+            onChange={(selected) => handleSelectChange("genreIds", selected)}
+            menuPortalTarget={document.body}
+          />
+        )}
         {!isEditing && (
           <span onClick={startEditing} style={{ cursor: "pointer" }}>
             {movie.Genres?.map((g) => g.name).join(", ") || "-"}
           </span>
         )}
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          fontSize: "0.8rem",
-        }}
-      >
+      <td className="cell cell-director">
         <Select
           isMulti
           options={props.directors.map((d) => ({ value: d.id, label: d.name }))}
@@ -262,13 +185,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           </span>
         )}
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          fontSize: "0.8rem",
-        }}
-      >
+      <td className="cell cell-actor">
         <Select
           isMulti
           options={props.actors.map((a) => ({ value: a.id, label: a.name }))}
@@ -285,14 +202,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           </span>
         )}
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          textShadow: "0 1px 3px rgba(0, 0, 0, 1)",
-          fontSize: "0.8rem",
-          textAlign: "center",
-        }}
-      >
+      <td className="cell cell-country">
         <Select
           isMulti
           options={props.countries.map((c) => ({
@@ -316,18 +226,12 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           </span>
         )}
       </td>
-      <td
-        style={{
-          padding: "0.5rem",
-          maxWidth: "120px",
-          width: "120px",
-        }}
-      >
+      <td className="cell cell-actions">
         <div style={{ display: "flex", gap: "0.25rem" }}>
           {isEditing ? (
             <button
               onClick={stopEditing}
-              className={`movies-table-btn ${isEditing ? "editing" : ""}`}
+              className={`btn ${isEditing ? "editing" : ""}`}
             >
               ✅
             </button>

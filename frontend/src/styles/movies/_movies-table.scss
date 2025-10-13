@@ -83,3 +83,35 @@
     font-size: 0.8em;
   }
 }
+
+/* ROWS */
+.movies-table-row {
+  .cell {
+    padding: 0 0.25rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+
+    &-year {
+      text-align: center;
+    }
+
+    &-rating {
+      max-width: 80px;
+      width: 80px;
+      text-align: center;
+    }
+
+    &-watched {
+      max-width: 80px;
+      width: 40px;
+    }
+
+    &-country {
+      text-align: center;
+    }
+
+    &-actions {
+      max-width: 100px;
+      width: 100px;
+    }
+  }
+}

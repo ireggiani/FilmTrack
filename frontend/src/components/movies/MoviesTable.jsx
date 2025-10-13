@@ -68,7 +68,6 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
   return (
     <>
       <style>
-        {`.spreadsheet-table td, .spreadsheet-table th { border: 1px solid rgba(255, 255, 255, 0.3) !important; padding: 0.25rem !important; }`}
         {`[class*="menu"][class*="react-select"] { z-index: 99999 !important; backdrop-filter: blur(15px) !important; }`}
         {`[class*="control"][class*="react-select"] { min-height: 38px !important; }`}
         {`[class*="dropdownIndicator"][class*="react-select"], [class*="indicatorSeparator"][class*="react-select"] { height: 24px !important; }`}
