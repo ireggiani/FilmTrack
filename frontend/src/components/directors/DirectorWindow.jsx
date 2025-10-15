@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import DirectorForm from "./DirectorForm";
 import DirectorList from "./DirectorList";
 
+import "../../styles/directors/_director-form.scss";
+import "../../styles/directors/_director-list.scss";
+
 const DirectorWindow = ({
   isOpen,
   isMinimized,

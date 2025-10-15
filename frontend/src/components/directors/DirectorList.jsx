@@ -37,25 +37,9 @@ const DirectorList = ({
   if (loading) return <div className="glass">Loading directors...</div>;
 
   return (
-    <div className="glass" style={{ padding: "1.5rem", marginTop: "2rem" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1rem",
-        }}
-      >
-        <h3
-          style={{
-            color: "white",
-            margin: 0,
-            textShadow:
-              "0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.3)",
-          }}
-        >
-          Existing Directors
-        </h3>
+    <div className="director-list">
+      <div className="list-header">
+        <h3 className="heading-left">Existing Directors</h3>
         <GlassCheckbox
           checked={alphabetical}
           onChange={(e) => setAlphabetical(e.target.checked)}
@@ -67,7 +51,7 @@ const DirectorList = ({
           No directors added yet
         </p>
       ) : (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        <div className="list">
           {sortedDirectors.map((director) => (
             <PillItem
               key={director.id}

@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import ActorForm from "./ActorForm";
 import ActorList from "./ActorList";
 
+import "../../styles/actors/_actor-form.scss";
+import "../../styles/actors/_actor-list.scss";
+
 const ActorWindow = ({
   isOpen,
   isMinimized,

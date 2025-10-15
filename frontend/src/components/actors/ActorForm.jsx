@@ -72,25 +72,11 @@ const ActorForm = ({
   };
 
   return (
-    <form className="glass-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? "Edit Actor" : "Add New Actor"}</h2>
-      {isEditing && (
-        <button
-          type="button"
-          onClick={() => onEditComplete?.()}
-          style={{
-            background: "none",
-            border: "none",
-            color: "rgba(255, 255, 255, 0.7)",
-            fontSize: "0.8rem",
-            cursor: "pointer",
-            marginBottom: "1rem",
-            textShadow: "0 1px 3px rgba(0, 0, 0, 0.8)",
-          }}
-        >
-          ← Cancel Edit
-        </button>
-      )}
+    <form className="actor-form " onSubmit={handleSubmit}>
+      <h2 className="heading-centre">
+        {isEditing ? "Edit Actor" : "Add New Actor"}
+      </h2>
+
       <div className="form-group">
         <label htmlFor="actorName">Actor Name</label>
         <input
@@ -104,6 +90,7 @@ const ActorForm = ({
           }}
           placeholder="Enter actor name"
           disabled={loading}
+          className="text-field"
         />
         {error && (
           <p
@@ -117,15 +104,30 @@ const ActorForm = ({
           </p>
         )}
       </div>
-      <button type="submit" className="btn" disabled={loading || !name.trim()}>
-        {loading
-          ? isEditing
-            ? "Updating..."
-            : "Adding..."
-          : isEditing
-          ? "Update Actor"
-          : "Add Actor"}
-      </button>
+      <div className="buttons">
+        {isEditing && (
+          <button
+            type="button"
+            className="btn"
+            onClick={() => onEditComplete?.()}
+          >
+            ← Cancel Edit
+          </button>
+        )}
+        <button
+          type="submit"
+          className="btn submit"
+          disabled={loading || !name.trim()}
+        >
+          {loading
+            ? isEditing
+              ? "Updating..."
+              : "Adding..."
+            : isEditing
+            ? "Update Actor"
+            : "Add Actor"}
+        </button>
+      </div>
     </form>
   );
 };

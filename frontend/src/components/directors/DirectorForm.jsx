@@ -72,25 +72,11 @@ const DirectorForm = ({
   };
 
   return (
-    <form className="glass-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? "Edit Director" : "Add New Director"}</h2>
-      {isEditing && (
-        <button
-          type="button"
-          onClick={() => onEditComplete?.()}
-          style={{
-            background: "none",
-            border: "none",
-            color: "rgba(255, 255, 255, 0.7)",
-            fontSize: "0.8rem",
-            cursor: "pointer",
-            marginBottom: "1rem",
-            textShadow: "0 1px 3px rgba(0, 0, 0, 0.8)",
-          }}
-        >
-          ← Cancel Edit
-        </button>
-      )}
+    <form className="director-form" onSubmit={handleSubmit}>
+      <h2 className="heading-centre">
+        {isEditing ? "Edit Director" : "Add New Director"}
+      </h2>
+
       <div className="form-group">
         <label htmlFor="directorName">Director Name</label>
         <input
@@ -104,6 +90,7 @@ const DirectorForm = ({
           }}
           placeholder="Enter director name"
           disabled={loading}
+          className="text-field"
         />
         {error && (
           <p
@@ -117,15 +104,30 @@ const DirectorForm = ({
           </p>
         )}
       </div>
-      <button type="submit" className="btn" disabled={loading || !name.trim()}>
-        {loading
-          ? isEditing
-            ? "Updating..."
-            : "Adding..."
-          : isEditing
-          ? "Update Director"
-          : "Add Director"}
-      </button>
+      <div className="buttons">
+        {isEditing && (
+          <button
+            type="button"
+            onClick={() => onEditComplete?.()}
+            className="btn"
+          >
+            ← Cancel Edit
+          </button>
+        )}
+        <button
+          type="submit"
+          className="btn submit"
+          disabled={loading || !name.trim()}
+        >
+          {loading
+            ? isEditing
+              ? "Updating..."
+              : "Adding..."
+            : isEditing
+            ? "Update Director"
+            : "Add Director"}
+        </button>
+      </div>
     </form>
   );
 };

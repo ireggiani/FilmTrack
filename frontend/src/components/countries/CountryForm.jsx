@@ -78,7 +78,7 @@ const CountryForm = ({
   };
 
   return (
-    <form className="country-form glass-inner" onSubmit={handleSubmit}>
+    <form className="country-form" onSubmit={handleSubmit}>
       <h2 className="heading-centre">
         {isEditing ? "Edit Country" : "Add New Country"}
       </h2>
