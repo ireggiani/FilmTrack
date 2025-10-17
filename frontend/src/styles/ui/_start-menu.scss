@@ -1,0 +1,42 @@
+.start-menu {
+  position: absolute;
+  bottom: 40px; // Height of the taskbar
+  left: 0;
+  width: 250px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #666;
+  border-radius: 5px 5px 0 0;
+  z-index: 1000;
+  color: white;
+
+  .start-menu-inner {
+    padding: 10px;
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 8px 12px;
+        cursor: pointer;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+  }
+}
+
+.start-button {
+  background: #222;
+  color: white;
+  border: 1px solid #666;
+  padding: 5px 15px;
+  cursor: pointer;
+
+  &:hover {
+    background: #333;
+  }
+}

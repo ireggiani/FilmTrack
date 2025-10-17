@@ -1,3 +1,6 @@
+@import './_pill-item.scss';
+@import './ui/_start-menu.scss';
+
 @mixin glass-inner-container {
   background: rgba(100, 100, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.3);

@@ -19,12 +19,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
+  gap: 0.5rem;
 
   .taskbar-content {
     display: flex;
     align-items: center;
     height: 100%;
     gap: 0.5rem;
+    margin-right: auto;
   }
 
   .taskbar-item {

@@ -19,13 +19,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
   const handleSelectChange = (field, selected) => {
     const ids = selected ? selected.map((s) => s.value) : [];
     setEditedMovie((prev) => ({ ...prev, [field]: ids }));
-    onUpdate(movie.id, field, ids);
   };
 
-  const handleKeyDown = (e, field) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      onUpdate(movie.id, field, editedMovie[field]);
-      setIsEditing(false);
+      saveChanges();
     }
   };
 
@@ -33,12 +31,19 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
     setIsEditing(true);
   };
 
-  const stopEditing = () => {
-    onUpdate(movie.id, "title", editedMovie.title);
-    onUpdate(movie.id, "alternativeTitle", editedMovie.alternativeTitle);
-    onUpdate(movie.id, "releaseYear", editedMovie.releaseYear);
-    onUpdate(movie.id, "rating", editedMovie.rating);
-    onUpdate(movie.id, "watchedDate", editedMovie.watchedDate);
+  const saveChanges = () => {
+    onUpdate(movie.id, editedMovie);
+    setIsEditing(false);
+  };
+
+  const cancelEditing = () => {
+    setEditedMovie({
+      ...movie,
+      genreIds: movie.Genres ? movie.Genres.map((g) => g.id) : [],
+      directorIds: movie.Directors ? movie.Directors.map((d) => d.id) : [],
+      actorIds: movie.Actors ? movie.Actors.map((a) => a.id) : [],
+      countryIds: movie.Countries ? movie.Countries.map((c) => c.id) : [],
+    });
     setIsEditing(false);
   };
 
@@ -51,7 +56,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               type="text"
               value={editedMovie.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, "title")}
+              onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "100%" }}
               autoFocus
@@ -76,7 +81,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onChange={(e) =>
                 handleInputChange("alternativeTitle", e.target.value)
               }
-              onKeyDown={(e) => handleKeyDown(e, "alternativeTitle")}
+              onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "100%" }}
             />
@@ -100,7 +105,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onChange={(e) =>
                 handleInputChange("releaseYear", parseInt(e.target.value) || "")
               }
-              onKeyDown={(e) => handleKeyDown(e, "releaseYear")}
+              onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "80px" }}
             />
@@ -122,7 +127,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               type="text"
               value={editedMovie.rating || ""}
               onChange={(e) => handleInputChange("rating", e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, "rating")}
+              onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "100%" }}
             />
@@ -144,6 +149,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               type="text"
               value={editedMovie.watchedDate || ""}
               onChange={(e) => handleInputChange("watchedDate", e.target.value)}
+              onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "100%" }}
             />
@@ -238,12 +244,12 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
         {isEditing && (
           <StyledSelect
             isMulti
-            options={props.countries
+            options={[...props.countries]
+              .sort((a, b) => a.name.localeCompare(b.name))
               .map((c) => ({
                 value: c.id,
                 label: `${c.flagEmoji} ${c.name}`,
-              }))
-              .sort((a, b) => a.label.localeCompare(b.label))}
+              }))}
             value={props.countries
               .filter((c) => editedMovie.countryIds.includes(c.id))
               .map((c) => ({ value: c.id, label: `${c.flagEmoji} ${c.name}` }))}
@@ -265,23 +271,24 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
       <td className="cell cell-actions">
         <div style={{ display: "flex", gap: "0.25rem" }}>
           {isEditing ? (
-            <button
-              onClick={stopEditing}
-              className={`btn ${isEditing ? "editing" : ""}`}
-            >
-              ✅
-            </button>
+            <>
+              <button onClick={saveChanges} className="btn editing">
+                ✅
+              </button>
+              <button onClick={cancelEditing} className="btn editing">
+                ❌
+              </button>
+            </>
           ) : (
-            <button onClick={startEditing} className="btn">
-              📝
-            </button>
+            <>
+              <button onClick={startEditing} className="btn">
+                📝
+              </button>
+              <button onClick={() => onDelete(movie.id)} className="btn">
+                🗑️
+              </button>
+            </>
           )}
-          <button
-            onClick={() => onDelete(movie.id)}
-            className={`btn ${isEditing ? "editing" : ""}`}
-          >
-            🗑️
-          </button>
         </div>
       </td>
     </tr>

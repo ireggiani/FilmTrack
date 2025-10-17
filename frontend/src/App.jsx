@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Sidebar from "./components/ui/Sidebar";
 import GenreWindow from "./components/genres/GenreWindow";
 import WallpaperWindow from "./components/wallpapers/WallpaperWindow";
 import CountryWindow from "./components/countries/CountryWindow";
@@ -188,6 +187,19 @@ function App() {
     ]
   );
 
+  const allWindows = useMemo(
+    () => [
+      { id: "genres", title: "Genres Manager", icon: "🎭" },
+      { id: "wallpaper", title: "Wallpaper Settings", icon: "🎨" },
+      { id: "countries", title: "Countries Manager", icon: "🌍" },
+      { id: "directors", title: "Directors Manager", icon: "🎬" },
+      { id: "actors", title: "Actors Manager", icon: "🎭" },
+      { id: "movies", title: "Movies Collection", icon: "🎬" },
+      { id: "backup", title: "Backup & Restore", icon: "💾" },
+    ],
+    []
+  );
+
   const openWindow = useCallback(
     (windowId) => {
       switch (windowId) {
@@ -218,35 +230,6 @@ function App() {
       handleWindowFocus(windowId);
     },
     [handleWindowFocus]
-  );
-
-  const handleOpenGenres = useCallback(
-    () => openWindow("genres"),
-    [openWindow]
-  );
-  const handleOpenWallpaper = useCallback(
-    () => openWindow("wallpaper"),
-    [openWindow]
-  );
-  const handleOpenCountries = useCallback(
-    () => openWindow("countries"),
-    [openWindow]
-  );
-  const handleOpenDirectors = useCallback(
-    () => openWindow("directors"),
-    [openWindow]
-  );
-  const handleOpenActors = useCallback(
-    () => openWindow("actors"),
-    [openWindow]
-  );
-  const handleOpenMovies = useCallback(
-    () => openWindow("movies"),
-    [openWindow]
-  );
-  const handleOpenBackup = useCallback(
-    () => openWindow("backup"),
-    [openWindow]
   );
 
   const closeWindow = useCallback((windowId) => {
@@ -354,15 +337,6 @@ function App() {
       >
         FilmTrack
       </h1>
-      <Sidebar
-        onOpenGenres={handleOpenGenres}
-        onOpenWallpaper={handleOpenWallpaper}
-        onOpenCountries={handleOpenCountries}
-        onOpenDirectors={handleOpenDirectors}
-        onOpenActors={handleOpenActors}
-        onOpenMovies={handleOpenMovies}
-        onOpenBackup={handleOpenBackup}
-      />
       <GenreWindow
         isOpen={genreWindowOpen}
         isMinimized={genreMinimized}
@@ -443,6 +417,8 @@ function App() {
       <Taskbar
         openWindows={memoizedOpenWindows}
         onWindowFocus={handleWindowFocus}
+        onOpenWindow={openWindow}
+        allWindows={allWindows}
       />
       <p id="system-watermark">
         FilmTrack⁰⁶

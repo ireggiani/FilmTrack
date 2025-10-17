@@ -59,16 +59,15 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     [actors]
   );
 
-  const memoizedCountryOptions = useMemo(
-    () =>
-      countries
-        .map((c) => ({
-          value: c.id,
-          label: `${c.flagEmoji} ${c.name}`,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label)),
-    [countries]
-  );
+  const memoizedCountryOptions = useMemo(() => {
+    const sortedCountries = [...countries].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    return sortedCountries.map((c) => ({
+      value: c.id,
+      label: `${c.flagEmoji} ${c.name}`,
+    }));
+  }, [countries]);
 
   const fetchMovies = useCallback(async () => {
     try {
@@ -126,14 +125,14 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     }
   }, []);
 
-  const handleUpdateMovie = useCallback(async (movieId, field, value) => {
+  const handleUpdateMovie = useCallback(async (movieId, movieData) => {
     try {
       const response = await fetch(
         `http://localhost:5000/api/movies/${movieId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ [field]: value }),
+          body: JSON.stringify(movieData),
         }
       );
 
