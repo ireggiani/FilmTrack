@@ -3,7 +3,7 @@
   bottom: 40px; // Height of the taskbar
   left: 0;
   width: 250px;
-  background: rgba(0, 0, 0, 0.8);
+  background: linear-gradient(0deg, #222, #444);
   border: 1px solid #666;
   border-radius: 5px 5px 0 0;
   z-index: 1000;
@@ -14,29 +14,60 @@
 
     ul {
       list-style: none;
-      padding: 0;
+      padding: 2px;
       margin: 0;
 
       li {
+        border-radius: 3px;
         padding: 8px 12px;
         cursor: pointer;
 
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: linear-gradient(
+            0deg,
+            rgb(110, 231, 231),
+            rgb(161, 230, 235)
+          );
+          border-color: aquamarine;
         }
+      }
+    }
+
+    ul {
+      background-color: white;
+      border-radius: 5px;
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6);
+      color: black;
+
+      li {
+        font-size: 0.8rem;
       }
     }
   }
 }
 
 .start-button {
-  background: #222;
-  color: white;
-  border: 1px solid #666;
-  padding: 5px 15px;
+  background: transparent;
+  border: none;
+  padding: 0;
   cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  width: 44px;
+  height: 44px;
+  display: block;
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+  z-index: 401; // Taskbar is 400
 
   &:hover {
-    background: #333;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }

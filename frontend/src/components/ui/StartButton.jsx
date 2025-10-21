@@ -1,10 +1,14 @@
 import React from 'react';
+import startButtonImage from '../../assets/orb-normal.png';
 
 const StartButton = ({ onClick }) => {
   return (
-    <button className="start-button" onClick={onClick}>
-      Start
-    </button>
+    <img
+      src={startButtonImage}
+      alt="Start"
+      className="start-button"
+      onClick={onClick}
+    />
   );
 };
 
