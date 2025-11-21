@@ -9,10 +9,17 @@
 
   padding: 0.5rem;
   display: flex;
+  align-items: center;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 0.5rem;
 
+  input {
+    flex-grow: 1;
+  }
+
   .filter-input-group {
+    max-width: 300px;
+    display: flex;
     position: relative;
     flex-grow: 1;
     label {
@@ -39,13 +46,21 @@
         transform: perspective(150px) rotateY(0deg);
       }
     }
-
-    .movie-table-input {
-      width: 100%;
-      &.year-input,
-      &.rating-input {
-        max-width: 100px;
-      }
+    .text-field {
+      flex-grow: 1;
     }
+  }
+
+  .year-input,
+  .rating-input {
+    max-width: 80px;
+  }
+
+  .genre-select {
+    min-width: 200px;
+  }
+
+  .rating-input {
+    max-width: 90px;
   }
 }

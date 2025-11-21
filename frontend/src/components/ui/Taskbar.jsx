@@ -33,14 +33,14 @@ const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows }) => {
 
   return (
     <>
-      {isStartMenuOpen && (
-        <StartMenu
-          windows={allWindows}
-          onSelect={handleStartMenuSelect}
-          onClose={() => setIsStartMenuOpen(false)}
-        />
-      )}
       <div className="taskbar">
+        {isStartMenuOpen && (
+          <StartMenu
+            windows={allWindows}
+            onSelect={handleStartMenuSelect}
+            onClose={() => setIsStartMenuOpen(false)}
+          />
+        )}
         <StartButton onClick={() => setIsStartMenuOpen(!isStartMenuOpen)} />
         <div className="taskbar-content">
           {openWindows.map((window) => (

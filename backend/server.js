@@ -8,7 +8,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
@@ -18,6 +23,7 @@ app.use('/api/countries', require('./routes/countries'));
 app.use('/api/directors', require('./routes/directors'));
 app.use('/api/actors', require('./routes/actors'));
 app.use('/api/database', require('./routes/database'));
+app.use('/api/views', require('./routes/views'));
 
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running!' });

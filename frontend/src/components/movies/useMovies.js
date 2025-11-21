@@ -13,6 +13,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const [minRating, setMinRating] = useState("");
   const [maxRating, setMaxRating] = useState("");
   const [genreTerm, setGenreTerm] = useState([]);
+  const [countryTerm, setCountryTerm] = useState([]);
 
   // Reference data
   const [genres, setGenres] = useState([]);
@@ -194,6 +195,13 @@ export const useMovies = (refresh, onMoviesLoaded) => {
         return false;
       }
 
+      if (
+        countryTerm.length > 0 &&
+        !movie.Countries.some((c) => countryTerm.includes(c.id))
+      ) {
+        return false;
+      }
+
       if (minRating && movie.rating < parseFloat(minRating)) {
         return false;
       }
@@ -203,7 +211,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
 
       return true;
     });
-  }, [movies, searchTerm, minYear, maxYear, minRating, maxRating, genreTerm]);
+  }, [movies, searchTerm, minYear, maxYear, minRating, maxRating, genreTerm, countryTerm]);
 
   const sortedMovies = useMemo(() => {
     let sortableMovies = [...filteredMovies];
@@ -277,6 +285,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     minRating,
     maxRating,
     genreTerm,
+    countryTerm,
     genres,
     countries,
     directors,
@@ -301,6 +310,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     setMinRating,
     setMaxRating,
     setGenreTerm,
+    setCountryTerm,
     setSortConfig,
   };
 };

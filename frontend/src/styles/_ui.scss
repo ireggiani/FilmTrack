@@ -1,5 +1,5 @@
-@import './_pill-item.scss';
-@import './ui/_start-menu.scss';
+@use './_pill-item.scss';
+@use './ui/_start-menu.scss';
 
 @mixin glass-inner-container {
   background: rgba(100, 100, 255, 0.1);

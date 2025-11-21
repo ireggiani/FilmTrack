@@ -1,7 +1,11 @@
 import React, { useMemo } from "react";
 import Select from "react-select";
 
-const StyledSelect = ({ isInline = false, ...props }) => {
+const StyledSelect = ({
+  isInline = false,
+  styles: customStyles = {},
+  ...props
+}) => {
   const baseStyles = useMemo(
     () => ({
       control: (base, state) => ({
@@ -73,6 +77,7 @@ const StyledSelect = ({ isInline = false, ...props }) => {
       clearIndicator: (base) => ({
         ...base,
         color: "rgb(118,118,118)",
+        padding: "0px",
       }),
       placeholder: (base) => ({
         ...base,
@@ -106,6 +111,7 @@ const StyledSelect = ({ isInline = false, ...props }) => {
         alignSelf: "stretch",
         display: "flex",
         alignItems: "center",
+        padding: "0px",
       }),
       valueContainer: (base) => ({
         ...base,
@@ -122,8 +128,19 @@ const StyledSelect = ({ isInline = false, ...props }) => {
     () => ({
       ...baseStyles,
       menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+      ...Object.keys(customStyles).reduce((acc, key) => {
+        acc[key] = (base, state) => {
+          const baseStyle = baseStyles[key]?.(base, state) || {};
+          const customStyle = customStyles[key]?.(base, state) || {};
+          return {
+            ...baseStyle,
+            ...customStyle,
+          };
+        };
+        return acc;
+      }, {}),
     }),
-    [baseStyles]
+    [baseStyles, customStyles]
   );
 
   return (

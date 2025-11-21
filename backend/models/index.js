@@ -4,6 +4,7 @@ const Genre = require('./Genre');
 const Country = require('./Country');
 const Director = require('./Director');
 const Actor = require('./Actor');
+const View = require('./View');
 
 // Many-to-many relationships
 Movie.belongsToMany(Genre, { through: 'MovieGenres' });
@@ -24,5 +25,6 @@ module.exports = {
   Genre,
   Country,
   Director,
-  Actor
+  Actor,
+  View
 };

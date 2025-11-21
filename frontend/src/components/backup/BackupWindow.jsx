@@ -26,7 +26,7 @@ const BackupWindow = ({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "database.backup.sqlite";
+      a.download = "filmtrack.backup.sqlite";
       document.body.appendChild(a);
       a.click();
       a.remove();

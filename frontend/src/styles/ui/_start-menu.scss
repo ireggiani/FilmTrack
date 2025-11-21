@@ -1,6 +1,6 @@
 .start-menu {
   position: absolute;
-  bottom: 40px; // Height of the taskbar
+  bottom: 30px; // Height of the taskbar
   left: 0;
   width: 250px;
   background: linear-gradient(0deg, #222, #444);
@@ -50,24 +50,34 @@
 }
 
 .start-button {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.1s ease-in-out;
+}
+
+.start-button-wrapper {
+  width: 38px;
+  height: 38px;
+
   background: transparent;
   border: none;
+  cursor: default;
+  line-height: 0;
+  outline: none;
   padding: 0;
-  cursor: pointer;
-  transition: transform 0.1s ease-in-out;
-  width: 44px;
-  height: 44px;
-  display: block;
-  position: absolute;
-  bottom: 4px;
-  left: 10px;
-  z-index: 401; // Taskbar is 400
 
-  &:hover {
-    transform: scale(1.1);
+  position: absolute;
+  bottom: -3px;
+  left: 13px;
+  z-index: 1002;
+  display: block;
+
+  &:focus {
+    outline: none;
   }
 
-  &:active {
-    transform: scale(0.95);
+  &:focus-visible {
+    outline: none;
   }
 }

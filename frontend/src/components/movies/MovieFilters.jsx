@@ -10,11 +10,14 @@ const MovieFilters = ({
   setMaxYear,
   genreTerm,
   setGenreTerm,
+  countryTerm,
+  setCountryTerm,
   minRating,
   setMinRating,
   maxRating,
   setMaxRating,
   memoizedGenreOptions,
+  memoizedCountryOptions,
 }) => {
   return (
     <FilterControls
@@ -26,11 +29,14 @@ const MovieFilters = ({
       setMaxYear={setMaxYear}
       genreTerm={genreTerm}
       setGenreTerm={setGenreTerm}
+      countryTerm={countryTerm}
+      setCountryTerm={setCountryTerm}
       minRating={minRating}
       setMinRating={setMinRating}
       maxRating={maxRating}
       setMaxRating={setMaxRating}
       memoizedGenreOptions={memoizedGenreOptions}
+      memoizedCountryOptions={memoizedCountryOptions}
     />
   );
 };

@@ -17,6 +17,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
     minRating,
     maxRating,
     genreTerm,
+    countryTerm,
     genres,
     countries,
     directors,
@@ -38,6 +39,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
     setMinRating,
     setMaxRating,
     setGenreTerm,
+    setCountryTerm,
     setSortConfig,
   } = useMovies(refresh, onMoviesLoaded);
 
@@ -82,6 +84,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         minRating={minRating}
         maxRating={maxRating}
         genreTerm={genreTerm}
+        countryTerm={countryTerm}
         setSortConfig={setSortConfig}
         setSearchTerm={setSearchTerm}
         setMinYear={setMinYear}
@@ -89,6 +92,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         setMinRating={setMinRating}
         setMaxRating={setMaxRating}
         setGenreTerm={setGenreTerm}
+        setCountryTerm={setCountryTerm}
       />
       <MovieFilters
         searchTerm={searchTerm}
@@ -99,11 +103,14 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         setMaxYear={setMaxYear}
         genreTerm={genreTerm}
         setGenreTerm={setGenreTerm}
+        countryTerm={countryTerm}
+        setCountryTerm={setCountryTerm}
         minRating={minRating}
         setMinRating={setMinRating}
         maxRating={maxRating}
         setMaxRating={setMaxRating}
         memoizedGenreOptions={memoizedGenreOptions}
+        memoizedCountryOptions={memoizedCountryOptions}
       />
       <MoviesList
         sortedMovies={sortedMovies}

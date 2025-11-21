@@ -6,7 +6,7 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       // If the click is on the start button, do nothing.
-      if (event.target.closest('.start-button')) {
+      if (event.target.closest('.start-button-wrapper')) {
         return;
       }
 

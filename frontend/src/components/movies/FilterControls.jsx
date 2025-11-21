@@ -22,6 +22,8 @@ const FilterControls = ({ ...props }) => {
         onChange={(e) => props.setMinYear(e.target.value)}
         placeholder="Min Year"
         className="text-field year-input"
+        min="1888"
+        max={new Date().getFullYear()}
       />
       <input
         type="number"
@@ -29,6 +31,8 @@ const FilterControls = ({ ...props }) => {
         onChange={(e) => props.setMaxYear(e.target.value)}
         placeholder="Max Year"
         className="text-field year-input"
+        min="1888"
+        max={new Date().getFullYear()}
       />
       <StyledSelect
         isMulti
@@ -42,6 +46,20 @@ const FilterControls = ({ ...props }) => {
           props.setGenreTerm(selected ? selected.map((s) => s.value) : [])
         }
         placeholder="Select genres"
+        className="genre-select"
+      />
+      <StyledSelect
+        isMulti
+        closeMenuOnScroll={false}
+        closeMenuOnBlur={false}
+        options={props.memoizedCountryOptions || []}
+        value={(props.memoizedCountryOptions || []).filter((opt) =>
+          (props.countryTerm || []).includes(opt.value)
+        )}
+        onChange={(selected) =>
+          props.setCountryTerm?.(selected ? selected.map((s) => s.value) : [])
+        }
+        placeholder="Select countries"
       />
       <input
         type="number"
@@ -49,6 +67,8 @@ const FilterControls = ({ ...props }) => {
         onChange={(e) => props.setMinRating(e.target.value)}
         placeholder="Min Rating"
         className="text-field rating-input"
+        min="0"
+        max="10"
       />
       <input
         type="number"
@@ -56,6 +76,8 @@ const FilterControls = ({ ...props }) => {
         onChange={(e) => props.setMaxRating(e.target.value)}
         placeholder="Max Rating"
         className="text-field rating-input"
+        min="0"
+        max="10"
       />
     </div>
   );
