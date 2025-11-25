@@ -1,8 +1,14 @@
 @use "../ui";
+@use "../decorative/textures";
 
 .director-form {
   @include ui.glass-inner-container;
+  @include textures.brushed-metal;
 
+  border-radius: 0;
+  border: unset;
+  border-top: 1px solid white;
+  border-bottom: 1px solid #444;
   padding: 0;
 
   .form-group {

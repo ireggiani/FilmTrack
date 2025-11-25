@@ -26,25 +26,22 @@ if [ $? -ne 0 ]; then
 fi
 echo "Frontend build successful."
 
-# Start the backend server in the background
-echo "Starting backend server..."
+# Start the backend server which serves both API and static files
+echo "Starting production server..."
 cd "$SCRIPT_DIR/backend"
 npm start &
+SERVER_PID=$!
 cd "$SCRIPT_DIR"
 
-# Serve the production build of the frontend in the background
-echo "Serving production frontend..."
-# The default port for 'serve' is 3000
-npx serve -s "$SCRIPT_DIR/frontend/dist" &
-
-# Wait a few seconds to ensure the servers have time to start
-echo "Waiting for servers to initialize..."
+# Wait a few seconds to ensure the server has time to start
+echo "Waiting for server to initialize..."
 sleep 5
 
-FRONTEND_URL="http://localhost:3000"
+FRONTEND_URL="http://localhost:5000"
 
-echo "Opening application at $FRONTEND_URL"
-xdg-open "$FRONTEND_URL"
+echo "Production server started at $FRONTEND_URL"
+echo "Server will continue running in background after this script exits"
+echo "To stop the server, use: pkill -f 'node server.js'"
 
-# Wait for all background processes to complete
-wait
+# Wait for the server process to complete
+wait $SERVER_PID

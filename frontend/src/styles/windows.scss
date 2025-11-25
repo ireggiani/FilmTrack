@@ -1,4 +1,7 @@
-.glass-window {
+@use "./decorative/textures";
+@use "./ui";
+
+.window {
   position: fixed;
   top: 100px;
   left: 100px;
@@ -11,6 +14,14 @@
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   z-index: 200;
   overflow: hidden;
+
+  &--solid {
+    @extend .window;
+    background: #dcdcdc;
+    backdrop-filter: unset;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid #444;
+  }
 
   &.maximized {
     transform: none !important;
@@ -26,44 +37,18 @@
     cursor: move;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
+    &.metal {
+      @include textures.brushed-metal;
+      border-bottom: 1px solid #444;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+      margin-bottom: 2px;
+    }
+
     span {
       color: white;
       font-weight: 600;
       font-size: 0.8rem;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    }
-
-    .titlebar-button {
-      width: 24px;
-      height: 24px;
-      background: rgba(255, 255, 255, 0);
-      border: none;
-      border-radius: 0;
-      color: white;
-      cursor: default;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-      font-size: 0.8rem;
-      transition: background-color 0.2s ease;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      &:active {
-        background: rgba(255, 255, 255, 0.4);
-      }
-    }
-
-    .window-minimize {
-      /*       margin: -0.5rem 0;
- */
-    }
-
-    .window-maximize {
-      /* margin: -0.5rem 0; */
     }
 
     .window-close {
@@ -83,6 +68,11 @@
     padding: 0.5rem;
     max-height: calc(80vh - 32px);
     overflow-y: auto;
+  }
+
+  .window-content--compact {
+    @extend .window-content;
+    padding: 0;
   }
 }
 

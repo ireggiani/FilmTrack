@@ -27,21 +27,24 @@ const CountryWindow = ({
     onCountryAdded(); // Refresh the list
   }, [onCountryAdded]);
 
-  const handleCountryDelete = useCallback(async (countryId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/countries/${countryId}`,
-        {
-          method: "DELETE",
+  const handleCountryDelete = useCallback(
+    async (countryId) => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/countries/${countryId}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (response.ok) {
+          onCountryAdded(); // Refresh the list
         }
-      );
-      if (response.ok) {
-        onCountryAdded(); // Refresh the list
+      } catch (error) {
+        console.error("Error deleting country:", error);
       }
-    } catch (error) {
-      console.error("Error deleting country:", error);
-    }
-  }, [onCountryAdded]);
+    },
+    [onCountryAdded]
+  );
 
   if (!isOpen) return null;
 
@@ -55,7 +58,7 @@ const CountryWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "glass-window maximized" : "glass-window"}
+        className={isMaximized ? "window maximized" : "window"}
         onClick={onFocus}
         style={{
           ...(isMaximized

@@ -11,11 +11,13 @@ const MoviesWindow = ({
   onMinimize,
   onMoviesLoaded,
   refreshMovies,
+  setRefreshMovies,
   onFocus,
   zIndex,
 }) => {
   const nodeRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [hideAddForm, setHideAddForm] = useState(false);
 
   if (!isOpen) return null;
 
@@ -29,7 +31,7 @@ const MoviesWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "glass-window maximized" : "glass-window"}
+        className={isMaximized ? "window maximized" : "window"}
         onClick={onFocus}
         style={{
           ...(isMaximized
@@ -72,6 +74,22 @@ const MoviesWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
+              className="titlebar-button"
+              onClick={() => setHideAddForm(!hideAddForm)}
+              title="Toggle add movie form"
+              style={{ marginRight: "5px" }}
+            >
+              ➕
+            </button>
+            <button
+              className="titlebar-button"
+              onClick={() => setRefreshMovies((prev) => prev + 1)}
+              title="Refresh data"
+              style={{ marginRight: "5px" }}
+            >
+              🔄
+            </button>
+            <button
               className="titlebar-button window-minimize"
               onClick={onMinimize}
               title="Minimize"
@@ -109,6 +127,7 @@ const MoviesWindow = ({
           <MoviesTable
             refresh={refreshMovies}
             onMoviesLoaded={onMoviesLoaded}
+            hideAddForm={hideAddForm}
           />
         </div>
       </div>
@@ -124,6 +143,7 @@ MoviesWindow.propTypes = {
   movies: PropTypes.array,
   onMoviesLoaded: PropTypes.func,
   refreshMovies: PropTypes.number,
+  setRefreshMovies: PropTypes.func,
   onFocus: PropTypes.func,
   zIndex: PropTypes.number,
 };

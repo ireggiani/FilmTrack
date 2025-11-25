@@ -56,7 +56,7 @@ const ActorWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "glass-window maximized" : "glass-window"}
+        className={isMaximized ? "window maximized" : "window"}
         onClick={onFocus}
         style={{
           ...(isMaximized

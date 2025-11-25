@@ -1,0 +1,116 @@
+/* BUTTONS */
+@use "../decorative/textures";
+
+.btn {
+  background-image: linear-gradient(
+    0deg,
+    rgb(161, 161, 161),
+    rgb(246, 246, 246)
+  );
+  color: rgb(82, 82, 82);
+  cursor: default;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgb(112, 112, 112);
+  border-radius: 4px;
+  box-shadow: 0 1px 0px 0px rgb(205, 205, 205);
+  box-sizing: border-box;
+  filter: grayscale(1);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  outline: none;
+  /* text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); */
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus-visible {
+    outline: 1px dashed #000;
+    outline-offset: 1px;
+  }
+
+  &:active {
+    background-image: linear-gradient(
+      180deg,
+      rgb(161, 161, 161),
+      rgb(215, 215, 215)
+    );
+  }
+}
+
+.btn--metal {
+  @extend .btn;
+  @include textures.brushed-metal-vertical;
+}
+
+/** Title bar buttons - standard */
+.titlebar-button {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0);
+  border: none;
+  border-radius: 0;
+  color: white;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/** Light switch style, raised on one side and flat on the other
+* Active state has the raised and flat sides reversed
+*/
+.paddle-switch {
+  background: linear-gradient(
+    180deg,
+    hsl(0, 0%, 70%) 0%,
+    hsl(0, 0%, 88%) 47%,
+    hsl(0, 0%, 98%) 53%,
+    hsl(0, 0%, 90%) 100%
+  );
+  border: 1px solid black;
+  border-bottom: 3px solid #444;
+  color: #444;
+  text-shadow: unset;
+  outline: none;
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    background: linear-gradient(
+      180deg,
+      hsl(0, 0%, 75%) 0%,
+      hsl(0, 0%, 93%) 47%,
+      hsl(0, 0%, 100%) 53%,
+      hsl(0, 0%, 95%) 100%
+    );
+    outline: none;
+  }
+
+  &:active,
+  &.active {
+    background: linear-gradient(
+      0deg,
+      hsl(0, 0%, 70%) 0%,
+      hsl(0, 0%, 88%) 47%,
+      hsl(0, 0%, 78%) 53%,
+      hsl(0, 0%, 50%) 100%
+    );
+    border-top: 4px solid #ededed;
+    border-bottom: 1px solid #444;
+    outline: none;
+  }
+}

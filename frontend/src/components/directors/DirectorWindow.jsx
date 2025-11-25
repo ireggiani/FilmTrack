@@ -22,6 +22,7 @@ const DirectorWindow = ({
   const nodeRef = useRef(null);
   const [editingDirector, setEditingDirector] = useState(null);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [hideDirectorForm, setHideDirectorForm] = useState(false);
 
   if (!isOpen) return null;
 
@@ -56,7 +57,7 @@ const DirectorWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "glass-window maximized" : "glass-window"}
+        className={isMaximized ? "window maximized" : "window--solid"}
         onClick={onFocus}
         style={{
           ...(isMaximized
@@ -78,7 +79,7 @@ const DirectorWindow = ({
             : {}),
         }}
       >
-        <div className="window-titlebar">
+        <div className="window-titlebar metal">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span
               onDoubleClick={onClose}
@@ -95,26 +96,36 @@ const DirectorWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="titlebar-button window-minimize"
+              className={`titlebar-button paddle-switch${hideDirectorForm ? ' active' : ''}`}
+              onClick={() => setHideDirectorForm(!hideDirectorForm)}
+              title="Toggle add director form"
+            >
+              +
+            </button>
+            <button
+              className="titlebar-button window-minimize paddle-switch"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
             <button
-              className="titlebar-button window-maximize"
+              className="titlebar-button window-maximize paddle-switch"
               onClick={() => setIsMaximized(!isMaximized)}
               title={isMaximized ? "Restore" : "Maximize"}
             >
               {isMaximized ? "🗗" : "🗖"}
             </button>
-            <button className="titlebar-button window-close" onClick={onClose}>
+            <button
+              className="titlebar-button window-close paddle-switch"
+              onClick={onClose}
+            >
               🗙
             </button>
           </div>
         </div>
         <div
-          className="window-content"
+          className="window-content--compact"
           style={
             isMaximized
               ? {
@@ -129,6 +140,7 @@ const DirectorWindow = ({
             existingDirectors={directors}
             editingDirector={editingDirector}
             onEditComplete={handleEditComplete}
+            hideDirectorForm={hideDirectorForm}
           />
           <DirectorList
             refresh={refreshDirectors}

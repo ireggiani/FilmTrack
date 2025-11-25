@@ -6,6 +6,7 @@ const DirectorForm = ({
   existingDirectors = [],
   editingDirector,
   onEditComplete,
+  hideDirectorForm,
 }) => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,16 +73,17 @@ const DirectorForm = ({
   };
 
   return (
-    <form className="director-form" onSubmit={handleSubmit}>
+    <form
+      className={`director-form${hideDirectorForm ? " hide" : ""}`}
+      onSubmit={handleSubmit}
+    >
       <h2 className="heading-centre">
         {isEditing ? "Edit Director" : "Add New Director"}
       </h2>
 
       <div className="form-group">
-        <label htmlFor="directorName">Director Name</label>
         <input
           ref={inputRef}
-          id="directorName"
           type="text"
           value={name}
           onChange={(e) => {
@@ -89,6 +91,7 @@ const DirectorForm = ({
             setError("");
           }}
           placeholder="Enter director name"
+          aria-label="Director Name"
           disabled={loading}
           className="text-field"
         />
@@ -145,6 +148,7 @@ DirectorForm.propTypes = {
     name: PropTypes.string,
   }),
   onEditComplete: PropTypes.func,
+  hideDirectorForm: PropTypes.bool,
 };
 
 export default DirectorForm;

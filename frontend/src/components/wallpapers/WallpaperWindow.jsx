@@ -65,7 +65,7 @@ const WallpaperWindow = ({
     >
       <div
         ref={nodeRef}
-        className="glass-window"
+        className="window"
         onClick={onFocus}
         style={{
           width: "350px",

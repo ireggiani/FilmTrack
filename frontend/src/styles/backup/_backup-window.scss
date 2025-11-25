@@ -1,3 +1,55 @@
+@mixin paper-texture {
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(120, 119, 198, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(120, 119, 198, 0.15) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      135deg,
+      #f5f5dc 0%,
+      #faf0e6 25%,
+      #f5f5dc 50%,
+      #fdf5e6 75%,
+      #f5f5dc 100%
+    );
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+    border-radius: 10px;
+    pointer-events: none;
+  }
+}
+
 .backup-window {
   width: 600px;
   .window-content {
@@ -7,7 +59,8 @@
     justify-content: space-around;
 
     .backup-section,
-    .restore-section {
+    .restore-section,
+    .export-section {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
       padding: 15px;
@@ -15,33 +68,86 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-  }
 
-  p {
-    font-family: "Segoe UI Variable", "Segoe UI", Tahoma, Geneva, Verdana,
-      sans-serif;
-    font-size: 0.8em;
-    margin-top: 0;
-    margin-bottom: 10px;
-    color: #fff;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  }
+    .restore-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-  .restore-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+      .btn-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
 
-    button {
-      width: 100%;
-      margin-top: 10px;
+        button {
+          width: 50%;
+        }
+      }
     }
-  }
 
-  .message {
-    margin-top: 15px;
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
+    .export-section {
+      @include paper-texture;
+
+      .cta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        p {
+          color: black;
+          margin-bottom: 0;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+      }
+      fieldset {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 9px;
+
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 4px;
+
+        legend {
+          font-weight: bold;
+          color: black;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        label {
+          margin: 0;
+          display: flex;
+          align-items: baseline;
+          color: black;
+          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+
+          input {
+            margin-right: 2px;
+          }
+        }
+      }
+    }
+
+    .message {
+      text-align: center;
+      color: #fff;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+
+    p,
+    legend,
+    input,
+    label {
+      font-family: "Segoe UI Variable", "Segoe UI", Tahoma, Geneva, Verdana,
+        sans-serif;
+      font-size: 0.8em;
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
   }
 }

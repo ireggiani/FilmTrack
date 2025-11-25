@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import StyledSelect from "../ui/StyledSelect";
 import "../../styles/movies/_add-movie-form.scss";
 
-const AddMovieForm = ({ handleAddMovie, ...props }) => {
+const AddMovieForm = ({ handleAddMovie, hideAddForm, ...props }) => {
   const [newMovie, setNewMovie] = useState({
     title: "",
     alternativeTitle: "",
@@ -38,7 +38,29 @@ const AddMovieForm = ({ handleAddMovie, ...props }) => {
   };
 
   const onAddMovie = () => {
-    handleAddMovie(newMovie);
+    // Filter out invalid IDs that may have been deleted
+    const validGenreIds = newMovie.genreIds.filter(id => 
+      props.memoizedGenreOptions.some(opt => opt.value === id)
+    );
+    const validDirectorIds = newMovie.directorIds.filter(id => 
+      props.memoizedDirectorOptions.some(opt => opt.value === id)
+    );
+    const validActorIds = newMovie.actorIds.filter(id => 
+      props.memoizedActorOptions.some(opt => opt.value === id)
+    );
+    const validCountryIds = newMovie.countryIds.filter(id => 
+      props.memoizedCountryOptions.some(opt => opt.value === id)
+    );
+    
+    const validatedMovie = {
+      ...newMovie,
+      genreIds: validGenreIds,
+      directorIds: validDirectorIds,
+      actorIds: validActorIds,
+      countryIds: validCountryIds,
+    };
+    
+    handleAddMovie(validatedMovie);
     setNewMovie({
       title: "",
       alternativeTitle: "",
@@ -61,7 +83,7 @@ const AddMovieForm = ({ handleAddMovie, ...props }) => {
   };
 
   return (
-    <div className="add-movie-form">
+    <div className={`add-movie-form${hideAddForm ? ' hide' : ''}`}>
       <input
         ref={titleInputRef}
         type="text"

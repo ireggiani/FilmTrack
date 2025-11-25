@@ -120,10 +120,7 @@ function App() {
       } else if (windowId === "wallpaper") {
         if (wallpaperMinimized) setWallpaperMinimized(false);
         setTimeout(
-          () =>
-            document
-              .querySelector('.glass-window input[type="radio"]')
-              ?.focus(),
+          () => document.querySelector('.window input[type="radio"]')?.focus(),
           10
         );
       } else if (windowId === "countries") {
@@ -325,7 +322,7 @@ function App() {
   );
 
   return (
-    <div className="container">
+    <main className="container">
       <h1
         style={{
           color: "white",
@@ -337,6 +334,11 @@ function App() {
       >
         FilmTrack
       </h1>
+      <p id="system-watermark">
+        FilmTrack⁰⁶
+        <br />
+        Build 2000
+      </p>
       <GenreWindow
         isOpen={genreWindowOpen}
         isMinimized={genreMinimized}
@@ -403,6 +405,7 @@ function App() {
         movies={movies}
         onMoviesLoaded={handleMoviesLoaded}
         refreshMovies={refreshMovies}
+        setRefreshMovies={setRefreshMovies}
         onFocus={() => handleWindowFocus("movies")}
         zIndex={100 + windowStack.indexOf("movies")}
       />
@@ -420,12 +423,7 @@ function App() {
         onOpenWindow={openWindow}
         allWindows={allWindows}
       />
-      <p id="system-watermark">
-        FilmTrack⁰⁶
-        <br />
-        Build 1700
-      </p>
-    </div>
+    </main>
   );
 }
 

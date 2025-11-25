@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
+import API_BASE_URL from '../../config/api.js';
 
 export const useMovies = (refresh, onMoviesLoaded) => {
   const [movies, setMovies] = useState([]);
@@ -72,7 +73,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
 
   const fetchMovies = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/movies");
+      const response = await fetch(`${API_BASE_URL}/movies`);
       const data = await response.json();
       setMovies(data);
       onMoviesLoaded?.(data);
@@ -87,10 +88,10 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     try {
       const [genresRes, countriesRes, directorsRes, actorsRes] =
         await Promise.all([
-          fetch("http://localhost:5000/api/genres"),
-          fetch("http://localhost:5000/api/countries"),
-          fetch("http://localhost:5000/api/directors"),
-          fetch("http://localhost:5000/api/actors"),
+          fetch(`${API_BASE_URL}/genres`),
+          fetch(`${API_BASE_URL}/countries`),
+          fetch(`${API_BASE_URL}/directors`),
+          fetch(`${API_BASE_URL}/actors`),
         ]);
 
       setGenres(await genresRes.json());
@@ -111,7 +112,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     if (!newMovie.title.trim() || !newMovie.releaseYear) return;
 
     try {
-      const response = await fetch("http://localhost:5000/api/movies", {
+      const response = await fetch(`${API_BASE_URL}/movies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newMovie),
@@ -129,7 +130,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const handleUpdateMovie = useCallback(async (movieId, movieData) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/movies/${movieId}`,
+        `${API_BASE_URL}/movies/${movieId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -153,7 +154,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const handleDeleteMovie = useCallback(async (movieId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/movies/${movieId}`,
+        `${API_BASE_URL}/movies/${movieId}`,
         {
           method: "DELETE",
         }

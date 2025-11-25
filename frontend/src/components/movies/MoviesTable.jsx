@@ -6,7 +6,7 @@ import MoviesList from "./MoviesList";
 import ViewsManager from "./ViewsManager";
 import { useMovies } from "./useMovies";
 
-const MoviesTable = ({ refresh, onMoviesLoaded }) => {
+const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
   const {
     movies,
     loading,
@@ -75,7 +75,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
         {`[class*="dropdownIndicator"][class*="react-select"], [class*="indicatorSeparator"][class*="react-select"] { height: 24px !important; }`}
         {`.spreadsheet-table td { font-size: 12px !important; }`}
       </style>
-      <AddMovieForm {...addMovieFormProps} />
+      <AddMovieForm {...addMovieFormProps} hideAddForm={hideAddForm} />
       <ViewsManager
         sortConfig={sortConfig}
         searchTerm={searchTerm}
@@ -142,6 +142,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded }) => {
 MoviesTable.propTypes = {
   refresh: PropTypes.number,
   onMoviesLoaded: PropTypes.func,
+  hideAddForm: PropTypes.bool,
 };
 
 export default MoviesTable;

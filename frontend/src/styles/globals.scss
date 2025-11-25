@@ -1,5 +1,4 @@
 @forward "bluescreen";
-@forward "pill-item";
 @forward "ui";
 @forward "movies/views-manager";
 @forward "backup/backup-window";
@@ -157,4 +156,8 @@ h3 {
   &::placeholder {
     color: rgb(185, 185, 185);
   }
+}
+
+.hide {
+  display: none !important;
 }
