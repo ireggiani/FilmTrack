@@ -34,7 +34,7 @@ const DirectorForm = ({
         (director) => director.name.toLowerCase() === trimmedName.toLowerCase()
       );
       if (isDuplicate) {
-        setError("Director already exists");
+        setError("🚫 Director already exists.");
         return;
       }
     }
@@ -95,17 +95,6 @@ const DirectorForm = ({
           disabled={loading}
           className="text-field"
         />
-        {error && (
-          <p
-            style={{
-              color: "#ff6b6b",
-              fontSize: "0.9rem",
-              marginTop: "0.5rem",
-            }}
-          >
-            {error}
-          </p>
-        )}
       </div>
       <div className="buttons">
         {isEditing && (
@@ -117,6 +106,7 @@ const DirectorForm = ({
             ← Cancel Edit
           </button>
         )}
+        {error && <p className="error">{error}</p>}
         <button
           type="submit"
           className="btn submit"

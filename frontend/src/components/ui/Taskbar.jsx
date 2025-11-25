@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import StartButton from './StartButton';
 import StartMenu from './StartMenu';
 
-const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows }) => {
+const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows, focusedWindow }) => {
   const [time, setTime] = useState(new Date());
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
 
@@ -46,7 +46,7 @@ const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows }) => {
           {openWindows.map((window) => (
             <button
               key={window.id}
-              className="taskbar-item"
+              className={`taskbar-item${focusedWindow === window.id ? ' active' : ''}`}
               onClick={() => onWindowFocus(window.id)}
               title={window.title}
             >
@@ -78,6 +78,7 @@ Taskbar.propTypes = {
       icon: PropTypes.string.isRequired,
     })
   ).isRequired,
+  focusedWindow: PropTypes.string,
 };
 
 export default Taskbar;

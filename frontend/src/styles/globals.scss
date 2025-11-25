@@ -158,6 +158,18 @@ h3 {
   }
 }
 
+.error {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  border: 1px solid grey;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  color: red;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0 5px;
+}
+
 .hide {
   display: none !important;
 }

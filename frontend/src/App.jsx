@@ -422,6 +422,7 @@ function App() {
         onWindowFocus={handleWindowFocus}
         onOpenWindow={openWindow}
         allWindows={allWindows}
+        focusedWindow={focusedWindow}
       />
     </main>
   );
