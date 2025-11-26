@@ -39,11 +39,12 @@ const DirectorList = ({
   return (
     <div className="director-list">
       <div className="list-header">
-        <h3 className="heading-left">Existing Directors</h3>
+        <h3 className="heading-left--metal">Existing Directors</h3>
         <GlassCheckbox
           checked={alphabetical}
           onChange={(e) => setAlphabetical(e.target.checked)}
           label="Alphabetical"
+          labelClassName="metal"
         />
       </div>
       {directors.length === 0 ? (

@@ -34,7 +34,7 @@ const DirectorForm = ({
         (director) => director.name.toLowerCase() === trimmedName.toLowerCase()
       );
       if (isDuplicate) {
-        setError("🚫 Director already exists.");
+        setError("🚫 Error: That director already exists.");
         return;
       }
     }
@@ -77,7 +77,7 @@ const DirectorForm = ({
       className={`director-form${hideDirectorForm ? " hide" : ""}`}
       onSubmit={handleSubmit}
     >
-      <h2 className="heading-centre">
+      <h2 className="heading-centre--metal">
         {isEditing ? "Edit Director" : "Add New Director"}
       </h2>
 
@@ -97,29 +97,31 @@ const DirectorForm = ({
         />
       </div>
       <div className="buttons">
-        {isEditing && (
+        <div className="buttons-inner">
+          {isEditing && (
+            <button
+              type="button"
+              onClick={() => onEditComplete?.()}
+              className="btn"
+            >
+              ← Cancel Edit
+            </button>
+          )}
+          {error && <p className="error">{error}</p>}
           <button
-            type="button"
-            onClick={() => onEditComplete?.()}
-            className="btn"
+            type="submit"
+            className="btn submit"
+            disabled={loading || !name.trim()}
           >
-            ← Cancel Edit
+            {loading
+              ? isEditing
+                ? "Updating..."
+                : "Adding..."
+              : isEditing
+              ? "Update Director"
+              : "Add Director"}
           </button>
-        )}
-        {error && <p className="error">{error}</p>}
-        <button
-          type="submit"
-          className="btn submit"
-          disabled={loading || !name.trim()}
-        >
-          {loading
-            ? isEditing
-              ? "Updating..."
-              : "Adding..."
-            : isEditing
-            ? "Update Director"
-            : "Add Director"}
-        </button>
+        </div>
       </div>
     </form>
   );

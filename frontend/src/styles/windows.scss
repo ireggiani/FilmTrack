@@ -17,10 +17,11 @@
 
   &--solid {
     @extend .window;
-    background: #dcdcdc;
+    @include textures.brushed-metal-grey;
     backdrop-filter: unset;
     border-radius: 0 0 8px 8px;
     border: 1px solid #666;
+    box-shadow: 0 4px 16px 0 rgba(38, 38, 38, 0.75);
   }
 
   &.maximized {
@@ -52,7 +53,6 @@
     }
 
     .window-close {
-      font-size: 1rem;
       margin: 0rem -1rem 0 0;
       &:hover {
         background: rgba(255, 100, 100, 0.4);

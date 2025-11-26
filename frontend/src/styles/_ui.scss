@@ -1,6 +1,7 @@
 @use "./ui/buttons";
 @use "./ui/_pill-item.scss";
 @use "./ui/_start-menu.scss";
+@use "./decorative/textures";
 
 @mixin glass-inner-container {
   background: rgba(100, 100, 255, 0.1);
@@ -22,6 +23,15 @@
   margin-left: auto;
   padding: 0 0.5rem;
   text-align: center;
+
+  &--metal {
+    @extend .heading-centre;
+    @include textures.brushed-metal-grey;
+    border: unset;
+    box-shadow: inset 0 -1px 0px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 8px 1px rgba(25, 25, 25, 0.5);
+    margin-top: -1px;
+  }
 }
 
 .heading-left {
@@ -34,6 +44,18 @@
   margin-right: auto;
   padding: 0.25rem 0.5rem 0.45rem;
   text-align: left;
+
+  &--metal {
+    @extend .heading-centre;
+    @include textures.brushed-metal-grey;
+    border-right: unset;
+    border-bottom: unset;
+    border-bottom-left-radius: 0px;
+    box-shadow: inset -1px -1px 0px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 8px 1px rgba(25, 25, 25, 0.5);
+    margin-top: -6px;
+    margin-left: -1px;
+  }
 }
 
 /* CHECKBOX */
@@ -86,5 +108,11 @@
         text-shadow: 0 1px 3px rgba(0, 0, 0, 1), 0 0 5px rgba(0, 0, 0, 0.8);
       }
     }
+  }
+
+  &.metal {
+    @extend .checkbox;
+    backdrop-filter: unset;
+    box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
   }
 }

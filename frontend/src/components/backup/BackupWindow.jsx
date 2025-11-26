@@ -58,7 +58,7 @@ const BackupWindow = ({
 
   const handleRestore = async () => {
     if (!file) {
-      setMessage("Please select a file to restore.");
+      setMessage("Select a file to restore.");
       return;
     }
 

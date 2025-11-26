@@ -57,7 +57,7 @@ const DirectorWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "window maximized" : "window--solid"}
+        className={isMaximized ? "window--solid maximized" : "window--solid"}
         onClick={onFocus}
         style={{
           ...(isMaximized
@@ -96,7 +96,9 @@ const DirectorWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className={`titlebar-button paddle-switch${hideDirectorForm ? ' active' : ''}`}
+              className={`titlebar-button paddle-switch${
+                hideDirectorForm ? " active" : ""
+              }`}
               onClick={() => setHideDirectorForm(!hideDirectorForm)}
               title="Toggle add director form"
             >

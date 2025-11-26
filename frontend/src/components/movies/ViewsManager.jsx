@@ -54,7 +54,7 @@ const ViewsManager = ({
 
   const handleSaveView = async () => {
     if (!viewName) {
-      alert("Please enter a name for the view.");
+      alert("Enter a name for the view.");
       return;
     }
 

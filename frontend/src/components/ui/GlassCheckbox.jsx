@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
-const GlassCheckbox = ({ checked, onChange, label, ...props }) => {
+const GlassCheckbox = ({ checked, onChange, label, labelClassName, ...props }) => {
   return (
-    <label className="checkbox">
+    <label className={`checkbox${labelClassName ? ` ${labelClassName}` : ''}`}>
       <span className="checkbox__inner">
         <input
           type="checkbox"
@@ -21,6 +21,7 @@ GlassCheckbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  labelClassName: PropTypes.string,
 };
 
 export default GlassCheckbox;
