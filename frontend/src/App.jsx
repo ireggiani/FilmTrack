@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
-import GenreWindow from "./components/genres/GenreWindow";
-import WallpaperWindow from "./components/wallpapers/WallpaperWindow";
-import CountryWindow from "./components/countries/CountryWindow";
-import DirectorWindow from "./components/directors/DirectorWindow";
-import ActorWindow from "./components/actors/ActorWindow";
-import MoviesWindow from "./components/movies/MoviesWindow";
-import BackupWindow from "./components/backup/BackupWindow";
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
+const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
+const WallpaperWindow = lazy(() => import("./components/wallpapers/WallpaperWindow"));
+const CountryWindow = lazy(() => import("./components/countries/CountryWindow"));
+const DirectorWindow = lazy(() => import("./components/directors/DirectorWindow"));
+const ActorWindow = lazy(() => import("./components/actors/ActorWindow"));
 import Taskbar from "./components/ui/Taskbar";
+
+const BackupWindow = lazy(() => import("./components/backup/BackupWindow"));
+const MoviesWindow = lazy(() => import("./components/movies/MoviesWindow"));
 import "./styles/globals.scss";
 import "./styles/windows.scss";
 import "./styles/scrollbar.scss";
@@ -337,86 +338,114 @@ function App() {
       <p id="system-watermark">
         FilmTrack⁰⁶
         <br />
-        Build 2000
+        Build 2001
       </p>
-      <GenreWindow
-        isOpen={genreWindowOpen}
-        isMinimized={genreMinimized}
-        onClose={handleCloseGenreWindow}
-        onMinimize={handleMinimizeGenreWindow}
-        genres={genres}
-        onGenreAdded={handleGenreAdded}
-        onGenresLoaded={handleGenresLoaded}
-        refreshGenres={refreshGenres}
-        onFocus={() => handleWindowFocus("genres")}
-        zIndex={100 + windowStack.indexOf("genres")}
-      />
-      <WallpaperWindow
-        isOpen={wallpaperWindowOpen}
-        isMinimized={wallpaperMinimized}
-        onClose={handleCloseWallpaperWindow}
-        onMinimize={handleMinimizeWallpaperWindow}
-        currentWallpaper={wallpaper}
-        onWallpaperChange={handleWallpaperChange}
-        onFocus={() => handleWindowFocus("wallpaper")}
-        zIndex={100 + windowStack.indexOf("wallpaper")}
-      />
-      <CountryWindow
-        isOpen={countryWindowOpen}
-        isMinimized={countryMinimized}
-        onClose={handleCloseCountryWindow}
-        onMinimize={handleMinimizeCountryWindow}
-        countries={countries}
-        onCountryAdded={handleCountryAdded}
-        onCountriesLoaded={handleCountriesLoaded}
-        refreshCountries={refreshCountries}
-        onFocus={() => handleWindowFocus("countries")}
-        zIndex={100 + windowStack.indexOf("countries")}
-      />
-      <DirectorWindow
-        isOpen={directorWindowOpen}
-        isMinimized={directorMinimized}
-        onClose={handleCloseDirectorWindow}
-        onMinimize={handleMinimizeDirectorWindow}
-        directors={directors}
-        onDirectorAdded={handleDirectorAdded}
-        onDirectorsLoaded={handleDirectorsLoaded}
-        refreshDirectors={refreshDirectors}
-        onFocus={() => handleWindowFocus("directors")}
-        zIndex={100 + windowStack.indexOf("directors")}
-      />
-      <ActorWindow
-        isOpen={actorWindowOpen}
-        isMinimized={actorMinimized}
-        onClose={handleCloseActorWindow}
-        onMinimize={handleMinimizeActorWindow}
-        actors={actors}
-        onActorAdded={handleActorAdded}
-        onActorsLoaded={handleActorsLoaded}
-        refreshActors={refreshActors}
-        onFocus={() => handleWindowFocus("actors")}
-        zIndex={100 + windowStack.indexOf("actors")}
-      />
-      <MoviesWindow
-        isOpen={moviesWindowOpen}
-        isMinimized={moviesMinimized}
-        onClose={handleCloseMoviesWindow}
-        onMinimize={handleMinimizeMoviesWindow}
-        movies={movies}
-        onMoviesLoaded={handleMoviesLoaded}
-        refreshMovies={refreshMovies}
-        setRefreshMovies={setRefreshMovies}
-        onFocus={() => handleWindowFocus("movies")}
-        zIndex={100 + windowStack.indexOf("movies")}
-      />
-      <BackupWindow
-        isOpen={backupWindowOpen}
-        isMinimized={backupMinimized}
-        onClose={handleCloseBackupWindow}
-        onMinimize={handleMinimizeBackupWindow}
-        onFocus={() => handleWindowFocus("backup")}
-        zIndex={100 + windowStack.indexOf("backup")}
-      />
+      {genreWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <GenreWindow
+            isOpen={genreWindowOpen}
+            isMinimized={genreMinimized}
+            onClose={handleCloseGenreWindow}
+            onMinimize={handleMinimizeGenreWindow}
+            genres={genres}
+            onGenreAdded={handleGenreAdded}
+            onGenresLoaded={handleGenresLoaded}
+            refreshGenres={refreshGenres}
+            onFocus={() => handleWindowFocus("genres")}
+            zIndex={100 + windowStack.indexOf("genres")}
+          />
+        </Suspense>
+      )}
+      {wallpaperWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <WallpaperWindow
+            isOpen={wallpaperWindowOpen}
+            isMinimized={wallpaperMinimized}
+            onClose={handleCloseWallpaperWindow}
+            onMinimize={handleMinimizeWallpaperWindow}
+            currentWallpaper={wallpaper}
+            onWallpaperChange={handleWallpaperChange}
+            onFocus={() => handleWindowFocus("wallpaper")}
+            zIndex={100 + windowStack.indexOf("wallpaper")}
+          />
+        </Suspense>
+      )}
+      {countryWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <CountryWindow
+            isOpen={countryWindowOpen}
+            isMinimized={countryMinimized}
+            onClose={handleCloseCountryWindow}
+            onMinimize={handleMinimizeCountryWindow}
+            countries={countries}
+            onCountryAdded={handleCountryAdded}
+            onCountriesLoaded={handleCountriesLoaded}
+            refreshCountries={refreshCountries}
+            onFocus={() => handleWindowFocus("countries")}
+            zIndex={100 + windowStack.indexOf("countries")}
+          />
+        </Suspense>
+      )}
+      {directorWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <DirectorWindow
+            isOpen={directorWindowOpen}
+            isMinimized={directorMinimized}
+            onClose={handleCloseDirectorWindow}
+            onMinimize={handleMinimizeDirectorWindow}
+            directors={directors}
+            onDirectorAdded={handleDirectorAdded}
+            onDirectorsLoaded={handleDirectorsLoaded}
+            refreshDirectors={refreshDirectors}
+            onFocus={() => handleWindowFocus("directors")}
+            zIndex={100 + windowStack.indexOf("directors")}
+          />
+        </Suspense>
+      )}
+      {actorWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <ActorWindow
+            isOpen={actorWindowOpen}
+            isMinimized={actorMinimized}
+            onClose={handleCloseActorWindow}
+            onMinimize={handleMinimizeActorWindow}
+            actors={actors}
+            onActorAdded={handleActorAdded}
+            onActorsLoaded={handleActorsLoaded}
+            refreshActors={refreshActors}
+            onFocus={() => handleWindowFocus("actors")}
+            zIndex={100 + windowStack.indexOf("actors")}
+          />
+        </Suspense>
+      )}
+      {moviesWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <MoviesWindow
+            isOpen={moviesWindowOpen}
+            isMinimized={moviesMinimized}
+            onClose={handleCloseMoviesWindow}
+            onMinimize={handleMinimizeMoviesWindow}
+            movies={movies}
+            onMoviesLoaded={handleMoviesLoaded}
+            refreshMovies={refreshMovies}
+            setRefreshMovies={setRefreshMovies}
+            onFocus={() => handleWindowFocus("movies")}
+            zIndex={100 + windowStack.indexOf("movies")}
+          />
+        </Suspense>
+      )}
+      {backupWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <BackupWindow
+            isOpen={backupWindowOpen}
+            isMinimized={backupMinimized}
+            onClose={handleCloseBackupWindow}
+            onMinimize={handleMinimizeBackupWindow}
+            onFocus={() => handleWindowFocus("backup")}
+            zIndex={100 + windowStack.indexOf("backup")}
+          />
+        </Suspense>
+      )}
       <Taskbar
         openWindows={memoizedOpenWindows}
         onWindowFocus={handleWindowFocus}
