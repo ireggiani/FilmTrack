@@ -112,7 +112,9 @@ const DirectorWindow = ({
               🗕
             </button>
             <button
-              className="titlebar-button window-maximize paddle-switch"
+              className={`titlebar-button window-maximize paddle-switch ${
+                isMaximized ? " active" : ""
+              }`}
               onClick={() => setIsMaximized(!isMaximized)}
               title={isMaximized ? "Restore" : "Maximize"}
             >

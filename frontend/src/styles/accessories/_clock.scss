@@ -1,0 +1,137 @@
+@use "../decorative/textures";
+
+.clock-window {
+  width: 220px;
+  height: 235px;
+
+  .clock-content {
+    @include textures.brushed-metal-grey;
+    padding: 15px;
+    /* height: 100%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clock-face {
+    width: 180px;
+    height: 180px;
+    position: relative;
+  }
+
+  .clock-bezel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 30% 30%,
+      rgba(255, 255, 255, 0.8) 0%,
+      rgba(255, 255, 255, 0.4) 30%,
+      rgba(200, 200, 200, 0.6) 70%,
+      rgba(150, 150, 150, 0.9) 100%
+    );
+    box-shadow: inset 0 2px 8px rgba(255, 255, 255, 0.6),
+      inset 0 -4px 12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4),
+      0 2px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle at 25% 25%,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.1) 60%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+  }
+
+  .clock-inner {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffffff 0%, #f8f8f8 50%, #e8e8e8 100%);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .hour-marker {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    margin-top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+    transform-origin: center center;
+  }
+
+  .clock-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    margin-top: -6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #666 0%, #333 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+
+  .clock-hand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    border-radius: 2px;
+
+    &.hour-hand {
+      width: 4px;
+      height: 50px;
+      margin-left: -2px;
+      margin-top: -50px;
+      background: linear-gradient(to bottom, #333 0%, #666 50%, #333 100%);
+      box-shadow: 1px 0 2px rgba(0, 0, 0, 0.3);
+      z-index: 3;
+    }
+
+    &.minute-hand {
+      width: 3px;
+      height: 70px;
+      margin-left: -1.5px;
+      margin-top: -70px;
+      background: linear-gradient(to bottom, #222 0%, #555 50%, #222 100%);
+      box-shadow: 1px 0 2px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+
+    &.second-hand {
+      width: 1px;
+      height: 75px;
+      margin-left: -0.5px;
+      margin-top: -75px;
+      background: #e74c3c;
+      box-shadow: 1px 0 1px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      transition: transform 0.1s ease-out;
+    }
+  }
+}

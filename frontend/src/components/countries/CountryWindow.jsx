@@ -58,7 +58,7 @@ const CountryWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "window maximized" : "window"}
+        className={isMaximized ? "window--paper maximized" : "window--paper"}
         onClick={onFocus}
         style={{
           ...(isMaximized
@@ -80,7 +80,7 @@ const CountryWindow = ({
             : {}),
         }}
       >
-        <div className="window-titlebar">
+        <div className="window-titlebar leather">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span
               onDoubleClick={onClose}
@@ -132,6 +132,7 @@ const CountryWindow = ({
             editingCountry={editingCountry}
             onEditComplete={handleEditComplete}
           />
+          <hr className="paper" />
           <CountryList
             refresh={refreshCountries}
             onCountriesLoaded={onCountriesLoaded}

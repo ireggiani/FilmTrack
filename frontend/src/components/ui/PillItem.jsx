@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const PillItem = ({ id, name, icon, onEdit, onDelete }) => {
+const PillItem = ({ id, name, icon, onEdit, onDelete, className }) => {
   const handleEditClick = (e) => {
     e.target.blur();
     onEdit?.({ id, name, icon });
@@ -16,7 +16,7 @@ const PillItem = ({ id, name, icon, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="pill-item">
+    <div className={`pill-item${className ? ` ${className}` : ""}`}>
       <button
         onClick={handleEditClick}
         className={`pill-edit-button ${icon ? "with-icon" : ""}`}
@@ -42,6 +42,7 @@ PillItem.propTypes = {
   icon: PropTypes.string,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default PillItem;

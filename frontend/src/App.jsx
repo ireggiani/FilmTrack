@@ -1,9 +1,25 @@
-import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  lazy,
+  Suspense,
+} from "react";
 const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
-const WallpaperWindow = lazy(() => import("./components/wallpapers/WallpaperWindow"));
-const CountryWindow = lazy(() => import("./components/countries/CountryWindow"));
-const DirectorWindow = lazy(() => import("./components/directors/DirectorWindow"));
+const WallpaperWindow = lazy(() =>
+  import("./components/wallpapers/WallpaperWindow")
+);
+const CountryWindow = lazy(() =>
+  import("./components/countries/CountryWindow")
+);
+const DirectorWindow = lazy(() =>
+  import("./components/directors/DirectorWindow")
+);
 const ActorWindow = lazy(() => import("./components/actors/ActorWindow"));
+const Calculator = lazy(() => import("./components/accessories/Calculator"));
+const Calendar = lazy(() => import("./components/accessories/Calendar"));
+const Clock = lazy(() => import("./components/accessories/Clock"));
 import Taskbar from "./components/ui/Taskbar";
 
 const BackupWindow = lazy(() => import("./components/backup/BackupWindow"));
@@ -32,6 +48,9 @@ function App() {
   const [actorWindowOpen, setActorWindowOpen] = useState(false);
   const [moviesWindowOpen, setMoviesWindowOpen] = useState(false);
   const [backupWindowOpen, setBackupWindowOpen] = useState(false);
+  const [calculatorWindowOpen, setCalculatorWindowOpen] = useState(false);
+  const [calendarWindowOpen, setCalendarWindowOpen] = useState(false);
+  const [clockWindowOpen, setClockWindowOpen] = useState(false);
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [genreMinimized, setGenreMinimized] = useState(false);
   const [wallpaperMinimized, setWallpaperMinimized] = useState(false);
@@ -40,6 +59,9 @@ function App() {
   const [actorMinimized, setActorMinimized] = useState(false);
   const [moviesMinimized, setMoviesMinimized] = useState(false);
   const [backupMinimized, setBackupMinimized] = useState(false);
+  const [calculatorMinimized, setCalculatorMinimized] = useState(false);
+  const [calendarMinimized, setCalendarMinimized] = useState(false);
+  const [clockMinimized, setClockMinimized] = useState(false);
   const [windowStack, setWindowStack] = useState([]);
 
   const handleGenreAdded = useCallback(() => {
@@ -137,6 +159,12 @@ function App() {
         if (moviesMinimized) setMoviesMinimized(false);
       } else if (windowId === "backup") {
         if (backupMinimized) setBackupMinimized(false);
+      } else if (windowId === "calculator") {
+        if (calculatorMinimized) setCalculatorMinimized(false);
+      } else if (windowId === "calendar") {
+        if (calendarMinimized) setCalendarMinimized(false);
+      } else if (windowId === "clock") {
+        if (clockMinimized) setClockMinimized(false);
       }
     },
     [
@@ -147,6 +175,9 @@ function App() {
       actorMinimized,
       moviesMinimized,
       backupMinimized,
+      calculatorMinimized,
+      calendarMinimized,
+      clockMinimized,
     ]
   );
 
@@ -173,6 +204,13 @@ function App() {
       ...(backupWindowOpen
         ? [{ id: "backup", title: "Backup & Restore", icon: "💾" }]
         : []),
+      ...(calculatorWindowOpen
+        ? [{ id: "calculator", title: "Calculator", icon: "🔢" }]
+        : []),
+      ...(calendarWindowOpen
+        ? [{ id: "calendar", title: "Calendar", icon: "📅" }]
+        : []),
+      ...(clockWindowOpen ? [{ id: "clock", title: "Clock", icon: "🕐" }] : []),
     ],
     [
       genreWindowOpen,
@@ -182,6 +220,9 @@ function App() {
       actorWindowOpen,
       moviesWindowOpen,
       backupWindowOpen,
+      calculatorWindowOpen,
+      calendarWindowOpen,
+      clockWindowOpen,
     ]
   );
 
@@ -194,6 +235,9 @@ function App() {
       { id: "actors", title: "Actors Manager", icon: "🎭" },
       { id: "movies", title: "Movies Collection", icon: "🎬" },
       { id: "backup", title: "Backup & Restore", icon: "💾" },
+      { id: "calculator", title: "Calculator", icon: "🔢" },
+      { id: "calendar", title: "Calendar", icon: "📅" },
+      { id: "clock", title: "Clock", icon: "🕐" },
     ],
     []
   );
@@ -221,6 +265,15 @@ function App() {
           break;
         case "backup":
           setBackupWindowOpen(true);
+          break;
+        case "calculator":
+          setCalculatorWindowOpen(true);
+          break;
+        case "calendar":
+          setCalendarWindowOpen(true);
+          break;
+        case "clock":
+          setClockWindowOpen(true);
           break;
         default:
           break;
@@ -252,6 +305,15 @@ function App() {
         break;
       case "backup":
         setBackupWindowOpen(false);
+        break;
+      case "calculator":
+        setCalculatorWindowOpen(false);
+        break;
+      case "calendar":
+        setCalendarWindowOpen(false);
+        break;
+      case "clock":
+        setClockWindowOpen(false);
         break;
       default:
         break;
@@ -322,6 +384,76 @@ function App() {
     []
   );
 
+  const handleCloseCalculatorWindow = useCallback(
+    () => closeWindow("calculator"),
+    [closeWindow]
+  );
+  const handleMinimizeCalculatorWindow = useCallback(
+    () => setCalculatorMinimized(true),
+    []
+  );
+
+  const handleCloseCalendarWindow = useCallback(
+    () => closeWindow("calendar"),
+    [closeWindow]
+  );
+  const handleMinimizeCalendarWindow = useCallback(
+    () => setCalendarMinimized(true),
+    []
+  );
+
+  const handleCloseClockWindow = useCallback(
+    () => closeWindow("clock"),
+    [closeWindow]
+  );
+  const handleMinimizeClockWindow = useCallback(
+    () => setClockMinimized(true),
+    []
+  );
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if user is typing in an input/textarea
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+        return;
+
+      // Ctrl/Cmd + M = Movies
+      if ((e.ctrlKey || e.metaKey) && e.key === "m") {
+        e.preventDefault();
+        openWindow("movies");
+      }
+      // Ctrl/Cmd + G = Genres
+      else if ((e.ctrlKey || e.metaKey) && e.key === "g") {
+        e.preventDefault();
+        openWindow("genres");
+      }
+      // Ctrl/Cmd + D = Directors
+      else if ((e.ctrlKey || e.metaKey) && e.key === "d") {
+        e.preventDefault();
+        openWindow("directors");
+      }
+      // Ctrl/Cmd + Shift + A = Actors
+      else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "A") {
+        e.preventDefault();
+        openWindow("actors");
+      }
+      // Ctrl/Cmd + Shift + C = Countries
+      else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+        openWindow("countries");
+      }
+      // Ctrl/Cmd + B = Backup
+      else if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+        e.preventDefault();
+        openWindow("backup");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [openWindow]);
+
   return (
     <main className="container">
       <h1
@@ -338,7 +470,7 @@ function App() {
       <p id="system-watermark">
         FilmTrack⁰⁶
         <br />
-        Build 2001
+        Build 2100
       </p>
       {genreWindowOpen && (
         <Suspense fallback={<div>Loading...</div>}>
@@ -443,6 +575,42 @@ function App() {
             onMinimize={handleMinimizeBackupWindow}
             onFocus={() => handleWindowFocus("backup")}
             zIndex={100 + windowStack.indexOf("backup")}
+          />
+        </Suspense>
+      )}
+      {calculatorWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Calculator
+            isOpen={calculatorWindowOpen}
+            isMinimized={calculatorMinimized}
+            onClose={handleCloseCalculatorWindow}
+            onMinimize={handleMinimizeCalculatorWindow}
+            onFocus={() => handleWindowFocus("calculator")}
+            zIndex={100 + windowStack.indexOf("calculator")}
+          />
+        </Suspense>
+      )}
+      {calendarWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Calendar
+            isOpen={calendarWindowOpen}
+            isMinimized={calendarMinimized}
+            onClose={handleCloseCalendarWindow}
+            onMinimize={handleMinimizeCalendarWindow}
+            onFocus={() => handleWindowFocus("calendar")}
+            zIndex={100 + windowStack.indexOf("calendar")}
+          />
+        </Suspense>
+      )}
+      {clockWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Clock
+            isOpen={clockWindowOpen}
+            isMinimized={clockMinimized}
+            onClose={handleCloseClockWindow}
+            onMinimize={handleMinimizeClockWindow}
+            onFocus={() => handleWindowFocus("clock")}
+            zIndex={100 + windowStack.indexOf("clock")}
           />
         </Suspense>
       )}

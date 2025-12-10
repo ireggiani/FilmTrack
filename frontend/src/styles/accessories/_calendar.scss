@@ -1,0 +1,107 @@
+@use "../decorative/textures";
+
+.calendar-window {
+  width: 300px;
+  height: 350px;
+
+  .calendar-content {
+    @include textures.brushed-metal-grey;
+    padding: 10px;
+    /* height: 100%; */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+
+    .nav-btn {
+      background: linear-gradient(180deg, #f0f0f0 0%, #d0d0d0 100%);
+      border: 1px solid #999;
+      border-radius: 3px;
+      width: 30px;
+      height: 25px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: linear-gradient(180deg, #f5f5f5 0%, #d5d5d5 100%);
+      }
+
+      &:active {
+        background: linear-gradient(0deg, #f0f0f0 0%, #d0d0d0 100%);
+      }
+    }
+
+    .month-year {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #333;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    flex: 1;
+    background: #999;
+    border: 1px solid #666;
+  }
+
+  .day-header {
+    background: linear-gradient(180deg, #e0e0e0 0%, #c0c0c0 100%);
+    padding: 5px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #999;
+  }
+
+  .calendar-day {
+    background: #fff;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 25px;
+
+    &:hover {
+      background: #e6f3ff;
+    }
+
+    &.today {
+      background: #4a90e2;
+      color: white;
+      font-weight: bold;
+
+      &:hover {
+        background: #357abd;
+      }
+    }
+
+    &.prev-month,
+    &.next-month {
+      color: #999;
+      background: #f5f5f5;
+
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+}

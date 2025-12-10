@@ -10,6 +10,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
   const {
     movies,
     loading,
+    error,
     sortConfig,
     searchTerm,
     minYear,
@@ -64,6 +65,20 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
     return (
       <div className="glass loading-container">
         <span className="loading-text">🎞️ Loading movies... 📽️</span>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="glass loading-container" style={{ padding: '2rem' }}>
+        <span className="loading-text" style={{ color: '#ff6b6b' }}>❌ {error}</span>
+        <button 
+          className="btn" 
+          onClick={() => window.location.reload()} 
+          style={{ marginTop: '1rem' }}
+        >
+          Retry
+        </button>
       </div>
     );
 

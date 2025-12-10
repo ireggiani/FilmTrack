@@ -21,6 +21,7 @@
         border-radius: 3px;
         padding: 8px 12px;
         cursor: pointer;
+        position: relative;
 
         &:hover {
           background: linear-gradient(
@@ -29,6 +30,34 @@
             rgb(161, 230, 235)
           );
           border-color: aquamarine;
+        }
+        
+        &.submenu {
+          &:hover .submenu-items {
+            display: block;
+          }
+        }
+      }
+      
+      .submenu-items {
+        display: none;
+        position: absolute;
+        left: 100%;
+        bottom: 0;
+        width: 150px;
+        background: white;
+        border: 1px solid #666;
+        border-radius: 3px;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        z-index: 1001;
+        
+        li {
+          padding: 6px 10px;
+          font-size: 0.75rem;
+          
+          &:hover {
+            background: #e0e0e0;
+          }
         }
       }
     }
@@ -44,6 +73,10 @@
 
       li {
         font-size: 0.8rem;
+        
+        &:not(.submenu) {
+          // Main menu items only
+        }
       }
     }
   }

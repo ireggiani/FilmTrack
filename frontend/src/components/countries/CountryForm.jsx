@@ -38,7 +38,7 @@ const CountryForm = ({
         (country) => country.name.toLowerCase() === trimmedName.toLowerCase()
       );
       if (isDuplicate) {
-        setError("Country already exists");
+        setError("🚫 Error: Country with that name already exists.");
         return;
       }
     }
@@ -79,13 +79,15 @@ const CountryForm = ({
 
   return (
     <form className="country-form" onSubmit={handleSubmit}>
-      <h2 className="heading-centre">
+      <h2 className="heading-centre--paper">
         {isEditing ? "Edit Country" : "Add New Country"}
       </h2>
 
       <div className="inputs">
         <div className="form-group">
-          <label htmlFor={`countryName-${formId}`}>Country Name</label>
+          <label htmlFor={`countryName-${formId}`} className="paper">
+            Country Name
+          </label>
           <input
             ref={inputRef}
             id={`countryName-${formId}`}
@@ -101,41 +103,43 @@ const CountryForm = ({
           />
         </div>
         <div className="form-group">
-          <label htmlFor={`flagEmoji-${formId}`}>Flag Emoji</label>
+          <label htmlFor={`flagEmoji-${formId}`} className="paper">
+            Flag Emoji
+          </label>
           <input
             id={`flagEmoji-${formId}`}
             type="text"
             value={flagEmoji}
             onChange={(e) => {
-              setFlagEmoji(e.target.value);
-              setError("");
+              const value = e.target.value;
+              // Limit to 4 characters (max for complex emoji like flags)
+              if (value.length <= 4) {
+                setFlagEmoji(value);
+                setError("");
+              }
             }}
             placeholder="🇺🇸"
             disabled={loading}
             className="text-field"
+            maxLength={4}
           />
         </div>
       </div>
-      {error && (
-        <p
-          style={{ color: "#ff6b6b", fontSize: "0.9rem", marginTop: "0.5rem" }}
-        >
-          {error}
-        </p>
-      )}
+
       <div className="buttons">
         {isEditing && (
           <button
             type="button"
             onClick={() => onEditComplete?.()}
-            className="btn"
+            className="btn--cork"
           >
             ← Cancel Edit
           </button>
         )}
+        {error && <p className="error--paper">{error}</p>}
         <button
           type="submit"
-          className="btn submit"
+          className="btn--cork submit"
           disabled={loading || !name.trim() || !flagEmoji.trim()}
         >
           {loading

@@ -126,6 +126,172 @@
     );
 }
 
+@mixin cartography-paper {
+  background: linear-gradient(
+      90deg,
+      rgba(139, 69, 19, 0.1) 0px,
+      transparent 1px
+    ),
+    linear-gradient(0deg, rgba(139, 69, 19, 0.1) 0px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 69, 19, 0.05) 0px, transparent 2px),
+    linear-gradient(0deg, rgba(139, 69, 19, 0.05) 0px, transparent 2px),
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(160, 82, 45, 0.08) 0%,
+      transparent 15%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(160, 82, 45, 0.06) 0%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 40% 80%,
+      rgba(139, 69, 19, 0.04) 0%,
+      transparent 25%
+    ),
+    linear-gradient(45deg, rgba(222, 184, 135, 0.03) 25%, transparent 25%),
+    #f5f5dc;
+  background-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px, 200px 200px,
+    180px 180px, 150px 150px, 40px 40px, 100% 100%;
+}
+
+@mixin leather {
+  background: radial-gradient(
+      ellipse at 20% 30%,
+      rgba(101, 67, 33, 0.3) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 80% 70%,
+      rgba(139, 69, 19, 0.25) 0%,
+      transparent 35%
+    ),
+    radial-gradient(
+      ellipse at 40% 80%,
+      rgba(160, 82, 45, 0.2) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      ellipse at 90% 20%,
+      rgba(101, 67, 33, 0.15) 0%,
+      transparent 30%
+    ),
+    linear-gradient(
+      45deg,
+      rgba(139, 69, 19, 0.1) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(139, 69, 19, 0.1) 50%,
+      rgba(139, 69, 19, 0.1) 75%,
+      transparent 75%
+    ),
+    linear-gradient(
+      -45deg,
+      rgba(160, 82, 45, 0.08) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(160, 82, 45, 0.08) 50%,
+      rgba(160, 82, 45, 0.08) 75%,
+      transparent 75%
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      rgba(101, 67, 33, 0.05) 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      rgba(139, 69, 19, 0.03) 1px,
+      transparent 3px
+    ),
+    #8b4513;
+  background-size: 120px 80px, 100px 90px, 80px 100px, 110px 70px, 20px 20px,
+    15px 15px, 3px 3px, 4px 4px, 100% 100%;
+}
+
+@mixin cork {
+  background: 
+    // Dense small pores - more random positions
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(101, 67, 33, 0.15) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 87% 73%,
+      rgba(139, 69, 19, 0.12) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 43% 89%,
+      rgba(160, 82, 45, 0.18) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 78% 12%,
+      rgba(101, 67, 33, 0.14) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 23% 67%,
+      rgba(139, 69, 19, 0.16) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 91% 34%,
+      rgba(160, 82, 45, 0.13) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 56% 21%,
+      rgba(101, 67, 33, 0.17) 0.5px,
+      transparent 0.5px
+    ),
+    radial-gradient(
+      circle at 34% 56%,
+      rgba(139, 69, 19, 0.11) 0.5px,
+      transparent 0.5px
+    ),
+    // Medium pores - more scattered
+    radial-gradient(
+        circle at 67% 45%,
+        rgba(101, 67, 33, 0.2) 1px,
+        transparent 1px
+      ),
+    radial-gradient(
+      circle at 29% 78%,
+      rgba(139, 69, 19, 0.18) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 84% 29%,
+      rgba(160, 82, 45, 0.16) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 45% 12%,
+      rgba(101, 67, 33, 0.19) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 18% 91%,
+      rgba(139, 69, 19, 0.14) 1px,
+      transparent 1px
+    ),
+    // Subtle texture lines
+    linear-gradient(23deg, rgba(101, 67, 33, 0.08) 0px, transparent 1px),
+    linear-gradient(-67deg, rgba(139, 69, 19, 0.06) 0px, transparent 1px),
+    linear-gradient(89deg, rgba(160, 82, 45, 0.05) 0px, transparent 1px),
+    // Matte base color
+    linear-gradient(127deg, #c8a882 0%, #d2b48c 30%, #bfa76a 60%, #d2b48c 100%);
+  background-size: 15px 15px, 18px 18px, 21px 21px, 16px 16px, 19px 19px,
+    17px 17px, 20px 20px, 14px 14px, 32px 32px, 28px 28px, 35px 35px, 30px 30px,
+    26px 26px, 6px 6px, 8px 8px, 10px 10px, 100% 100%;
+}
+
 @mixin radial-metal {
   background-image: -webkit-radial-gradient(
       50% 0%,
@@ -218,5 +384,57 @@
 
   &::after {
     transform: rotate(-65deg);
+  }
+}
+
+@mixin fine-paper {
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(120, 119, 198, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(120, 119, 198, 0.15) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      135deg,
+      #f5f5dc 0%,
+      #faf0e6 25%,
+      #f5f5dc 50%,
+      #fdf5e6 75%,
+      #f5f5dc 100%
+    );
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+    border-radius: 10px;
+    pointer-events: none;
   }
 }

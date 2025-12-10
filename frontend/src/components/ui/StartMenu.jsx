@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 
 const StartMenu = ({ onSelect, onClose, windows }) => {
   const menuRef = useRef(null);
+  
+  const mainWindows = windows.filter(w => !['calculator', 'calendar', 'clock'].includes(w.id));
+  const accessoryWindows = windows.filter(w => ['calculator', 'calendar', 'clock'].includes(w.id));
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -25,11 +28,23 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
     <div className="start-menu" ref={menuRef}>
       <div className="start-menu-inner">
         <ul>
-          {windows.map((window) => (
+          {mainWindows.map((window) => (
             <li key={window.id} onClick={() => onSelect(window.id)}>
               {window.title}
             </li>
           ))}
+          {accessoryWindows.length > 0 && (
+            <li className="submenu">
+              📁 Accessories
+              <ul className="submenu-items">
+                {accessoryWindows.map((window) => (
+                  <li key={window.id} onClick={() => onSelect(window.id)}>
+                    {window.icon} {window.title}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )}
         </ul>
       </div>
     </div>

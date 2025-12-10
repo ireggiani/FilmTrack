@@ -4,6 +4,7 @@ import API_BASE_URL from '../../config/api.js';
 export const useMovies = (refresh, onMoviesLoaded) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({
     key: "title",
     direction: "ascending",
@@ -73,12 +74,15 @@ export const useMovies = (refresh, onMoviesLoaded) => {
 
   const fetchMovies = useCallback(async () => {
     try {
+      setError(null);
       const response = await fetch(`${API_BASE_URL}/movies`);
+      if (!response.ok) throw new Error('Failed to fetch movies');
       const data = await response.json();
       setMovies(data);
       onMoviesLoaded?.(data);
     } catch (error) {
       console.error("Error fetching movies:", error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -100,6 +104,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       setActors(await actorsRes.json());
     } catch (error) {
       console.error("Error fetching reference data:", error);
+      setError('Failed to load reference data');
     }
   }, []);
 
@@ -118,12 +123,14 @@ export const useMovies = (refresh, onMoviesLoaded) => {
         body: JSON.stringify(newMovie),
       });
 
-      if (response.ok) {
-        const addedMovie = await response.json();
-        setMovies((prevMovies) => [...prevMovies, addedMovie]);
-      }
+      if (!response.ok) throw new Error('Failed to add movie');
+      const addedMovie = await response.json();
+      setMovies((prevMovies) => [...prevMovies, addedMovie]);
+      setError(null);
     } catch (error) {
       console.error("Error adding movie:", error);
+      setError(error.message);
+      throw error;
     }
   }, []);
 
@@ -138,16 +145,18 @@ export const useMovies = (refresh, onMoviesLoaded) => {
         }
       );
 
-      if (response.ok) {
-        const updatedMovieFromServer = await response.json();
-        setMovies((prevMovies) =>
-          prevMovies.map((m) =>
-            m.id === movieId ? updatedMovieFromServer : m
-          )
-        );
-      }
+      if (!response.ok) throw new Error('Failed to update movie');
+      const updatedMovieFromServer = await response.json();
+      setMovies((prevMovies) =>
+        prevMovies.map((m) =>
+          m.id === movieId ? updatedMovieFromServer : m
+        )
+      );
+      setError(null);
     } catch (error) {
       console.error("Error updating movie:", error);
+      setError(error.message);
+      throw error;
     }
   }, []);
 
@@ -159,11 +168,13 @@ export const useMovies = (refresh, onMoviesLoaded) => {
           method: "DELETE",
         }
       );
-      if (response.ok) {
-        setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movieId));
-      }
+      if (!response.ok) throw new Error('Failed to delete movie');
+      setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movieId));
+      setError(null);
     } catch (error) {
       console.error("Error deleting movie:", error);
+      setError(error.message);
+      throw error;
     }
   }, []);
 
@@ -279,6 +290,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   return {
     movies,
     loading,
+    error,
     sortConfig,
     searchTerm,
     minYear,

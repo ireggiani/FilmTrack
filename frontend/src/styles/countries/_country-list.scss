@@ -1,10 +1,11 @@
 @use "../ui";
+@use "../decorative/textures";
 
 .country-list {
-  @include ui.glass-inner-container;
+  @include ui.paper-inner-container;
 
   padding: 0 0.5rem 0.5rem 0;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 
   .list-header {
     display: flex;

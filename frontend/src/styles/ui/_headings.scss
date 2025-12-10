@@ -1,0 +1,85 @@
+@use "../decorative/textures";
+
+h2 {
+  color: white;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+  color: white;
+  font-size: 1rem;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* HEADINGS */
+.heading-centre {
+  width: fit-content;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0 0.5rem;
+  text-align: center;
+
+  &--metal {
+    @extend .heading-centre;
+    @include textures.brushed-metal-grey;
+    border: unset;
+    box-shadow: inset 0 -1px 0px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 8px 1px rgba(25, 25, 25, 0.5);
+    margin-top: -1px;
+  }
+
+  &--paper {
+    border: unset;
+    color: darkslategray;
+    font-family: "Brush Script MT", "Lucida Handwriting", "Marker Felt",
+      "Bradley Hand", "Comic Sans MS", cursive;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8),
+      0 0 10px rgba(0, 0, 255, 0.3);
+  }
+}
+
+.heading-left {
+  width: fit-content;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom-right-radius: 4px;
+  line-height: 1;
+
+  margin-right: auto;
+  padding: 0.25rem 0.5rem 0.45rem;
+  text-align: left;
+
+  &--metal {
+    @extend .heading-centre;
+    @include textures.brushed-metal-grey;
+    border-right: unset;
+    border-bottom: unset;
+    border-bottom-left-radius: 0px;
+    box-shadow: inset -1px -1px 0px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 8px 1px rgba(25, 25, 25, 0.5);
+    margin-top: -6px;
+    margin-left: -1px;
+  }
+
+  &--paper {
+    @extend .heading-centre;
+    border: unset;
+    color: darkslategray;
+    font-family: "Brush Script MT", "Lucida Handwriting", "Marker Felt",
+      "Bradley Hand", "Comic Sans MS", cursive;
+    margin-left: 0;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8),
+      0 0 10px rgba(255, 128, 0, 0.8);
+  }
+}

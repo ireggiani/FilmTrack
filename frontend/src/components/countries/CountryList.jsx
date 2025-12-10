@@ -39,11 +39,12 @@ const CountryList = ({
   return (
     <div className="country-list">
       <div className="list-header">
-        <h3 className="heading-left">Existing Countries</h3>
+        <h3 className="heading-left--paper">Existing Countries</h3>
         <GlassCheckbox
           checked={alphabetical}
           onChange={(e) => setAlphabetical(e.target.checked)}
           label="Alphabetical"
+          labelClassName="paper"
         />
       </div>
       {countries.length === 0 ? (
@@ -61,6 +62,7 @@ const CountryList = ({
               id={country.id}
               name={country.name}
               icon={country.flagEmoji}
+              className="paper"
               onEdit={() => {
                 onCountryEdit?.(country);
                 setTimeout(() => {

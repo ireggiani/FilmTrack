@@ -1,7 +1,7 @@
 @use "../ui";
 
 .country-form {
-  @include ui.glass-inner-container;
+  @include ui.paper-inner-container;
 
   padding: 0;
 
@@ -9,7 +9,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
-    padding: 0.25rem;
+    padding: 0.25rem 0.5rem;
 
     .form-group {
       .text-field {
@@ -21,7 +21,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 0.25rem;
+    padding: 0.25rem 0.5rem 0.5rem;
 
     .submit {
       margin-left: auto;

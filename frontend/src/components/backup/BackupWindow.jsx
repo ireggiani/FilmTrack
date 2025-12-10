@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import Draggable from "react-draggable";
 import API_BASE_URL from "../../config/api.js";
+import "../../styles/backup/_backup-window.scss";
 
 const BackupWindow = ({
   isOpen,
@@ -42,7 +43,7 @@ const BackupWindow = ({
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      setMessage("Backup downloaded successfully. ");
+      setMessage("☑️ Backup downloaded successfully. ");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -161,13 +162,11 @@ const BackupWindow = ({
         className="window backup-window"
         onClick={onFocus}
         style={{
-          width: "400px",
-          height: "600px",
           zIndex,
           ...(isMinimized && { display: "none" }),
         }}
       >
-        <div className="window-titlebar">
+        <div className="window-titlebar important">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span
               onDoubleClick={onClose}
@@ -184,19 +183,22 @@ const BackupWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="titlebar-button window-minimize"
+              className="titlebar-button window-minimize orb"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
-            <button className="titlebar-button window-close" onClick={onClose}>
+            <button
+              className="titlebar-button window-close orb"
+              onClick={onClose}
+            >
               🗙
             </button>
           </div>
         </div>
         <div className="window-content">
-          <section className="backup-section" style={{ marginBottom: "15px" }}>
+          <section className="backup-section">
             <p>
               Here you can download a backup copy of the current database, as a
               SQLite file.
