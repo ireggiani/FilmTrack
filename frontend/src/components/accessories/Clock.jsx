@@ -38,9 +38,10 @@ const Clock = ({
   const hours = ((time.getHours() % 12) * 30) + (minutes / 12); // 30° per hour + smooth transition
 
   const renderHourMarkers = () => {
+    const romanNumerals = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
     const markers = [];
-    for (let i = 1; i <= 12; i++) {
-      const angle = (i * 30); // 30 degrees per hour, 12 at top
+    for (let i = 0; i < 12; i++) {
+      const angle = (i * 30); // 0° for XII at top, then 30°, 60°, etc.
       markers.push(
         <div
           key={i}
@@ -49,7 +50,7 @@ const Clock = ({
             transform: `rotate(${angle}deg) translateY(-85px)`,
           }}
         >
-          {i}
+          {romanNumerals[i]}
         </div>
       );
     }

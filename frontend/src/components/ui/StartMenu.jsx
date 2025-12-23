@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from 'react';
 const StartMenu = ({ onSelect, onClose, windows }) => {
   const menuRef = useRef(null);
   
-  const mainWindows = windows.filter(w => !['calculator', 'calendar', 'clock'].includes(w.id));
-  const accessoryWindows = windows.filter(w => ['calculator', 'calendar', 'clock'].includes(w.id));
+  const mainWindows = windows.filter(w => !['calculator', 'calendar', 'clock', 'notepad'].includes(w.id));
+  const accessoryWindows = windows.filter(w => ['calculator', 'calendar', 'clock', 'notepad'].includes(w.id));
 
   useEffect(() => {
     const handleClickOutside = (event) => {

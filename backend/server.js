@@ -27,6 +27,7 @@ app.use('/api/directors', require('./routes/directors'));
 app.use('/api/actors', require('./routes/actors'));
 app.use('/api/database', require('./routes/database'));
 app.use('/api/views', require('./routes/views'));
+app.use('/api/notes', require('./routes/notes'));
 
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running!' });

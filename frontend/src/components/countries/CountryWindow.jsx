@@ -21,6 +21,7 @@ const CountryWindow = ({
   const nodeRef = useRef(null);
   const [editingCountry, setEditingCountry] = useState(null);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(true);
 
   const handleEditComplete = useCallback(() => {
     setEditingCountry(null);
@@ -97,20 +98,34 @@ const CountryWindow = ({
           </div>
           <div style={{ display: "flex" }}>
             <button
-              className="titlebar-button window-minimize"
+              className={`titlebar-button rubber ${
+                !showAddForm ? "active" : ""
+              }`}
+              onClick={() => setShowAddForm(!showAddForm)}
+              title={showAddForm ? "Hide Add Form" : "Show Add Form"}
+            >
+              +
+            </button>
+            <button
+              className="titlebar-button window-minimize rubber"
               onClick={onMinimize}
               title="Minimize"
             >
               🗕
             </button>
             <button
-              className="titlebar-button window-maximize"
+              className={`titlebar-button window-maximize rubber ${
+                isMaximized ? "active" : ""
+              }`}
               onClick={() => setIsMaximized(!isMaximized)}
               title={isMaximized ? "Restore" : "Maximize"}
             >
               {isMaximized ? "🗗" : "🗖"}
             </button>
-            <button className="titlebar-button window-close" onClick={onClose}>
+            <button
+              className="titlebar-button window-close rubber"
+              onClick={onClose}
+            >
               🗙
             </button>
           </div>
@@ -126,13 +141,17 @@ const CountryWindow = ({
               : {}
           }
         >
-          <CountryForm
-            onCountryAdded={onCountryAdded}
-            existingCountries={countries}
-            editingCountry={editingCountry}
-            onEditComplete={handleEditComplete}
-          />
-          <hr className="paper" />
+          {showAddForm && (
+            <>
+              <CountryForm
+                onCountryAdded={onCountryAdded}
+                existingCountries={countries}
+                editingCountry={editingCountry}
+                onEditComplete={handleEditComplete}
+              />
+              <hr className="paper" />
+            </>
+          )}
           <CountryList
             refresh={refreshCountries}
             onCountriesLoaded={onCountriesLoaded}

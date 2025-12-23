@@ -6,6 +6,7 @@ import {
   lazy,
   Suspense,
 } from "react";
+import notepadIcon from "./assets/notepad-icon.png";
 const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
 const WallpaperWindow = lazy(() =>
   import("./components/wallpapers/WallpaperWindow")
@@ -20,6 +21,7 @@ const ActorWindow = lazy(() => import("./components/actors/ActorWindow"));
 const Calculator = lazy(() => import("./components/accessories/Calculator"));
 const Calendar = lazy(() => import("./components/accessories/Calendar"));
 const Clock = lazy(() => import("./components/accessories/Clock"));
+const Notepad = lazy(() => import("./components/accessories/Notepad"));
 import Taskbar from "./components/ui/Taskbar";
 
 const BackupWindow = lazy(() => import("./components/backup/BackupWindow"));
@@ -28,6 +30,7 @@ import "./styles/globals.scss";
 import "./styles/windows.scss";
 import "./styles/scrollbar.scss";
 import "./styles/taskbar.scss";
+import "./styles/accessories/_notepad.scss";
 
 function App() {
   const [refreshGenres, setRefreshGenres] = useState(0);
@@ -51,6 +54,7 @@ function App() {
   const [calculatorWindowOpen, setCalculatorWindowOpen] = useState(false);
   const [calendarWindowOpen, setCalendarWindowOpen] = useState(false);
   const [clockWindowOpen, setClockWindowOpen] = useState(false);
+  const [notepadWindowOpen, setNotepadWindowOpen] = useState(false);
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [genreMinimized, setGenreMinimized] = useState(false);
   const [wallpaperMinimized, setWallpaperMinimized] = useState(false);
@@ -62,6 +66,7 @@ function App() {
   const [calculatorMinimized, setCalculatorMinimized] = useState(false);
   const [calendarMinimized, setCalendarMinimized] = useState(false);
   const [clockMinimized, setClockMinimized] = useState(false);
+  const [notepadMinimized, setNotepadMinimized] = useState(false);
   const [windowStack, setWindowStack] = useState([]);
 
   const handleGenreAdded = useCallback(() => {
@@ -165,6 +170,8 @@ function App() {
         if (calendarMinimized) setCalendarMinimized(false);
       } else if (windowId === "clock") {
         if (clockMinimized) setClockMinimized(false);
+      } else if (windowId === "notepad") {
+        if (notepadMinimized) setNotepadMinimized(false);
       }
     },
     [
@@ -178,6 +185,7 @@ function App() {
       calculatorMinimized,
       calendarMinimized,
       clockMinimized,
+      notepadMinimized,
     ]
   );
 
@@ -211,6 +219,9 @@ function App() {
         ? [{ id: "calendar", title: "Calendar", icon: "📅" }]
         : []),
       ...(clockWindowOpen ? [{ id: "clock", title: "Clock", icon: "🕐" }] : []),
+      ...(notepadWindowOpen
+        ? [{ id: "notepad", title: "Notepad", icon: <img src={notepadIcon} alt="Notepad" style={{ width: "16px", height: "16px", verticalAlign: "middle" }} /> }]
+        : []),
     ],
     [
       genreWindowOpen,
@@ -223,6 +234,7 @@ function App() {
       calculatorWindowOpen,
       calendarWindowOpen,
       clockWindowOpen,
+      notepadWindowOpen,
     ]
   );
 
@@ -238,6 +250,7 @@ function App() {
       { id: "calculator", title: "Calculator", icon: "🔢" },
       { id: "calendar", title: "Calendar", icon: "📅" },
       { id: "clock", title: "Clock", icon: "🕐" },
+      { id: "notepad", title: "Notepad", icon: <img src={notepadIcon} alt="Notepad" style={{ width: "16px", height: "16px", verticalAlign: "middle" }} /> },
     ],
     []
   );
@@ -274,6 +287,9 @@ function App() {
           break;
         case "clock":
           setClockWindowOpen(true);
+          break;
+        case "notepad":
+          setNotepadWindowOpen(true);
           break;
         default:
           break;
@@ -314,6 +330,9 @@ function App() {
         break;
       case "clock":
         setClockWindowOpen(false);
+        break;
+      case "notepad":
+        setNotepadWindowOpen(false);
         break;
       default:
         break;
@@ -408,6 +427,15 @@ function App() {
   );
   const handleMinimizeClockWindow = useCallback(
     () => setClockMinimized(true),
+    []
+  );
+
+  const handleCloseNotepadWindow = useCallback(
+    () => closeWindow("notepad"),
+    [closeWindow]
+  );
+  const handleMinimizeNotepadWindow = useCallback(
+    () => setNotepadMinimized(true),
     []
   );
 
@@ -611,6 +639,18 @@ function App() {
             onMinimize={handleMinimizeClockWindow}
             onFocus={() => handleWindowFocus("clock")}
             zIndex={100 + windowStack.indexOf("clock")}
+          />
+        </Suspense>
+      )}
+      {notepadWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Notepad
+            isOpen={notepadWindowOpen}
+            isMinimized={notepadMinimized}
+            onClose={handleCloseNotepadWindow}
+            onMinimize={handleMinimizeNotepadWindow}
+            onFocus={() => handleWindowFocus("notepad")}
+            zIndex={100 + windowStack.indexOf("notepad")}
           />
         </Suspense>
       )}

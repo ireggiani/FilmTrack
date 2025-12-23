@@ -438,3 +438,65 @@
     pointer-events: none;
   }
 }
+
+@mixin classy-wood {
+  background: 
+    // Fine wood grain - seamless horizontal lines
+    repeating-linear-gradient(
+      90deg,
+      rgba(101, 67, 33, 0.2) 0px,
+      rgba(101, 67, 33, 0.2) 1px,
+      transparent 1px,
+      transparent 6px
+    ),
+    // Subtle vertical grain
+    repeating-linear-gradient(
+      0deg,
+      rgba(139, 69, 19, 0.08) 0px,
+      rgba(139, 69, 19, 0.08) 1px,
+      transparent 1px,
+      transparent 12px
+    ),
+    // Seamless wood pattern using sine-like curves
+    repeating-linear-gradient(
+      90deg,
+      rgba(160, 82, 45, 0.15) 0%,
+      rgba(101, 67, 33, 0.1) 25%,
+      rgba(139, 69, 19, 0.12) 50%,
+      rgba(101, 67, 33, 0.1) 75%,
+      rgba(160, 82, 45, 0.15) 100%
+    ),
+    // Tileable wood knots pattern
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(101, 67, 33, 0.3) 0%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgba(101, 67, 33, 0.3) 0%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(139, 69, 19, 0.2) 0%,
+      transparent 25%
+    ),
+    // Base wood color - seamless gradient
+    linear-gradient(
+      90deg,
+      #A0522D 0%,
+      #CD853F 25%,
+      #D2691E 50%,
+      #CD853F 75%,
+      #A0522D 100%
+    );
+  background-size: 
+    8px 8px,
+    16px 16px,
+    32px 32px,
+    64px 64px,
+    64px 64px,
+    64px 64px,
+    100% 100%;
+}

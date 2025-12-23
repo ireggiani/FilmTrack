@@ -5,7 +5,7 @@
   height: 235px;
 
   .clock-content {
-    @include textures.brushed-metal-grey;
+    @include textures.classy-wood;
     padding: 15px;
     /* height: 100%; */
     display: flex;
@@ -131,7 +131,6 @@
       background: #e74c3c;
       box-shadow: 1px 0 1px rgba(0, 0, 0, 0.2);
       z-index: 1;
-      transition: transform 0.1s ease-out;
     }
   }
 }
