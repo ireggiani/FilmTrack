@@ -6,16 +6,16 @@ import {
   lazy,
   Suspense,
 } from "react";
-import notepadIcon from "./assets/notepad-icon.png";
+import notepadIcon from "./assets/icons/notepad-icon.png";
 const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
-const WallpaperWindow = lazy(() =>
-  import("./components/wallpapers/WallpaperWindow")
+const WallpaperWindow = lazy(
+  () => import("./components/wallpapers/WallpaperWindow"),
 );
-const CountryWindow = lazy(() =>
-  import("./components/countries/CountryWindow")
+const CountryWindow = lazy(
+  () => import("./components/countries/CountryWindow"),
 );
-const DirectorWindow = lazy(() =>
-  import("./components/directors/DirectorWindow")
+const DirectorWindow = lazy(
+  () => import("./components/directors/DirectorWindow"),
 );
 const ActorWindow = lazy(() => import("./components/actors/ActorWindow"));
 const Calculator = lazy(() => import("./components/accessories/Calculator"));
@@ -31,6 +31,15 @@ import "./styles/windows.scss";
 import "./styles/scrollbar.scss";
 import "./styles/taskbar.scss";
 import "./styles/accessories/_notepad.scss";
+
+import CountriesIcon from "./assets/icons/countries.png";
+import DirectorsIcon from "./assets/icons/directors.png";
+import ActorsIcon from "./assets/icons/actors.png";
+import GenresIcon from "./assets/icons/genres.png";
+import WallpaperIcon from "./assets/icons/wallpaper.png";
+import MoviesIcon from "./assets/icons/movies.png";
+import BackupIcon from "./assets/icons/backup.png";
+import CalendarIcon from "./assets/icons/calendar.png";
 
 function App() {
   const [refreshGenres, setRefreshGenres] = useState(0);
@@ -133,94 +142,101 @@ function App() {
     }
   }, []);
 
-  const handleWindowFocus = useCallback(
-    (windowId) => {
-      setWindowStack((prevStack) => {
-        const newStack = prevStack.filter((id) => id !== windowId);
-        newStack.push(windowId);
-        return newStack;
-      });
-      setFocusedWindow(windowId);
+  const handleWindowFocus = useCallback((windowId) => {
+    setWindowStack((prevStack) => {
+      const newStack = prevStack.filter((id) => id !== windowId);
+      newStack.push(windowId);
+      return newStack;
+    });
+    setFocusedWindow(windowId);
 
-      if (windowId === "genres") {
-        if (genreMinimized) setGenreMinimized(false);
-        setTimeout(() => document.querySelector("#genreName")?.focus(), 10);
-      } else if (windowId === "wallpaper") {
-        if (wallpaperMinimized) setWallpaperMinimized(false);
-        setTimeout(
-          () => document.querySelector('.window input[type="radio"]')?.focus(),
-          10
-        );
-      } else if (windowId === "countries") {
-        if (countryMinimized) setCountryMinimized(false);
-        setTimeout(() => document.querySelector("#countryName")?.focus(), 10);
-      } else if (windowId === "directors") {
-        if (directorMinimized) setDirectorMinimized(false);
-        setTimeout(() => document.querySelector("#directorName")?.focus(), 10);
-      } else if (windowId === "actors") {
-        if (actorMinimized) setActorMinimized(false);
-        setTimeout(() => document.querySelector("#actorName")?.focus(), 10);
-      } else if (windowId === "movies") {
-        if (moviesMinimized) setMoviesMinimized(false);
-      } else if (windowId === "backup") {
-        if (backupMinimized) setBackupMinimized(false);
-      } else if (windowId === "calculator") {
-        if (calculatorMinimized) setCalculatorMinimized(false);
-      } else if (windowId === "calendar") {
-        if (calendarMinimized) setCalendarMinimized(false);
-      } else if (windowId === "clock") {
-        if (clockMinimized) setClockMinimized(false);
-      } else if (windowId === "notepad") {
-        if (notepadMinimized) setNotepadMinimized(false);
-      }
-    },
-    [
-      genreMinimized,
-      wallpaperMinimized,
-      countryMinimized,
-      directorMinimized,
-      actorMinimized,
-      moviesMinimized,
-      backupMinimized,
-      calculatorMinimized,
-      calendarMinimized,
-      clockMinimized,
-      notepadMinimized,
-    ]
+    // React bails out of state updates when the new value equals the current
+    // value, so calling these unconditionally is safe and avoids listing all
+    // minimized states as deps (which would make this callback recreate on
+    // every minimize/unminimize and cascade re-renders everywhere).
+    const minimizeSetters = {
+      genres: setGenreMinimized,
+      wallpaper: setWallpaperMinimized,
+      countries: setCountryMinimized,
+      directors: setDirectorMinimized,
+      actors: setActorMinimized,
+      movies: setMoviesMinimized,
+      backup: setBackupMinimized,
+      calculator: setCalculatorMinimized,
+      calendar: setCalendarMinimized,
+      clock: setClockMinimized,
+      notepad: setNotepadMinimized,
+    };
+    minimizeSetters[windowId]?.(false);
+
+    const focusSelectors = {
+      genres: "#genreName",
+      wallpaper: '.window input[type="radio"]',
+      countries: "#countryName",
+      directors: "#directorName",
+      actors: "#actorName",
+    };
+    const selector = focusSelectors[windowId];
+    if (selector) {
+      setTimeout(() => document.querySelector(selector)?.focus(), 10);
+    }
+  }, []);
+
+  const windowFocusHandlers = useMemo(
+    () => ({
+      genres: () => handleWindowFocus("genres"),
+      wallpaper: () => handleWindowFocus("wallpaper"),
+      countries: () => handleWindowFocus("countries"),
+      directors: () => handleWindowFocus("directors"),
+      actors: () => handleWindowFocus("actors"),
+      movies: () => handleWindowFocus("movies"),
+      backup: () => handleWindowFocus("backup"),
+      calculator: () => handleWindowFocus("calculator"),
+      calendar: () => handleWindowFocus("calendar"),
+      clock: () => handleWindowFocus("clock"),
+      notepad: () => handleWindowFocus("notepad"),
+    }),
+    [handleWindowFocus],
   );
 
   const memoizedOpenWindows = useMemo(
     () => [
       ...(genreWindowOpen
-        ? [{ id: "genres", title: "Genres Manager", icon: "🎭" }]
+        ? [{ id: "genres", title: "Genres Manager", icon: GenresIcon }]
         : []),
       ...(wallpaperWindowOpen
-        ? [{ id: "wallpaper", title: "Wallpaper Settings", icon: "🎨" }]
+        ? [
+            {
+              id: "wallpaper",
+              title: "Wallpaper Settings",
+              icon: WallpaperIcon,
+            },
+          ]
         : []),
       ...(countryWindowOpen
-        ? [{ id: "countries", title: "Countries Manager", icon: "🌍" }]
+        ? [{ id: "countries", title: "Countries Manager", icon: CountriesIcon }]
         : []),
       ...(directorWindowOpen
-        ? [{ id: "directors", title: "Directors Manager", icon: "🎬" }]
+        ? [{ id: "directors", title: "Directors Manager", icon: DirectorsIcon }]
         : []),
       ...(actorWindowOpen
-        ? [{ id: "actors", title: "Actors Manager", icon: "🎭" }]
+        ? [{ id: "actors", title: "Actors Manager", icon: ActorsIcon }]
         : []),
       ...(moviesWindowOpen
-        ? [{ id: "movies", title: "Movies Collection", icon: "🎬" }]
+        ? [{ id: "movies", title: "Movies Collection", icon: MoviesIcon }]
         : []),
       ...(backupWindowOpen
-        ? [{ id: "backup", title: "Backup & Restore", icon: "💾" }]
+        ? [{ id: "backup", title: "Backup & Restore", icon: BackupIcon }]
         : []),
       ...(calculatorWindowOpen
         ? [{ id: "calculator", title: "Calculator", icon: "🔢" }]
         : []),
       ...(calendarWindowOpen
-        ? [{ id: "calendar", title: "Calendar", icon: "📅" }]
+        ? [{ id: "calendar", title: "Calendar", icon: CalendarIcon }]
         : []),
       ...(clockWindowOpen ? [{ id: "clock", title: "Clock", icon: "🕐" }] : []),
       ...(notepadWindowOpen
-        ? [{ id: "notepad", title: "Notepad", icon: <img src={notepadIcon} alt="Notepad" style={{ width: "16px", height: "16px", verticalAlign: "middle" }} /> }]
+        ? [{ id: "notepad", title: "Notepad", icon: notepadIcon }]
         : []),
     ],
     [
@@ -235,24 +251,24 @@ function App() {
       calendarWindowOpen,
       clockWindowOpen,
       notepadWindowOpen,
-    ]
+    ],
   );
 
   const allWindows = useMemo(
     () => [
-      { id: "genres", title: "Genres Manager", icon: "🎭" },
-      { id: "wallpaper", title: "Wallpaper Settings", icon: "🎨" },
-      { id: "countries", title: "Countries Manager", icon: "🌍" },
-      { id: "directors", title: "Directors Manager", icon: "🎬" },
-      { id: "actors", title: "Actors Manager", icon: "🎭" },
-      { id: "movies", title: "Movies Collection", icon: "🎬" },
-      { id: "backup", title: "Backup & Restore", icon: "💾" },
+      { id: "movies", title: "Movies Collection", icon: MoviesIcon },
+      { id: "genres", title: "Genres Manager", icon: GenresIcon },
+      { id: "directors", title: "Directors Manager", icon: DirectorsIcon },
+      { id: "actors", title: "Actors Manager", icon: ActorsIcon },
+      { id: "countries", title: "Countries Manager", icon: CountriesIcon },
+      { id: "backup", title: "Backup & Restore", icon: BackupIcon },
+      { id: "wallpaper", title: "Wallpaper Settings", icon: WallpaperIcon },
       { id: "calculator", title: "Calculator", icon: "🔢" },
-      { id: "calendar", title: "Calendar", icon: "📅" },
+      { id: "calendar", title: "Calendar", icon: CalendarIcon },
       { id: "clock", title: "Clock", icon: "🕐" },
-      { id: "notepad", title: "Notepad", icon: <img src={notepadIcon} alt="Notepad" style={{ width: "16px", height: "16px", verticalAlign: "middle" }} /> },
+      { id: "notepad", title: "Notepad", icon: notepadIcon },
     ],
-    []
+    [],
   );
 
   const openWindow = useCallback(
@@ -296,7 +312,7 @@ function App() {
       }
       handleWindowFocus(windowId);
     },
-    [handleWindowFocus]
+    [handleWindowFocus],
   );
 
   const closeWindow = useCallback((windowId) => {
@@ -342,101 +358,101 @@ function App() {
 
   const handleCloseGenreWindow = useCallback(
     () => closeWindow("genres"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeGenreWindow = useCallback(
     () => setGenreMinimized(true),
-    []
+    [],
   );
 
   const handleCloseWallpaperWindow = useCallback(
     () => closeWindow("wallpaper"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeWallpaperWindow = useCallback(
     () => setWallpaperMinimized(true),
-    []
+    [],
   );
 
   const handleCloseCountryWindow = useCallback(
     () => closeWindow("countries"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeCountryWindow = useCallback(
     () => setCountryMinimized(true),
-    []
+    [],
   );
 
   const handleCloseDirectorWindow = useCallback(
     () => closeWindow("directors"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeDirectorWindow = useCallback(
     () => setDirectorMinimized(true),
-    []
+    [],
   );
 
   const handleCloseActorWindow = useCallback(
     () => closeWindow("actors"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeActorWindow = useCallback(
     () => setActorMinimized(true),
-    []
+    [],
   );
 
   const handleCloseMoviesWindow = useCallback(
     () => closeWindow("movies"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeMoviesWindow = useCallback(
     () => setMoviesMinimized(true),
-    []
+    [],
   );
 
   const handleCloseBackupWindow = useCallback(
     () => closeWindow("backup"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeBackupWindow = useCallback(
     () => setBackupMinimized(true),
-    []
+    [],
   );
 
   const handleCloseCalculatorWindow = useCallback(
     () => closeWindow("calculator"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeCalculatorWindow = useCallback(
     () => setCalculatorMinimized(true),
-    []
+    [],
   );
 
   const handleCloseCalendarWindow = useCallback(
     () => closeWindow("calendar"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeCalendarWindow = useCallback(
     () => setCalendarMinimized(true),
-    []
+    [],
   );
 
   const handleCloseClockWindow = useCallback(
     () => closeWindow("clock"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeClockWindow = useCallback(
     () => setClockMinimized(true),
-    []
+    [],
   );
 
   const handleCloseNotepadWindow = useCallback(
     () => closeWindow("notepad"),
-    [closeWindow]
+    [closeWindow],
   );
   const handleMinimizeNotepadWindow = useCallback(
     () => setNotepadMinimized(true),
-    []
+    [],
   );
 
   // Keyboard shortcuts
@@ -511,7 +527,7 @@ function App() {
             onGenreAdded={handleGenreAdded}
             onGenresLoaded={handleGenresLoaded}
             refreshGenres={refreshGenres}
-            onFocus={() => handleWindowFocus("genres")}
+            onFocus={windowFocusHandlers.genres}
             zIndex={100 + windowStack.indexOf("genres")}
           />
         </Suspense>
@@ -525,7 +541,7 @@ function App() {
             onMinimize={handleMinimizeWallpaperWindow}
             currentWallpaper={wallpaper}
             onWallpaperChange={handleWallpaperChange}
-            onFocus={() => handleWindowFocus("wallpaper")}
+            onFocus={windowFocusHandlers.wallpaper}
             zIndex={100 + windowStack.indexOf("wallpaper")}
           />
         </Suspense>
@@ -541,7 +557,7 @@ function App() {
             onCountryAdded={handleCountryAdded}
             onCountriesLoaded={handleCountriesLoaded}
             refreshCountries={refreshCountries}
-            onFocus={() => handleWindowFocus("countries")}
+            onFocus={windowFocusHandlers.countries}
             zIndex={100 + windowStack.indexOf("countries")}
           />
         </Suspense>
@@ -557,7 +573,7 @@ function App() {
             onDirectorAdded={handleDirectorAdded}
             onDirectorsLoaded={handleDirectorsLoaded}
             refreshDirectors={refreshDirectors}
-            onFocus={() => handleWindowFocus("directors")}
+            onFocus={windowFocusHandlers.directors}
             zIndex={100 + windowStack.indexOf("directors")}
           />
         </Suspense>
@@ -573,7 +589,7 @@ function App() {
             onActorAdded={handleActorAdded}
             onActorsLoaded={handleActorsLoaded}
             refreshActors={refreshActors}
-            onFocus={() => handleWindowFocus("actors")}
+            onFocus={windowFocusHandlers.actors}
             zIndex={100 + windowStack.indexOf("actors")}
           />
         </Suspense>
@@ -589,7 +605,7 @@ function App() {
             onMoviesLoaded={handleMoviesLoaded}
             refreshMovies={refreshMovies}
             setRefreshMovies={setRefreshMovies}
-            onFocus={() => handleWindowFocus("movies")}
+            onFocus={windowFocusHandlers.movies}
             zIndex={100 + windowStack.indexOf("movies")}
           />
         </Suspense>
@@ -601,7 +617,7 @@ function App() {
             isMinimized={backupMinimized}
             onClose={handleCloseBackupWindow}
             onMinimize={handleMinimizeBackupWindow}
-            onFocus={() => handleWindowFocus("backup")}
+            onFocus={windowFocusHandlers.backup}
             zIndex={100 + windowStack.indexOf("backup")}
           />
         </Suspense>
@@ -613,7 +629,7 @@ function App() {
             isMinimized={calculatorMinimized}
             onClose={handleCloseCalculatorWindow}
             onMinimize={handleMinimizeCalculatorWindow}
-            onFocus={() => handleWindowFocus("calculator")}
+            onFocus={windowFocusHandlers.calculator}
             zIndex={100 + windowStack.indexOf("calculator")}
           />
         </Suspense>
@@ -625,7 +641,7 @@ function App() {
             isMinimized={calendarMinimized}
             onClose={handleCloseCalendarWindow}
             onMinimize={handleMinimizeCalendarWindow}
-            onFocus={() => handleWindowFocus("calendar")}
+            onFocus={windowFocusHandlers.calendar}
             zIndex={100 + windowStack.indexOf("calendar")}
           />
         </Suspense>
@@ -637,7 +653,7 @@ function App() {
             isMinimized={clockMinimized}
             onClose={handleCloseClockWindow}
             onMinimize={handleMinimizeClockWindow}
-            onFocus={() => handleWindowFocus("clock")}
+            onFocus={windowFocusHandlers.clock}
             zIndex={100 + windowStack.indexOf("clock")}
           />
         </Suspense>
@@ -649,7 +665,7 @@ function App() {
             isMinimized={notepadMinimized}
             onClose={handleCloseNotepadWindow}
             onMinimize={handleMinimizeNotepadWindow}
-            onFocus={() => handleWindowFocus("notepad")}
+            onFocus={windowFocusHandlers.notepad}
             zIndex={100 + windowStack.indexOf("notepad")}
           />
         </Suspense>

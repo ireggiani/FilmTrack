@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import Draggable from "react-draggable";
-import notepadIcon from "../../assets/notepad-icon.png";
+import notepadIcon from "../../assets/icons/notepad-icon.png";
 
 const Notepad = ({
   onClose,

@@ -3,6 +3,7 @@ import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import MoviesTable from "./MoviesTable";
 import "../../styles/movies/_movies-table.scss";
+import MoviesIcon from "../../assets/icons/movies.png";
 
 const MoviesWindow = ({
   isOpen,
@@ -67,8 +68,9 @@ const MoviesWindow = ({
                 userSelect: "none",
               }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              🎬
+              <img src={MoviesIcon} alt="Movies" />
             </span>
             <span>Movies Collection</span>
           </div>

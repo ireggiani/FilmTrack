@@ -19,9 +19,13 @@
 
       li {
         border-radius: 3px;
-        padding: 8px 12px;
+        padding: 2px 8px;
         cursor: pointer;
         position: relative;
+
+        display: flex;
+        align-items: center;
+        column-gap: 5px;
 
         &:hover {
           background: linear-gradient(
@@ -31,14 +35,18 @@
           );
           border-color: aquamarine;
         }
-        
+
         &.submenu {
           &:hover .submenu-items {
             display: block;
           }
         }
+
+        img {
+          max-height: 24px;
+        }
       }
-      
+
       .submenu-items {
         display: none;
         position: absolute;
@@ -48,15 +56,20 @@
         background: white;
         border: 1px solid #666;
         border-radius: 3px;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         z-index: 1001;
-        
+
         li {
-          padding: 6px 10px;
+          padding: 2px 8px;
           font-size: 0.75rem;
-          
+
           &:hover {
-            background: #e0e0e0;
+            background: linear-gradient(
+              0deg,
+              rgb(110, 231, 231),
+              rgb(161, 230, 235)
+            );
+            border-color: aquamarine;
           }
         }
       }
@@ -73,7 +86,7 @@
 
       li {
         font-size: 0.8rem;
-        
+
         &:not(.submenu) {
           // Main menu items only
         }

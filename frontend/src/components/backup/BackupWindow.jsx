@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import Draggable from "react-draggable";
 import API_BASE_URL from "../../config/api.js";
 import "../../styles/backup/_backup-window.scss";
+import BackupIcon from "../../assets/icons/backup.png";
 
 const BackupWindow = ({
   isOpen,
@@ -88,7 +89,7 @@ const BackupWindow = ({
       const movies = await response.json();
       movies.sort((a, b) => a.title.localeCompare(b.title));
       const selectedColumns = Object.keys(csvColumns).filter(
-        (col) => csvColumns[col]
+        (col) => csvColumns[col],
       );
 
       const headers = selectedColumns.map((col) => {
@@ -176,8 +177,9 @@ const BackupWindow = ({
                 userSelect: "none",
               }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              💾
+              <img src={BackupIcon} alt="Backup" />
             </span>
             <span>Backup & Restore</span>
           </div>
@@ -249,8 +251,8 @@ const BackupWindow = ({
                   {col === "alternativeTitle"
                     ? "Alternative Title"
                     : col === "releaseYear"
-                    ? "Release Year"
-                    : col.charAt(0).toUpperCase() + col.slice(1)}
+                      ? "Release Year"
+                      : col.charAt(0).toUpperCase() + col.slice(1)}
                 </label>
               ))}
             </fieldset>

@@ -7,6 +7,8 @@ import DirectorList from "./DirectorList";
 import "../../styles/directors/_director-form.scss";
 import "../../styles/directors/_director-list.scss";
 
+import DirectorsIcon from "../../assets/icons/directors.png";
+
 const DirectorWindow = ({
   isOpen,
   isMinimized,
@@ -37,7 +39,7 @@ const DirectorWindow = ({
         `http://localhost:5000/api/directors/${directorId}`,
         {
           method: "DELETE",
-        }
+        },
       );
       if (response.ok) {
         onDirectorAdded(); // Refresh the list
@@ -89,8 +91,9 @@ const DirectorWindow = ({
                 userSelect: "none",
               }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              🎬
+              <img src={DirectorsIcon} alt="Directors" />
             </span>
             <span>Directors Manager</span>
           </div>
@@ -167,7 +170,7 @@ DirectorWindow.propTypes = {
     PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
-    })
+    }),
   ),
   onDirectorAdded: PropTypes.func,
   onDirectorsLoaded: PropTypes.func,

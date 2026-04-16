@@ -5,6 +5,7 @@ import CountryForm from "./CountryForm";
 import CountryList from "./CountryList";
 import "../../styles/countries/_country-form.scss";
 import "../../styles/countries/_country-list.scss";
+import CountriesIcon from "../../assets/icons/countries.png";
 
 const CountryWindow = ({
   isOpen,
@@ -35,7 +36,7 @@ const CountryWindow = ({
           `http://localhost:5000/api/countries/${countryId}`,
           {
             method: "DELETE",
-          }
+          },
         );
         if (response.ok) {
           onCountryAdded(); // Refresh the list
@@ -44,7 +45,7 @@ const CountryWindow = ({
         console.error("Error deleting country:", error);
       }
     },
-    [onCountryAdded]
+    [onCountryAdded],
   );
 
   if (!isOpen) return null;
@@ -85,14 +86,10 @@ const CountryWindow = ({
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              🌍
+              <img src={CountriesIcon} />
             </span>
             <span>Countries Manager</span>
           </div>
@@ -174,7 +171,7 @@ CountryWindow.propTypes = {
       id: PropTypes.number,
       name: PropTypes.string,
       flagEmoji: PropTypes.string,
-    })
+    }),
   ),
   onCountryAdded: PropTypes.func,
   onCountriesLoaded: PropTypes.func,

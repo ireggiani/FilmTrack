@@ -7,6 +7,8 @@ import ActorList from "./ActorList";
 import "../../styles/actors/_actor-form.scss";
 import "../../styles/actors/_actor-list.scss";
 
+import ActorsIcon from "../../assets/icons/actors.png";
+
 const ActorWindow = ({
   isOpen,
   isMinimized,
@@ -36,7 +38,7 @@ const ActorWindow = ({
         `http://localhost:5000/api/actors/${actorId}`,
         {
           method: "DELETE",
-        }
+        },
       );
       if (response.ok) {
         onActorAdded(); // Refresh the list
@@ -88,8 +90,9 @@ const ActorWindow = ({
                 userSelect: "none",
               }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              🎭
+              <img src={ActorsIcon} alt="Actors" />
             </span>
             <span>Actors Manager</span>
           </div>
@@ -151,7 +154,7 @@ ActorWindow.propTypes = {
     PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
-    })
+    }),
   ),
   onActorAdded: PropTypes.func,
   onActorsLoaded: PropTypes.func,

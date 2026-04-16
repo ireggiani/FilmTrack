@@ -1,9 +1,15 @@
-import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import StartButton from './StartButton';
-import StartMenu from './StartMenu';
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import StartButton from "./StartButton";
+import StartMenu from "./StartMenu";
 
-const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows, focusedWindow }) => {
+const Taskbar = ({
+  openWindows,
+  onWindowFocus,
+  onOpenWindow,
+  allWindows,
+  focusedWindow,
+}) => {
   const [time, setTime] = useState(new Date());
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
 
@@ -19,11 +25,11 @@ const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows, focused
 
   const formatTime = (date) => {
     let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    return `${hours.toString().padStart(2, '0')}:${minutes} ${ampm}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes} ${ampm}`;
   };
 
   const handleStartMenuSelect = (windowId) => {
@@ -41,16 +47,19 @@ const Taskbar = ({ openWindows, onWindowFocus, onOpenWindow, allWindows, focused
             onClose={() => setIsStartMenuOpen(false)}
           />
         )}
-        <StartButton onClick={() => setIsStartMenuOpen(!isStartMenuOpen)} />
+        <StartButton
+          onClick={() => setIsStartMenuOpen(!isStartMenuOpen)}
+          isOpen={isStartMenuOpen}
+        />
         <div className="taskbar-content">
           {openWindows.map((window) => (
             <button
               key={window.id}
-              className={`taskbar-item${focusedWindow === window.id ? ' active' : ''}`}
+              className={`taskbar-item${focusedWindow === window.id ? " active" : ""}`}
               onClick={() => onWindowFocus(window.id)}
               title={window.title}
             >
-              <span className="taskbar-icon">{window.icon}</span>
+              <img src={window.icon} className="taskbar-icon" />
               <span className="taskbar-title">{window.title}</span>
             </button>
           ))}
@@ -67,7 +76,7 @@ Taskbar.propTypes = {
       id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       icon: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   onWindowFocus: PropTypes.func.isRequired,
   onOpenWindow: PropTypes.func.isRequired,
@@ -76,7 +85,7 @@ Taskbar.propTypes = {
       id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       icon: PropTypes.string.isRequired,
-    })
+    }),
   ).isRequired,
   focusedWindow: PropTypes.string,
 };

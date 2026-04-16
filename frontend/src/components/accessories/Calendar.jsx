@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Draggable from "react-draggable";
 import "../../styles/accessories/_calendar.scss";
+import CalendarIcon from "../../assets/icons/calendar.png";
 
 const Calendar = ({
   isOpen,
@@ -13,7 +14,7 @@ const Calendar = ({
   const nodeRef = useRef(null);
   const today = new Date();
   const [currentDate, setCurrentDate] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    new Date(today.getFullYear(), today.getMonth(), 1),
   );
 
   const monthNames = [
@@ -77,7 +78,7 @@ const Calendar = ({
           className="calendar-day prev-month"
         >
           {daysInPrevMonth - i}
-        </div>
+        </div>,
       );
     }
 
@@ -89,7 +90,7 @@ const Calendar = ({
           className={`calendar-day ${isToday(day) ? "today" : ""}`}
         >
           {day}
-        </div>
+        </div>,
       );
     }
 
@@ -100,7 +101,7 @@ const Calendar = ({
       days.push(
         <div key={`next-${day}`} className="calendar-day next-month">
           {day}
-        </div>
+        </div>,
       );
     }
 
@@ -126,7 +127,9 @@ const Calendar = ({
       >
         <div className="window-titlebar">
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <span>📅</span>
+            <span className="window-icon-container">
+              <img src={CalendarIcon} alt="Calendar" />
+            </span>
             <span>Calendar</span>
           </div>
           <div style={{ display: "flex" }}>

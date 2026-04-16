@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import Select from "react-select";
+import React, { useState, useMemo } from "react";
 import StyledSelect from "../ui/StyledSelect";
 
-const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
+const MovieRow = ({ movie, onUpdate, onDelete, genres, directors, actors, countries, formatDate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedMovie, setEditedMovie] = useState({
     ...movie,
@@ -19,6 +18,19 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
   const handleSelectChange = (field, selected) => {
     const ids = selected ? selected.map((s) => s.value) : [];
     setEditedMovie((prev) => ({ ...prev, [field]: ids }));
+  };
+
+  const handleDateBlur = (e) => {
+    let value = e.target.value;
+    const match = value.match(/^(\d{1,2})\/(\d{1,2})$/);
+
+    if (match) {
+      const day = match[1].padStart(2, "0");
+      const month = match[2].padStart(2, "0");
+      const year = new Date().getFullYear();
+      const formattedDate = `${year}-${month}-${day}`;
+      setEditedMovie((prev) => ({ ...prev, watchedDate: formattedDate }));
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -46,6 +58,39 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
     });
     setIsEditing(false);
   };
+
+  const genreOptions = useMemo(
+    () => genres.map((g) => ({ value: g.id, label: g.name })).sort((a, b) => a.label.localeCompare(b.label)),
+    [genres],
+  );
+  const genreValues = useMemo(
+    () => genres.filter((g) => editedMovie.genreIds.includes(g.id)).map((g) => ({ value: g.id, label: g.name })),
+    [genres, editedMovie.genreIds],
+  );
+  const directorOptions = useMemo(
+    () => directors.map((d) => ({ value: d.id, label: d.name })).sort((a, b) => a.label.localeCompare(b.label)),
+    [directors],
+  );
+  const directorValues = useMemo(
+    () => directors.filter((d) => editedMovie.directorIds.includes(d.id)).map((d) => ({ value: d.id, label: d.name })),
+    [directors, editedMovie.directorIds],
+  );
+  const actorOptions = useMemo(
+    () => actors.map((a) => ({ value: a.id, label: a.name })).sort((a, b) => a.label.localeCompare(b.label)),
+    [actors],
+  );
+  const actorValues = useMemo(
+    () => actors.filter((a) => editedMovie.actorIds.includes(a.id)).map((a) => ({ value: a.id, label: a.name })),
+    [actors, editedMovie.actorIds],
+  );
+  const countryOptions = useMemo(
+    () => [...countries].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ value: c.id, label: `${c.flagEmoji} ${c.name}` })),
+    [countries],
+  );
+  const countryValues = useMemo(
+    () => countries.filter((c) => editedMovie.countryIds.includes(c.id)).map((c) => ({ value: c.id, label: `${c.flagEmoji} ${c.name}` })),
+    [countries, editedMovie.countryIds],
+  );
 
   return (
     <tr className={`movies-table-row ${isEditing ? "editing" : ""}`}>
@@ -149,9 +194,11 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               type="text"
               value={editedMovie.watchedDate || ""}
               onChange={(e) => handleInputChange("watchedDate", e.target.value)}
+              onBlur={handleDateBlur}
               onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "100%" }}
+              placeholder="DD/MM or DD/MM/YYYY"
             />
           ) : (
             <span
@@ -159,7 +206,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
               onClick={startEditing}
               style={{ cursor: "pointer" }}
             >
-              {props.formatDate(movie.watchedDate)}
+              {formatDate(movie.watchedDate)}
             </span>
           )}
         </div>
@@ -169,12 +216,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
           <StyledSelect
             isMulti
             isInline
-            options={props.genres
-              .map((g) => ({ value: g.id, label: g.name }))
-              .sort((a, b) => a.label.localeCompare(b.label))}
-            value={props.genres
-              .filter((g) => editedMovie.genreIds.includes(g.id))
-              .map((g) => ({ value: g.id, label: g.name }))}
+            options={genreOptions}
+            value={genreValues}
             onChange={(selected) => handleSelectChange("genreIds", selected)}
             menuPortalTarget={document.body}
           />
@@ -193,15 +236,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
         {isEditing && (
           <StyledSelect
             isMulti
-            options={props.directors
-              .map((d) => ({
-                value: d.id,
-                label: d.name,
-              }))
-              .sort((a, b) => a.label.localeCompare(b.label))}
-            value={props.directors
-              .filter((d) => editedMovie.directorIds.includes(d.id))
-              .map((d) => ({ value: d.id, label: d.name }))}
+            options={directorOptions}
+            value={directorValues}
             onChange={(selected) => handleSelectChange("directorIds", selected)}
             menuPortalTarget={document.body}
           />
@@ -220,12 +256,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
         {isEditing && (
           <StyledSelect
             isMulti
-            options={props.actors
-              .map((a) => ({ value: a.id, label: a.name }))
-              .sort((a, b) => a.label.localeCompare(b.label))}
-            value={props.actors
-              .filter((a) => editedMovie.actorIds.includes(a.id))
-              .map((a) => ({ value: a.id, label: a.name }))}
+            options={actorOptions}
+            value={actorValues}
             onChange={(selected) => handleSelectChange("actorIds", selected)}
             menuPortalTarget={document.body}
           />
@@ -244,15 +276,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, ...props }) => {
         {isEditing && (
           <StyledSelect
             isMulti
-            options={[...props.countries]
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((c) => ({
-                value: c.id,
-                label: `${c.flagEmoji} ${c.name}`,
-              }))}
-            value={props.countries
-              .filter((c) => editedMovie.countryIds.includes(c.id))
-              .map((c) => ({ value: c.id, label: `${c.flagEmoji} ${c.name}` }))}
+            options={countryOptions}
+            value={countryValues}
             onChange={(selected) => handleSelectChange("countryIds", selected)}
             menuPortalTarget={document.body}
           />

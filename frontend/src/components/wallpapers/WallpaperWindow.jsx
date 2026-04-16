@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Draggable from "react-draggable";
+import WallpaperIcon from "../../assets/icons/wallpaper.png";
 
 const WallpaperWindow = ({
   isOpen,
@@ -87,8 +88,9 @@ const WallpaperWindow = ({
                 userSelect: "none",
               }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              🎨
+              <img src={WallpaperIcon} alt="Wallpaper" />
             </span>
             <span>Wallpaper Settings</span>
           </div>
