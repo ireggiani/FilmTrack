@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import StartButton from "./StartButton";
 import StartMenu from "./StartMenu";
+import WindowIcon from "./WindowIcon";
 
 const Taskbar = ({
   openWindows,
@@ -59,7 +60,7 @@ const Taskbar = ({
               onClick={() => onWindowFocus(window.id)}
               title={window.title}
             >
-              <img src={window.icon} className="taskbar-icon" />
+              <WindowIcon icon={window.icon} alt={window.title} className="taskbar-icon" />
               <span className="taskbar-title">{window.title}</span>
             </button>
           ))}

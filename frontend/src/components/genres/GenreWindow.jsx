@@ -1,8 +1,9 @@
-import { useState, useRef } from "react";
-import Draggable from "react-draggable";
-import PropTypes from "prop-types";
-import GenreForm from "./GenreForm";
-import GenreList from "./GenreList";
+import { useState, useRef } from 'react';
+import Draggable from 'react-draggable';
+import PropTypes from 'prop-types';
+import GenreForm from './GenreForm';
+import GenreList from './GenreList';
+import WindowIcon from '../ui/WindowIcon';
 
 const GenreWindow = ({
   isOpen,
@@ -15,6 +16,7 @@ const GenreWindow = ({
   refreshGenres,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [editingGenre, setEditingGenre] = useState(null);
@@ -32,14 +34,14 @@ const GenreWindow = ({
       const response = await fetch(
         `http://localhost:5000/api/genres/${genreId}`,
         {
-          method: "DELETE",
-        }
+          method: 'DELETE',
+        },
       );
       if (response.ok) {
         onGenreAdded(); // Refresh the list
       }
     } catch (error) {
-      console.error("Error deleting genre:", error);
+      console.error('Error deleting genre:', error);
     }
   };
 
@@ -53,44 +55,40 @@ const GenreWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "window maximized" : "window"}
+        className={isMaximized ? 'window maximized' : 'window'}
         onClick={onFocus}
         style={{
           ...(isMaximized
             ? {
-                position: "fixed",
+                position: 'fixed',
                 top: 0,
                 left: 0,
-                width: "100vw",
-                height: "calc(100vh - 32px)",
-                maxHeight: "calc(100vh - 32px)",
+                width: '100vw',
+                height: 'calc(100vh - 32px)',
+                maxHeight: 'calc(100vh - 32px)',
                 borderRadius: 0,
                 zIndex: 300,
               }
             : { zIndex }),
           ...(isMinimized
             ? {
-                display: "none",
+                display: 'none',
               }
             : {}),
         }}
       >
         <div className="window-titlebar">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
+              className="window-icon-container"
             >
-              🎭
+              <WindowIcon icon={icon} alt="Genres" />
             </span>
             <span>Genres Manager</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button window-minimize"
               onClick={onMinimize}
@@ -101,9 +99,9 @@ const GenreWindow = ({
             <button
               className="titlebar-button window-maximize"
               onClick={() => setIsMaximized(!isMaximized)}
-              title={isMaximized ? "Restore" : "Maximize"}
+              title={isMaximized ? 'Restore' : 'Maximize'}
             >
-              {isMaximized ? "🗗" : "🗖"}
+              {isMaximized ? '🗗' : '🗖'}
             </button>
             <button className="titlebar-button window-close" onClick={onClose}>
               🗙
@@ -115,8 +113,8 @@ const GenreWindow = ({
           style={
             isMaximized
               ? {
-                  maxHeight: "calc(100vh - 64px)",
-                  height: "calc(100vh - 64px)",
+                  maxHeight: 'calc(100vh - 64px)',
+                  height: 'calc(100vh - 64px)',
                 }
               : {}
           }
@@ -148,7 +146,7 @@ GenreWindow.propTypes = {
     PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
-    })
+    }),
   ),
   onGenreAdded: PropTypes.func,
   onGenresLoaded: PropTypes.func,

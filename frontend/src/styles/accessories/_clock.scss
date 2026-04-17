@@ -3,6 +3,7 @@
 .clock-window {
   width: 220px;
   height: 235px;
+  outline: none;
 
   .clock-content {
     @include textures.classy-wood;

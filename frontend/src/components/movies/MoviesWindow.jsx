@@ -3,7 +3,7 @@ import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import MoviesTable from "./MoviesTable";
 import "../../styles/movies/_movies-table.scss";
-import MoviesIcon from "../../assets/icons/movies.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const MoviesWindow = ({
   isOpen,
@@ -15,6 +15,7 @@ const MoviesWindow = ({
   setRefreshMovies,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
@@ -59,22 +60,17 @@ const MoviesWindow = ({
         }}
       >
         <div className="window-titlebar">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
               className="window-icon-container"
             >
-              <img src={MoviesIcon} alt="Movies" />
+              <WindowIcon icon={icon} alt="Movies" />
             </span>
             <span>Movies Collection</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button"
               onClick={() => setHideAddForm(!hideAddForm)}

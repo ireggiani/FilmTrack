@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
-import Draggable from "react-draggable";
-import notepadIcon from "../../assets/icons/notepad-icon.png";
+import { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Draggable from 'react-draggable';
+import WindowIcon from '../ui/WindowIcon';
 
 const Notepad = ({
   onClose,
@@ -10,11 +10,12 @@ const Notepad = ({
   zIndex,
   isOpen,
   isMinimized,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [notes, setNotes] = useState([]);
   const [currentNote, setCurrentNote] = useState(null);
-  const [title, setTitle] = useState("Untitled");
+  const [title, setTitle] = useState('Untitled');
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const Notepad = ({
 
   const loadNotes = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/notes");
+      const response = await fetch('http://localhost:5000/api/notes');
       const data = await response.json();
       setNotes(data);
       if (data.length > 0) {
@@ -34,7 +35,7 @@ const Notepad = ({
         }
       }
     } catch (error) {
-      console.error("Error loading notes:", error);
+      console.error('Error loading notes:', error);
     }
   };
 
@@ -43,14 +44,14 @@ const Notepad = ({
     try {
       if (currentNote) {
         await fetch(`http://localhost:5000/api/notes/${currentNote.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title, content }),
         });
       } else {
-        const response = await fetch("http://localhost:5000/api/notes", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const response = await fetch('http://localhost:5000/api/notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title, content }),
         });
         const newNote = await response.json();
@@ -58,14 +59,14 @@ const Notepad = ({
       }
       loadNotes();
     } catch (error) {
-      console.error("Error saving note:", error);
+      console.error('Error saving note:', error);
     }
   };
 
   const newNote = () => {
     setCurrentNote(null);
-    setTitle("Untitled");
-    editorRef.current.innerHTML = "";
+    setTitle('Untitled');
+    editorRef.current.innerHTML = '';
   };
 
   const loadNote = (note) => {
@@ -84,6 +85,7 @@ const Notepad = ({
   return (
     <Draggable
       handle=".window-titlebar"
+      bounds="parent"
       nodeRef={nodeRef}
       cancel=".titlebar-button"
     >
@@ -93,26 +95,21 @@ const Notepad = ({
         onClick={onFocus}
         style={{
           zIndex,
-          ...(isMinimized && { display: "none" }),
+          ...(isMinimized && { display: 'none' }),
         }}
       >
         <div className="window-titlebar leather">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <img
-              src={notepadIcon}
-              alt="Notepad"
+          <div className="titlebar-left">
+            <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                width: "16px",
-                height: "16px",
-                userSelect: "none",
-              }}
               title="Double-click to close"
-            />
+              className="window-icon-container"
+            >
+              <WindowIcon icon={icon} alt="Notepad" />
+            </span>
             <span>Notepad</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button window-minimize"
               onClick={onMinimize}
@@ -137,28 +134,28 @@ const Notepad = ({
             />
             <div className="toolbar-buttons">
               <button
-                onClick={() => formatText("bold")}
+                onClick={() => formatText('bold')}
                 title="Bold"
                 className="btn"
               >
                 <b>B</b>
               </button>
               <button
-                onClick={() => formatText("italic")}
+                onClick={() => formatText('italic')}
                 title="Italic"
                 className="btn"
               >
                 <i>I</i>
               </button>
               <button
-                onClick={() => formatText("underline")}
+                onClick={() => formatText('underline')}
                 title="Underline"
                 className="btn"
               >
                 <u>U</u>
               </button>
               <button
-                onClick={() => formatText("insertUnorderedList")}
+                onClick={() => formatText('insertUnorderedList')}
                 title="Bullet List"
                 className="btn"
               >
@@ -180,7 +177,7 @@ const Notepad = ({
                 <div
                   key={note.id}
                   className={`note-item ${
-                    currentNote?.id === note.id ? "active" : ""
+                    currentNote?.id === note.id ? 'active' : ''
                   }`}
                   onClick={() => loadNote(note)}
                 >

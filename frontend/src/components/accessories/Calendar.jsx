@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Draggable from "react-draggable";
 import "../../styles/accessories/_calendar.scss";
-import CalendarIcon from "../../assets/icons/calendar.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const Calendar = ({
   isOpen,
@@ -10,6 +10,7 @@ const Calendar = ({
   onMinimize,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const today = new Date();
@@ -111,6 +112,7 @@ const Calendar = ({
   return (
     <Draggable
       handle=".window-titlebar"
+      bounds="parent"
       nodeRef={nodeRef}
       cancel=".titlebar-button"
     >
@@ -121,18 +123,17 @@ const Calendar = ({
         tabIndex={0}
         style={{
           zIndex,
-          outline: "none",
           ...(isMinimized && { display: "none" }),
         }}
       >
         <div className="window-titlebar">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span className="window-icon-container">
-              <img src={CalendarIcon} alt="Calendar" />
+              <WindowIcon icon={icon} alt="Calendar" />
             </span>
             <span>Calendar</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button window-minimize"
               onClick={onMinimize}

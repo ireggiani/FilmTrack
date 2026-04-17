@@ -6,7 +6,7 @@ import {
   lazy,
   Suspense,
 } from "react";
-import notepadIcon from "./assets/icons/notepad-icon.png";
+import { WINDOWS, WINDOW_MAP } from "./config/windowRegistry";
 const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
 const WallpaperWindow = lazy(
   () => import("./components/wallpapers/WallpaperWindow"),
@@ -32,14 +32,6 @@ import "./styles/scrollbar.scss";
 import "./styles/taskbar.scss";
 import "./styles/accessories/_notepad.scss";
 
-import CountriesIcon from "./assets/icons/countries.png";
-import DirectorsIcon from "./assets/icons/directors.png";
-import ActorsIcon from "./assets/icons/actors.png";
-import GenresIcon from "./assets/icons/genres.png";
-import WallpaperIcon from "./assets/icons/wallpaper.png";
-import MoviesIcon from "./assets/icons/movies.png";
-import BackupIcon from "./assets/icons/backup.png";
-import CalendarIcon from "./assets/icons/calendar.png";
 
 function App() {
   const [refreshGenres, setRefreshGenres] = useState(0);
@@ -201,43 +193,17 @@ function App() {
 
   const memoizedOpenWindows = useMemo(
     () => [
-      ...(genreWindowOpen
-        ? [{ id: "genres", title: "Genres Manager", icon: GenresIcon }]
-        : []),
-      ...(wallpaperWindowOpen
-        ? [
-            {
-              id: "wallpaper",
-              title: "Wallpaper Settings",
-              icon: WallpaperIcon,
-            },
-          ]
-        : []),
-      ...(countryWindowOpen
-        ? [{ id: "countries", title: "Countries Manager", icon: CountriesIcon }]
-        : []),
-      ...(directorWindowOpen
-        ? [{ id: "directors", title: "Directors Manager", icon: DirectorsIcon }]
-        : []),
-      ...(actorWindowOpen
-        ? [{ id: "actors", title: "Actors Manager", icon: ActorsIcon }]
-        : []),
-      ...(moviesWindowOpen
-        ? [{ id: "movies", title: "Movies Collection", icon: MoviesIcon }]
-        : []),
-      ...(backupWindowOpen
-        ? [{ id: "backup", title: "Backup & Restore", icon: BackupIcon }]
-        : []),
-      ...(calculatorWindowOpen
-        ? [{ id: "calculator", title: "Calculator", icon: "🔢" }]
-        : []),
-      ...(calendarWindowOpen
-        ? [{ id: "calendar", title: "Calendar", icon: CalendarIcon }]
-        : []),
-      ...(clockWindowOpen ? [{ id: "clock", title: "Clock", icon: "🕐" }] : []),
-      ...(notepadWindowOpen
-        ? [{ id: "notepad", title: "Notepad", icon: notepadIcon }]
-        : []),
+      ...(genreWindowOpen     ? [WINDOW_MAP.genres]      : []),
+      ...(wallpaperWindowOpen ? [WINDOW_MAP.wallpaper]   : []),
+      ...(countryWindowOpen   ? [WINDOW_MAP.countries]   : []),
+      ...(directorWindowOpen  ? [WINDOW_MAP.directors]   : []),
+      ...(actorWindowOpen     ? [WINDOW_MAP.actors]      : []),
+      ...(moviesWindowOpen    ? [WINDOW_MAP.movies]      : []),
+      ...(backupWindowOpen    ? [WINDOW_MAP.backup]      : []),
+      ...(calculatorWindowOpen? [WINDOW_MAP.calculator]  : []),
+      ...(calendarWindowOpen  ? [WINDOW_MAP.calendar]    : []),
+      ...(clockWindowOpen     ? [WINDOW_MAP.clock]       : []),
+      ...(notepadWindowOpen   ? [WINDOW_MAP.notepad]     : []),
     ],
     [
       genreWindowOpen,
@@ -252,23 +218,6 @@ function App() {
       clockWindowOpen,
       notepadWindowOpen,
     ],
-  );
-
-  const allWindows = useMemo(
-    () => [
-      { id: "movies", title: "Movies Collection", icon: MoviesIcon },
-      { id: "genres", title: "Genres Manager", icon: GenresIcon },
-      { id: "directors", title: "Directors Manager", icon: DirectorsIcon },
-      { id: "actors", title: "Actors Manager", icon: ActorsIcon },
-      { id: "countries", title: "Countries Manager", icon: CountriesIcon },
-      { id: "backup", title: "Backup & Restore", icon: BackupIcon },
-      { id: "wallpaper", title: "Wallpaper Settings", icon: WallpaperIcon },
-      { id: "calculator", title: "Calculator", icon: "🔢" },
-      { id: "calendar", title: "Calendar", icon: CalendarIcon },
-      { id: "clock", title: "Clock", icon: "🕐" },
-      { id: "notepad", title: "Notepad", icon: notepadIcon },
-    ],
-    [],
   );
 
   const openWindow = useCallback(
@@ -529,6 +478,7 @@ function App() {
             refreshGenres={refreshGenres}
             onFocus={windowFocusHandlers.genres}
             zIndex={100 + windowStack.indexOf("genres")}
+            icon={WINDOW_MAP.genres.icon}
           />
         </Suspense>
       )}
@@ -543,6 +493,7 @@ function App() {
             onWallpaperChange={handleWallpaperChange}
             onFocus={windowFocusHandlers.wallpaper}
             zIndex={100 + windowStack.indexOf("wallpaper")}
+            icon={WINDOW_MAP.wallpaper.icon}
           />
         </Suspense>
       )}
@@ -559,6 +510,7 @@ function App() {
             refreshCountries={refreshCountries}
             onFocus={windowFocusHandlers.countries}
             zIndex={100 + windowStack.indexOf("countries")}
+            icon={WINDOW_MAP.countries.icon}
           />
         </Suspense>
       )}
@@ -575,6 +527,7 @@ function App() {
             refreshDirectors={refreshDirectors}
             onFocus={windowFocusHandlers.directors}
             zIndex={100 + windowStack.indexOf("directors")}
+            icon={WINDOW_MAP.directors.icon}
           />
         </Suspense>
       )}
@@ -591,6 +544,7 @@ function App() {
             refreshActors={refreshActors}
             onFocus={windowFocusHandlers.actors}
             zIndex={100 + windowStack.indexOf("actors")}
+            icon={WINDOW_MAP.actors.icon}
           />
         </Suspense>
       )}
@@ -607,6 +561,7 @@ function App() {
             setRefreshMovies={setRefreshMovies}
             onFocus={windowFocusHandlers.movies}
             zIndex={100 + windowStack.indexOf("movies")}
+            icon={WINDOW_MAP.movies.icon}
           />
         </Suspense>
       )}
@@ -619,6 +574,7 @@ function App() {
             onMinimize={handleMinimizeBackupWindow}
             onFocus={windowFocusHandlers.backup}
             zIndex={100 + windowStack.indexOf("backup")}
+            icon={WINDOW_MAP.backup.icon}
           />
         </Suspense>
       )}
@@ -631,6 +587,7 @@ function App() {
             onMinimize={handleMinimizeCalculatorWindow}
             onFocus={windowFocusHandlers.calculator}
             zIndex={100 + windowStack.indexOf("calculator")}
+            icon={WINDOW_MAP.calculator.icon}
           />
         </Suspense>
       )}
@@ -643,6 +600,7 @@ function App() {
             onMinimize={handleMinimizeCalendarWindow}
             onFocus={windowFocusHandlers.calendar}
             zIndex={100 + windowStack.indexOf("calendar")}
+            icon={WINDOW_MAP.calendar.icon}
           />
         </Suspense>
       )}
@@ -655,6 +613,7 @@ function App() {
             onMinimize={handleMinimizeClockWindow}
             onFocus={windowFocusHandlers.clock}
             zIndex={100 + windowStack.indexOf("clock")}
+            icon={WINDOW_MAP.clock.icon}
           />
         </Suspense>
       )}
@@ -667,6 +626,7 @@ function App() {
             onMinimize={handleMinimizeNotepadWindow}
             onFocus={windowFocusHandlers.notepad}
             zIndex={100 + windowStack.indexOf("notepad")}
+            icon={WINDOW_MAP.notepad.icon}
           />
         </Suspense>
       )}
@@ -674,7 +634,7 @@ function App() {
         openWindows={memoizedOpenWindows}
         onWindowFocus={handleWindowFocus}
         onOpenWindow={openWindow}
-        allWindows={allWindows}
+        allWindows={WINDOWS}
         focusedWindow={focusedWindow}
       />
     </main>

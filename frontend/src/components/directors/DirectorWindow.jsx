@@ -7,7 +7,7 @@ import DirectorList from "./DirectorList";
 import "../../styles/directors/_director-form.scss";
 import "../../styles/directors/_director-list.scss";
 
-import DirectorsIcon from "../../assets/icons/directors.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const DirectorWindow = ({
   isOpen,
@@ -20,6 +20,7 @@ const DirectorWindow = ({
   refreshDirectors,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [editingDirector, setEditingDirector] = useState(null);
@@ -82,22 +83,17 @@ const DirectorWindow = ({
         }}
       >
         <div className="window-titlebar metal">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
               className="window-icon-container"
             >
-              <img src={DirectorsIcon} alt="Directors" />
+              <WindowIcon icon={icon} alt="Directors" />
             </span>
             <span>Directors Manager</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className={`titlebar-button paddle-switch${
                 hideDirectorForm ? " active" : ""

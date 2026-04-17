@@ -3,6 +3,9 @@
 .calculator-window {
   width: 250px;
   height: 345px;
+  outline: none;
+  display: flex;
+  flex-direction: column;
 
   .calculator-content {
     @include textures.brushed-metal-grey;
@@ -10,6 +13,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
   }
 
   .calculator-display {
@@ -35,29 +39,79 @@
   }
 
   .calc-btn {
-    background: linear-gradient(180deg, #f0f0f0 0%, #d0d0d0 100%);
-    border: 1px solid #999;
-    border-radius: 3px;
+    background: linear-gradient(
+      to bottom,
+      #ffffff 0%,
+      #dde0ec 45%,
+      #adb2c6 51%,
+      #c8cce0 100%
+    );
+    border: 1px solid #8890a8;
+    border-top-color: #d8dcec;
+    border-radius: 4px;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.1s ease;
+    color: #1a1a2e;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: all 0.08s ease;
 
     &:hover {
-      background: linear-gradient(180deg, #f5f5f5 0%, #d5d5d5 100%);
+      background: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #eef0fa 45%,
+        #c0c6de 51%,
+        #d8dce8 100%
+      );
     }
 
     &:active {
-      background: linear-gradient(0deg, #f0f0f0 0%, #d0d0d0 100%);
-      border: 1px inset #999;
+      background: linear-gradient(
+        to bottom,
+        #b8bdd0 0%,
+        #c8cce0 45%,
+        #d8dce8 51%,
+        #eceef8 100%
+      );
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+      border-top-color: #8890a8;
     }
 
     &.clear {
-      background: linear-gradient(180deg, #ff6b6b 0%, #e55555 100%);
+      background: linear-gradient(
+        to bottom,
+        #ffcccc 0%,
+        #ee5555 45%,
+        #cc1c1c 51%,
+        #e04040 100%
+      );
+      border-color: #aa1818;
+      border-top-color: #ffaaaa;
       color: white;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 
       &:hover {
-        background: linear-gradient(180deg, #ff7777 0%, #e66666 100%);
+        background: linear-gradient(
+          to bottom,
+          #ffd8d8 0%,
+          #f06666 45%,
+          #dd2828 51%,
+          #ee5050 100%
+        );
+      }
+
+      &:active {
+        background: linear-gradient(
+          to bottom,
+          #cc2020 0%,
+          #dd3030 45%,
+          #ee5050 51%,
+          #ffaaaa 100%
+        );
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.4);
       }
     }
 
@@ -67,11 +121,37 @@
 
     &.equals {
       grid-row: span 2;
-      background: linear-gradient(180deg, #4ecdc4 0%, #45b7aa 100%);
+      background: linear-gradient(
+        to bottom,
+        #c0f0ec 0%,
+        #4ec8c0 45%,
+        #2a9090 51%,
+        #44b0a8 100%
+      );
+      border-color: #207878;
+      border-top-color: #a0e4e0;
       color: white;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 
       &:hover {
-        background: linear-gradient(180deg, #5dd3cc 0%, #4fc4b7 100%);
+        background: linear-gradient(
+          to bottom,
+          #d0f4f0 0%,
+          #60d8d0 45%,
+          #38a0a0 51%,
+          #54c0b8 100%
+        );
+      }
+
+      &:active {
+        background: linear-gradient(
+          to bottom,
+          #289090 0%,
+          #38a0a0 45%,
+          #50b8b0 51%,
+          #a0e0dc 100%
+        );
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
       }
     }
 

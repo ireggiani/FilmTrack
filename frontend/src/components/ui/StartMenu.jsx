@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import WindowIcon from "./WindowIcon";
 
 const StartMenu = ({ onSelect, onClose, windows }) => {
   const menuRef = useRef(null);
@@ -37,7 +38,7 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
         <ul>
           {mainWindows.map((window) => (
             <li key={window.id} onClick={() => onSelect(window.id)}>
-              <img src={window.icon} alt={window.title} />
+              <WindowIcon icon={window.icon} alt={window.title} />
               {window.title}
             </li>
           ))}
@@ -47,7 +48,7 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
               <ul className="submenu-items">
                 {systemWindows.map((window) => (
                   <li key={window.id} onClick={() => onSelect(window.id)}>
-                    <img src={window.icon} alt={window.title} />
+                    <WindowIcon icon={window.icon} alt={window.title} />
                     {window.title}
                   </li>
                 ))}
@@ -60,11 +61,7 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
               <ul className="submenu-items">
                 {accessoryWindows.map((window) => (
                   <li key={window.id} onClick={() => onSelect(window.id)}>
-                    {typeof window.icon === 'string' && window.icon.startsWith('/') ? (
-                      <img src={window.icon} alt={window.title} />
-                    ) : (
-                      window.icon
-                    )}{' '}
+                    <WindowIcon icon={window.icon} alt={window.title} />
                     {window.title}
                   </li>
                 ))}

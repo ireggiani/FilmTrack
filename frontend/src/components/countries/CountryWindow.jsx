@@ -5,7 +5,7 @@ import CountryForm from "./CountryForm";
 import CountryList from "./CountryList";
 import "../../styles/countries/_country-form.scss";
 import "../../styles/countries/_country-list.scss";
-import CountriesIcon from "../../assets/icons/countries.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const CountryWindow = ({
   isOpen,
@@ -18,6 +18,7 @@ const CountryWindow = ({
   refreshCountries,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [editingCountry, setEditingCountry] = useState(null);
@@ -83,17 +84,17 @@ const CountryWindow = ({
         }}
       >
         <div className="window-titlebar leather">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
               title="Double-click to close"
               className="window-icon-container"
             >
-              <img src={CountriesIcon} />
+              <WindowIcon icon={icon} alt="Countries" />
             </span>
             <span>Countries Manager</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className={`titlebar-button rubber ${
                 !showAddForm ? "active" : ""

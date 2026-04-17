@@ -7,7 +7,7 @@ import ActorList from "./ActorList";
 import "../../styles/actors/_actor-form.scss";
 import "../../styles/actors/_actor-list.scss";
 
-import ActorsIcon from "../../assets/icons/actors.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const ActorWindow = ({
   isOpen,
@@ -20,6 +20,7 @@ const ActorWindow = ({
   refreshActors,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [editingActor, setEditingActor] = useState(null);
@@ -81,22 +82,17 @@ const ActorWindow = ({
         }}
       >
         <div className="window-titlebar">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
               className="window-icon-container"
             >
-              <img src={ActorsIcon} alt="Actors" />
+              <WindowIcon icon={icon} alt="Actors" />
             </span>
             <span>Actors Manager</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button window-minimize"
               onClick={onMinimize}

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Draggable from "react-draggable";
-import WallpaperIcon from "../../assets/icons/wallpaper.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const WallpaperWindow = ({
   isOpen,
@@ -11,6 +11,7 @@ const WallpaperWindow = ({
   onWallpaperChange,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -79,22 +80,17 @@ const WallpaperWindow = ({
         }}
       >
         <div className="window-titlebar">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
               className="window-icon-container"
             >
-              <img src={WallpaperIcon} alt="Wallpaper" />
+              <WindowIcon icon={icon} alt="Wallpaper" />
             </span>
             <span>Wallpaper Settings</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button window-minimize"
               onClick={onMinimize}

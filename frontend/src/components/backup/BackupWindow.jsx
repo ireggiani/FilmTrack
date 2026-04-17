@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import Draggable from "react-draggable";
 import API_BASE_URL from "../../config/api.js";
 import "../../styles/backup/_backup-window.scss";
-import BackupIcon from "../../assets/icons/backup.png";
+import WindowIcon from "../ui/WindowIcon";
 
 const BackupWindow = ({
   isOpen,
@@ -11,6 +11,7 @@ const BackupWindow = ({
   onMinimize,
   onFocus,
   zIndex,
+  icon,
 }) => {
   const nodeRef = useRef(null);
   const [file, setFile] = useState(null);
@@ -155,6 +156,7 @@ const BackupWindow = ({
   return (
     <Draggable
       handle=".window-titlebar"
+      bounds="parent"
       nodeRef={nodeRef}
       cancel=".titlebar-button"
     >
@@ -168,22 +170,17 @@ const BackupWindow = ({
         }}
       >
         <div className="window-titlebar important">
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div className="titlebar-left">
             <span
               onDoubleClick={onClose}
-              style={{
-                cursor: "pointer",
-                fontSize: "1rem",
-                userSelect: "none",
-              }}
               title="Double-click to close"
               className="window-icon-container"
             >
-              <img src={BackupIcon} alt="Backup" />
+              <WindowIcon icon={icon} alt="Backup" />
             </span>
             <span>Backup & Restore</span>
           </div>
-          <div style={{ display: "flex" }}>
+          <div className="titlebar-right">
             <button
               className="titlebar-button window-minimize orb"
               onClick={onMinimize}
