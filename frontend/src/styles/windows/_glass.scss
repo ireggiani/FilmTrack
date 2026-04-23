@@ -1,0 +1,46 @@
+/// Glass / frosted theme — the default window style.
+/// Used by: GenreWindow, ActorWindow, MoviesWindow, WallpaperWindow,
+///           Notepad, Clock, Calendar, Calculator.
+@use './base';
+
+.window {
+  @include base.window-base;
+  background: rgba(220, 220, 220, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+  .window-titlebar {
+    background: rgba(225, 225, 225, 0.45);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    .window-title {
+      color: black;
+    }
+
+    .window-close {
+      &:hover {
+        background: rgba(255, 100, 100, 0.4);
+      }
+
+      &:active {
+        background: rgba(255, 100, 100, 0.6);
+      }
+    }
+  }
+
+  .window-content {
+    padding: 0.5rem;
+    max-height: calc(80vh - 32px);
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.45);
+  }
+
+  .window-content--compact {
+    padding: 0;
+    max-height: calc(80vh - 32px);
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.45);
+  }
+}

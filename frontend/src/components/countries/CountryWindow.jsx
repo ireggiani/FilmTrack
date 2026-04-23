@@ -92,7 +92,7 @@ const CountryWindow = ({
             >
               <WindowIcon icon={icon} alt="Countries" />
             </span>
-            <span>Countries Manager</span>
+            <span className="window-title">Countries Manager</span>
           </div>
           <div className="titlebar-right">
             <button

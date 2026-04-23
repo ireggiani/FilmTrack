@@ -107,7 +107,7 @@ const Notepad = ({
             >
               <WindowIcon icon={icon} alt="Notepad" />
             </span>
-            <span>Notepad</span>
+            <span className="window-title">Notepad</span>
           </div>
           <div className="titlebar-right">
             <button

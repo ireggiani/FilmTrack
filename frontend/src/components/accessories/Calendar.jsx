@@ -131,7 +131,7 @@ const Calendar = ({
             <span className="window-icon-container">
               <WindowIcon icon={icon} alt="Calendar" />
             </span>
-            <span>Calendar</span>
+            <span className="window-title">Calendar</span>
           </div>
           <div className="titlebar-right">
             <button

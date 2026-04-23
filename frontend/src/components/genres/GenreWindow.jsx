@@ -86,7 +86,7 @@ const GenreWindow = ({
             >
               <WindowIcon icon={icon} alt="Genres" />
             </span>
-            <span>Genres Manager</span>
+            <span className="window-title">Genres Manager</span>
           </div>
           <div className="titlebar-right">
             <button

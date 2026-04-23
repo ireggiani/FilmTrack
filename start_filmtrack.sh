@@ -26,16 +26,5 @@ echo "Starting frontend server..."
 cd "$SCRIPT_DIR/frontend"
 npm run dev &
 
-# Wait a few seconds to ensure the servers have time to start
-echo "Waiting for servers to initialize..."
-sleep 5
-
-# The default Vite port is 5173. If you have configured a different port,
-# change the URL below.
-FRONTEND_URL="http://localhost:5173"
-
-echo "Opening application at $FRONTEND_URL"
-xdg-open "$FRONTEND_URL"
-
 # Wait for all background processes to complete (which they won't, until the script is terminated)
 wait

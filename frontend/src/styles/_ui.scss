@@ -1,12 +1,13 @@
-@use "./ui/headings";
-@use "./ui/buttons";
-@use "./ui/_pill-item.scss";
-@use "./ui/_start-menu.scss";
-@use "./decorative/textures";
+@use './ui/headings';
+@use './ui/buttons';
+@use './ui/_pill-item.scss';
+@use './ui/_start-menu.scss';
+@use './ui/_filter-input.scss';
+@use './decorative/textures';
 
 @mixin glass-inner-container {
   background: rgba(100, 100, 255, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
 }
@@ -49,12 +50,13 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
         0 1px 3px rgba(0, 0, 0, 0.3);
       margin-right: 0.5rem;
 
       &:checked::after {
-        content: "✓";
+        content: '✓';
         position: absolute;
         top: 45%;
         left: 50%;
@@ -75,7 +77,8 @@
     border: 3px double darkslategray;
     box-shadow: unset;
     color: darkslategray;
-    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8),
+    text-shadow:
+      0 1px 3px rgba(255, 255, 255, 0.8),
       0 0 10px rgba(255, 128, 0, 0.8);
 
     .checkbox__inner {
