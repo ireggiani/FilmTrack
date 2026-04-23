@@ -88,7 +88,7 @@ const WallpaperWindow = ({
             >
               <WindowIcon icon={icon} alt="Wallpaper" />
             </span>
-            <span>Wallpaper Settings</span>
+            <span className="window-title">Wallpaper Settings</span>
           </div>
           <div className="titlebar-right">
             <button

@@ -142,10 +142,6 @@ function App() {
     });
     setFocusedWindow(windowId);
 
-    // React bails out of state updates when the new value equals the current
-    // value, so calling these unconditionally is safe and avoids listing all
-    // minimized states as deps (which would make this callback recreate on
-    // every minimize/unminimize and cascade re-renders everywhere).
     const minimizeSetters = {
       genres: setGenreMinimized,
       wallpaper: setWallpaperMinimized,
@@ -310,7 +306,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeGenreWindow = useCallback(
-    () => setGenreMinimized(true),
+    (e) => { e?.stopPropagation(); setGenreMinimized(true); },
     [],
   );
 
@@ -319,7 +315,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeWallpaperWindow = useCallback(
-    () => setWallpaperMinimized(true),
+    (e) => { e?.stopPropagation(); setWallpaperMinimized(true); },
     [],
   );
 
@@ -328,7 +324,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeCountryWindow = useCallback(
-    () => setCountryMinimized(true),
+    (e) => { e?.stopPropagation(); setCountryMinimized(true); },
     [],
   );
 
@@ -337,7 +333,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeDirectorWindow = useCallback(
-    () => setDirectorMinimized(true),
+    (e) => { e?.stopPropagation(); setDirectorMinimized(true); },
     [],
   );
 
@@ -346,7 +342,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeActorWindow = useCallback(
-    () => setActorMinimized(true),
+    (e) => { e?.stopPropagation(); setActorMinimized(true); },
     [],
   );
 
@@ -355,7 +351,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeMoviesWindow = useCallback(
-    () => setMoviesMinimized(true),
+    (e) => { e?.stopPropagation(); setMoviesMinimized(true); },
     [],
   );
 
@@ -364,7 +360,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeBackupWindow = useCallback(
-    () => setBackupMinimized(true),
+    (e) => { e?.stopPropagation(); setBackupMinimized(true); },
     [],
   );
 
@@ -373,7 +369,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeCalculatorWindow = useCallback(
-    () => setCalculatorMinimized(true),
+    (e) => { e?.stopPropagation(); setCalculatorMinimized(true); },
     [],
   );
 
@@ -382,7 +378,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeCalendarWindow = useCallback(
-    () => setCalendarMinimized(true),
+    (e) => { e?.stopPropagation(); setCalendarMinimized(true); },
     [],
   );
 
@@ -391,7 +387,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeClockWindow = useCallback(
-    () => setClockMinimized(true),
+    (e) => { e?.stopPropagation(); setClockMinimized(true); },
     [],
   );
 
@@ -400,7 +396,7 @@ function App() {
     [closeWindow],
   );
   const handleMinimizeNotepadWindow = useCallback(
-    () => setNotepadMinimized(true),
+    (e) => { e?.stopPropagation(); setNotepadMinimized(true); },
     [],
   );
 

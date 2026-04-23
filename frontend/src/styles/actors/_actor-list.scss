@@ -1,4 +1,4 @@
-@use "../ui";
+@use '../ui';
 
 .actor-list {
   @include ui.glass-inner-container;
@@ -9,8 +9,16 @@
   .list-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    gap: 0.5rem;
     margin-bottom: 0.5rem;
+
+    .filter-input-wrap {
+      flex: 1;
+      min-width: 0;
+      width: auto;
+      margin-bottom: 0;
+    }
 
     .checkbox {
       margin-top: 0.25rem;

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, memo } from "react";
 import PropTypes from "prop-types";
 import GlassCheckbox from "../ui/GlassCheckbox";
+import FilterInput from "../ui/FilterInput";
 import PillItem from "../ui/PillItem";
 
 const CountryList = ({
@@ -12,6 +13,7 @@ const CountryList = ({
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [alphabetical, setAlphabetical] = useState(true);
+  const [filterText, setFilterText] = useState('');
 
   const fetchCountries = useCallback(async () => {
     try {
@@ -34,12 +36,25 @@ const CountryList = ({
     ? [...countries].sort((a, b) => a.name.localeCompare(b.name))
     : countries;
 
+  const filteredCountries = sortedCountries.filter((c) =>
+    c.name.toLowerCase().includes(filterText.toLowerCase()),
+  );
+
   if (loading) return <div className="glass">Loading countries...</div>;
 
   return (
     <div className="country-list">
       <div className="list-header">
         <h3 className="heading-left--paper">Existing Countries</h3>
+        {countries.length > 0 && (
+          <FilterInput
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            onClear={() => setFilterText('')}
+            theme="paper"
+            placeholder="Filter countries…"
+          />
+        )}
         <GlassCheckbox
           checked={alphabetical}
           onChange={(e) => setAlphabetical(e.target.checked)}
@@ -51,12 +66,16 @@ const CountryList = ({
         <p style={{ color: "rgba(255, 255, 255, 0.8)" }}>
           No countries added yet
         </p>
+      ) : filteredCountries.length === 0 ? (
+        <p style={{ color: "darkslategray", fontStyle: "italic", fontSize: "0.8rem", padding: "0.25rem 0.5rem", opacity: 0.7 }}>
+          No countries match &ldquo;{filterText}&rdquo;
+        </p>
       ) : (
         <div
           className="list"
           style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
         >
-          {sortedCountries.map((country) => (
+          {filteredCountries.map((country) => (
             <PillItem
               key={country.id}
               id={country.id}

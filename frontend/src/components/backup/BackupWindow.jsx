@@ -1,8 +1,7 @@
-import { useState, useRef } from "react";
-import Draggable from "react-draggable";
-import API_BASE_URL from "../../config/api.js";
-import "../../styles/backup/_backup-window.scss";
-import WindowIcon from "../ui/WindowIcon";
+import { useState, useRef } from 'react';
+import Draggable from 'react-draggable';
+import API_BASE_URL from '../../config/api.js';
+import WindowIcon from '../ui/WindowIcon';
 
 const BackupWindow = ({
   isOpen,
@@ -15,7 +14,7 @@ const BackupWindow = ({
 }) => {
   const nodeRef = useRef(null);
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const fileInputRef = useRef(null);
   const [csvColumns, setCsvColumns] = useState({
     title: true,
@@ -30,22 +29,22 @@ const BackupWindow = ({
 
   const handleBackup = async () => {
     try {
-      setMessage("Starting backup...");
+      setMessage('Starting backup...');
       const response = await fetch(`${API_BASE_URL}/database/backup`);
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || "Backup failed");
+        throw new Error(errorText || 'Backup failed');
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = "filmtrack.backup.sqlite";
+      a.download = 'filmtrack.backup.sqlite';
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      setMessage("☑️ Backup downloaded successfully. ");
+      setMessage('☑️ Backup downloaded successfully. ');
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -61,17 +60,17 @@ const BackupWindow = ({
 
   const handleRestore = async () => {
     if (!file) {
-      setMessage("Select a file to restore.");
+      setMessage('Select a file to restore.');
       return;
     }
 
     const formData = new FormData();
-    formData.append("db-file", file);
+    formData.append('db-file', file);
 
     try {
-      setMessage("Restoring database... This may take a moment.");
+      setMessage('Restoring database... This may take a moment.');
       const response = await fetch(`${API_BASE_URL}/database/restore`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
       });
       const result = await response.text();
@@ -83,9 +82,9 @@ const BackupWindow = ({
 
   const handleCsvExport = async () => {
     try {
-      setMessage("Generating CSV export...");
+      setMessage('Generating CSV export...');
       const response = await fetch(`${API_BASE_URL}/movies`);
-      if (!response.ok) throw new Error("Failed to fetch movies");
+      if (!response.ok) throw new Error('Failed to fetch movies');
 
       const movies = await response.json();
       movies.sort((a, b) => a.title.localeCompare(b.title));
@@ -95,51 +94,51 @@ const BackupWindow = ({
 
       const headers = selectedColumns.map((col) => {
         switch (col) {
-          case "alternativeTitle":
-            return "Alternative Title";
-          case "releaseYear":
-            return "Release Year";
+          case 'alternativeTitle':
+            return 'Alternative Title';
+          case 'releaseYear':
+            return 'Release Year';
           default:
             return col.charAt(0).toUpperCase() + col.slice(1);
         }
       });
 
-      const csvRows = [headers.join(",")];
+      const csvRows = [headers.join(',')];
       movies.forEach((movie) => {
         const row = selectedColumns.map((col) => {
-          let value = "";
+          let value = '';
           switch (col) {
-            case "genres":
-              value = movie.Genres?.map((g) => g.name).join("; ") || "";
+            case 'genres':
+              value = movie.Genres?.map((g) => g.name).join('; ') || '';
               break;
-            case "directors":
-              value = movie.Directors?.map((d) => d.name).join("; ") || "";
+            case 'directors':
+              value = movie.Directors?.map((d) => d.name).join('; ') || '';
               break;
-            case "actors":
-              value = movie.Actors?.map((a) => a.name).join("; ") || "";
+            case 'actors':
+              value = movie.Actors?.map((a) => a.name).join('; ') || '';
               break;
-            case "countries":
-              value = movie.Countries?.map((c) => c.name).join("; ") || "";
+            case 'countries':
+              value = movie.Countries?.map((c) => c.name).join('; ') || '';
               break;
             default:
-              value = movie[col] || "";
+              value = movie[col] || '';
           }
           return `"${String(value).replace(/"/g, '""')}"`;
         });
-        csvRows.push(row.join(","));
+        csvRows.push(row.join(','));
       });
 
-      const csvContent = csvRows.join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv" });
+      const csvContent = csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
-      a.download = "movies-export.csv";
+      a.download = 'movies-export.csv';
       document.body.appendChild(a);
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      setMessage("CSV export downloaded successfully.");
+      setMessage('CSV export downloaded successfully.');
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -162,11 +161,11 @@ const BackupWindow = ({
     >
       <div
         ref={nodeRef}
-        className="window backup-window"
+        className="window--backup"
         onClick={onFocus}
         style={{
           zIndex,
-          ...(isMinimized && { display: "none" }),
+          ...(isMinimized && { display: 'none' }),
         }}
       >
         <div className="window-titlebar important">
@@ -178,7 +177,7 @@ const BackupWindow = ({
             >
               <WindowIcon icon={icon} alt="Backup" />
             </span>
-            <span>Backup & Restore</span>
+            <span className="window-title">Backup & Restore</span>
           </div>
           <div className="titlebar-right">
             <button
@@ -214,7 +213,7 @@ const BackupWindow = ({
               type="file"
               onChange={handleFileChange}
               ref={fileInputRef}
-              style={{ display: "none" }}
+              style={{ display: 'none' }}
             />
             <div className="btn-group">
               <button
@@ -229,7 +228,7 @@ const BackupWindow = ({
             </div>
           </section>
 
-          <section className="export-section" style={{ marginBottom: "15px" }}>
+          <section className="export-section" style={{ marginBottom: '15px' }}>
             <div className="cta">
               <p>Export movies data as CSV file:</p>
               <button className="btn" onClick={handleCsvExport}>
@@ -245,10 +244,10 @@ const BackupWindow = ({
                     checked={checked}
                     onChange={() => handleColumnToggle(col)}
                   />
-                  {col === "alternativeTitle"
-                    ? "Alternative Title"
-                    : col === "releaseYear"
-                      ? "Release Year"
+                  {col === 'alternativeTitle'
+                    ? 'Alternative Title'
+                    : col === 'releaseYear'
+                      ? 'Release Year'
                       : col.charAt(0).toUpperCase() + col.slice(1)}
                 </label>
               ))}

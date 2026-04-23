@@ -60,7 +60,7 @@ const DirectorWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "window--solid maximized" : "window--solid"}
+        className={isMaximized ? "window--metal maximized" : "window--metal"}
         onClick={onFocus}
         style={{
           ...(isMaximized
@@ -91,7 +91,7 @@ const DirectorWindow = ({
             >
               <WindowIcon icon={icon} alt="Directors" />
             </span>
-            <span>Directors Manager</span>
+            <span className="window-title">Directors Manager</span>
           </div>
           <div className="titlebar-right">
             <button

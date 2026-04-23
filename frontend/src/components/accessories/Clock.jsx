@@ -99,7 +99,7 @@ const Clock = ({
             >
               <WindowIcon icon={icon} alt="Clock" />
             </span>
-            <span>Clock</span>
+            <span className="window-title">Clock</span>
           </div>
           <div className="titlebar-right">
             <button

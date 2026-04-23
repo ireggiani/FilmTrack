@@ -68,7 +68,7 @@ const MoviesWindow = ({
             >
               <WindowIcon icon={icon} alt="Movies" />
             </span>
-            <span>Movies Collection</span>
+            <span className="window-title">Movies Collection</span>
           </div>
           <div className="titlebar-right">
             <button

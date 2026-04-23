@@ -1,0 +1,56 @@
+/// Structural mixin shared by all window themes.
+/// Contains layout and positioning only — no colors, textures, or visual styles.
+@mixin window-base {
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  width: 450px;
+  max-height: 80vh;
+  z-index: 200;
+  overflow: hidden;
+  will-change: transform;
+
+  &.maximized {
+    transform: none !important;
+  }
+
+  .window-titlebar {
+    padding: 0.4rem 1rem 0.5rem 0.4rem;
+    height: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+
+    img {
+      max-width: 1rem;
+      max-height: 1rem;
+      object-fit: contain;
+    }
+
+    .window-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .window-icon-container {
+      display: flex;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .titlebar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .titlebar-right {
+      display: flex;
+    }
+
+    .window-close {
+      margin: 0 -1rem 0 0;
+    }
+  }
+}

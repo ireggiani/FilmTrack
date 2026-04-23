@@ -1,0 +1,96 @@
+/// Brushed metal theme.
+/// Used by: DirectorWindow.
+/// Titlebar buttons use the paddle-switch (light-switch) style.
+@use '../decorative/textures';
+@use './base';
+
+.window--metal {
+  @include base.window-base;
+  @include textures.brushed-metal-grey;
+  backdrop-filter: unset;
+  border-radius: 0 0 8px 8px;
+  border: 1px solid #666;
+  box-shadow: 0 4px 16px 0 rgba(38, 38, 38, 0.75);
+
+  .window-titlebar {
+    @include textures.brushed-metal;
+    border-bottom: 1px solid #444;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+
+    .window-title {
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .titlebar-button {
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    // Paddle-switch: raised/flat light-switch skeuomorphic buttons
+    .paddle-switch {
+      background: linear-gradient(
+        180deg,
+        hsl(0, 0%, 70%) 0%,
+        hsl(0, 0%, 88%) 47%,
+        hsl(0, 0%, 98%) 53%,
+        hsl(0, 0%, 90%) 100%
+      );
+      border: 1px solid black;
+      border-bottom: 3px solid #444;
+      color: #444;
+      text-shadow: unset;
+      outline: none;
+
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        background: linear-gradient(
+          180deg,
+          hsl(0, 0%, 75%) 0%,
+          hsl(0, 0%, 93%) 47%,
+          hsl(0, 0%, 100%) 53%,
+          hsl(0, 0%, 95%) 100%
+        );
+        outline: none;
+      }
+
+      &:active,
+      &.active {
+        background: linear-gradient(
+          0deg,
+          hsl(0, 0%, 70%) 0%,
+          hsl(0, 0%, 88%) 47%,
+          hsl(0, 0%, 78%) 53%,
+          hsl(0, 0%, 50%) 100%
+        );
+        border-top: 4px solid #ededed;
+        border-bottom: 1px solid #444;
+        outline: none;
+      }
+    }
+
+    .window-close {
+      &:hover {
+        background: rgba(200, 50, 50, 0.5);
+      }
+
+      &:active {
+        background: rgba(200, 50, 50, 0.8);
+      }
+    }
+  }
+
+  // Metal texture shows through the content area — no white overlay
+  .window-content {
+    padding: 0.5rem;
+    max-height: calc(80vh - 32px);
+    overflow-y: auto;
+  }
+
+  .window-content--compact {
+    padding: 0;
+    max-height: calc(80vh - 32px);
+    overflow-y: auto;
+  }
+}

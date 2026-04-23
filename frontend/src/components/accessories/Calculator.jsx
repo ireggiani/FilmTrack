@@ -170,7 +170,7 @@ const Calculator = ({
             >
               <WindowIcon icon={icon} alt="Calculator" />
             </span>
-            <span>Calculator</span>
+            <span className="window-title">Calculator</span>
           </div>
           <div className="titlebar-right">
             <button

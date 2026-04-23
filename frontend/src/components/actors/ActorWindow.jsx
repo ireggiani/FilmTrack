@@ -90,7 +90,7 @@ const ActorWindow = ({
             >
               <WindowIcon icon={icon} alt="Actors" />
             </span>
-            <span>Actors Manager</span>
+            <span className="window-title">Actors Manager</span>
           </div>
           <div className="titlebar-right">
             <button
