@@ -1,7 +1,9 @@
-@use "../ui";
+@use '../ui';
 
 .genre-form {
-  @include ui.glass-inner-container;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
 
   display: flex;
   align-items: flex-start;

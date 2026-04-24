@@ -131,7 +131,7 @@ const CountryForm = ({
           <button
             type="button"
             onClick={() => onEditComplete?.()}
-            className="btn--cork"
+            className="btn--brass"
           >
             ← Cancel Edit
           </button>
@@ -139,7 +139,7 @@ const CountryForm = ({
         {error && <p className="error--paper">{error}</p>}
         <button
           type="submit"
-          className="btn--cork submit"
+          className="btn--brass submit"
           disabled={loading || !name.trim() || !flagEmoji.trim()}
         >
           {loading

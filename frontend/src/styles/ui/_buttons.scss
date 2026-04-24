@@ -63,6 +63,77 @@
   }
 }
 
+// Horizontal brass dome rivet — mirrors the titlebar brass-rivet button scaled to a full button.
+// Specular oval glint via ::before; gradient shifts on :active to simulate pressing in.
+.btn--brass {
+  @extend .btn;
+  position: relative;
+  background: radial-gradient(
+    ellipse at 38% 28%,
+    #f5dd78 0%,
+    #c89820 35%,
+    #9b6d0e 68%,
+    #6b4508 100%
+  );
+  border: 1px solid rgba(55, 25, 0, 0.6);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 228, 110, 0.55),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 1px 3px rgba(0, 0, 0, 0.45);
+  color: rgba(255, 240, 170, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+  filter: unset;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 15%;
+    right: 15%;
+    height: 5px;
+    background: rgba(255, 248, 190, 0.5);
+    border-radius: 50%;
+    filter: blur(2px);
+    pointer-events: none;
+  }
+
+  &:hover {
+    background: radial-gradient(
+      ellipse at 38% 28%,
+      #faec98 0%,
+      #d4a828 35%,
+      #a87818 68%,
+      #7a5210 100%
+    );
+    box-shadow:
+      inset 0 1px 3px rgba(255, 235, 120, 0.65),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.35),
+      0 2px 5px rgba(0, 0, 0, 0.4);
+    filter: unset;
+  }
+
+  &:active {
+    background: radial-gradient(
+      ellipse at 55% 68%,
+      #a87010 0%,
+      #8a5a08 45%,
+      #6a4006 80%,
+      #4a2c04 100%
+    );
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.55),
+      inset 0 -0.5px 1px rgba(255, 210, 60, 0.15),
+      0 0.5px 1px rgba(0, 0, 0, 0.3);
+    filter: unset;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: unset;
+  }
+}
+
 /** Title bar buttons - standard */
 .titlebar-button {
   width: 24px;

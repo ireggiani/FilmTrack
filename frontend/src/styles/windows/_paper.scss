@@ -1,6 +1,6 @@
-/// Cartography paper + leather titlebar theme.
+/// Leather-bound atlas theme: cartography paper body, leather spine titlebar.
 /// Used by: CountryWindow.
-/// Titlebar buttons use the rubber (3D ball) style.
+/// Titlebar buttons use the brass-rivet (dome stud) style.
 @use '../decorative/textures';
 @use './base';
 
@@ -23,34 +23,32 @@
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
     }
 
-    // Rubber: matte 3D sphere buttons
-    .rubber {
+    // Brass dome rivet: warm gold gradient, specular highlight, bronze rim
+    .brass-rivet {
       width: 20px;
       height: 20px;
       border-radius: 50%;
       border: none;
       background: radial-gradient(
-        circle at 30% 30%,
-        rgba(255, 255, 255, 0.4) 0%,
-        rgba(200, 200, 200, 0.3) 20%,
-        rgba(120, 120, 120, 0.8) 60%,
-        rgba(80, 80, 80, 1) 100%
+        circle at 35% 28%,
+        #f7e07a 0%,
+        #c89820 30%,
+        #9b6d0e 65%,
+        #6b4508 100%
       );
       box-shadow:
-        inset 0 2px 4px rgba(255, 255, 255, 0.5),
-        inset 0 -3px 6px rgba(0, 0, 0, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.4);
+        0 0 0 1px rgba(55, 25, 0, 0.55),
+        inset 0 1px 2px rgba(255, 230, 120, 0.55),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.38),
+        0 1px 3px rgba(0, 0, 0, 0.5);
       cursor: pointer;
       margin: 0 5px 0 0;
       padding: 2px;
       position: relative;
-      overflow: hidden;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 240, 170, 0.92);
       text-shadow:
-        0 1px 1px rgba(255, 255, 255, 0.5),
-        0 -1px 1px rgba(0, 0, 0, 0.4),
-        1px 0 1px rgba(255, 255, 255, 0.3),
-        -1px 0 1px rgba(0, 0, 0, 0.3);
+        0 1px 2px rgba(0, 0, 0, 0.7),
+        0 -1px 1px rgba(255, 210, 60, 0.25);
       transition: unset;
 
       &.window-close {
@@ -62,37 +60,48 @@
         position: absolute;
         top: 3px;
         left: 4px;
-        width: 6px;
+        width: 5px;
         height: 4px;
-        background: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 248, 190, 0.68);
         border-radius: 50%;
-        filter: blur(1px);
+        filter: blur(1.5px);
         pointer-events: none;
+      }
+
+      &:hover {
+        background: radial-gradient(
+          circle at 35% 28%,
+          #faeea0 0%,
+          #d4a828 30%,
+          #a87818 65%,
+          #7a5210 100%
+        );
+        box-shadow:
+          0 0 0 1px rgba(55, 25, 0, 0.6),
+          inset 0 1px 2px rgba(255, 235, 130, 0.65),
+          inset 0 -1px 2px rgba(0, 0, 0, 0.32),
+          0 2px 5px rgba(0, 0, 0, 0.45);
       }
 
       &:active,
       &.active {
         background: radial-gradient(
-          circle at 70% 70%,
-          rgba(80, 80, 80, 1) 0%,
-          rgba(120, 120, 120, 0.8) 40%,
-          rgba(200, 200, 200, 0.3) 80%,
-          rgba(255, 255, 255, 0.4) 100%
+          circle at 55% 65%,
+          #a87010 0%,
+          #8a5a08 45%,
+          #6a4006 80%,
+          #4a2c04 100%
         );
         box-shadow:
-          inset 0 -2px 4px rgba(255, 255, 255, 0.5),
-          inset 0 3px 6px rgba(0, 0, 0, 0.4),
-          0 1px 2px rgba(0, 0, 0, 0.2);
-        text-shadow:
-          0 -1px 1px rgba(255, 255, 255, 0.5),
-          0 1px 1px rgba(0, 0, 0, 0.4),
-          -1px 0 1px rgba(255, 255, 255, 0.3),
-          1px 0 1px rgba(0, 0, 0, 0.3);
+          0 0 0 1px rgba(55, 25, 0, 0.65),
+          inset 0 2px 4px rgba(0, 0, 0, 0.52),
+          inset 0 -0.5px 1px rgba(255, 210, 60, 0.15),
+          0 0.5px 1px rgba(0, 0, 0, 0.3);
 
         &::before {
           top: 12px;
           left: 10px;
-          opacity: 0.8;
+          opacity: 0.35;
         }
       }
     }

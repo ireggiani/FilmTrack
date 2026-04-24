@@ -491,7 +491,7 @@
       #CD853F 75%,
       #A0522D 100%
     );
-  background-size: 
+  background-size:
     8px 8px,
     16px 16px,
     32px 32px,
@@ -499,4 +499,60 @@
     64px 64px,
     64px 64px,
     100% 100%;
+}
+
+// Ribbed sheet metal — 20 px corrugation pitch, highlight/shadow pairs per ridge.
+// Light cool-grey base, works with dark text. Industrial but not brushed.
+@mixin corrugated-steel {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.48) 0px,
+      rgba(255, 255, 255, 0.14) 3px,
+      rgba(255, 255, 255, 0.02) 8px,
+      rgba(0, 0, 0, 0.15)       12px,
+      rgba(0, 0, 0, 0.28)       14px,
+      rgba(0, 0, 0, 0.12)       17px,
+      rgba(255, 255, 255, 0.08) 19px,
+      rgba(255, 255, 255, 0.48) 20px
+    ),
+    linear-gradient(180deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent               45%,
+      rgba(0, 0, 0, 0.08)       100%
+    ),
+    linear-gradient(165deg,
+      #7b8c9d 0%,
+      #8ea0b3 25%,
+      #9db2c6 50%,
+      #8999ad 75%,
+      #788a9b 100%
+    );
+}
+
+// Painted industrial casing — dark gunmetal base, Aero gloss arc, faint panel seams.
+// Requires light text in child elements (see _backup.scss note).
+@mixin powder-coated-gunmetal {
+  background:
+    radial-gradient(
+      ellipse 140% 50% at 50% -8%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.07) 35%,
+      transparent               65%
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent               0px,
+      transparent               47px,
+      rgba(0, 0, 0, 0.22)       47px,
+      rgba(255, 255, 255, 0.05) 49px,
+      transparent               50px
+    ),
+    linear-gradient(160deg,
+      #222830 0%,
+      #2d3844 35%,
+      #384455 60%,
+      #293040 80%,
+      #1d232c 100%
+    );
 }

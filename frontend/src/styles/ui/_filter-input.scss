@@ -60,24 +60,26 @@
     }
   }
 
-  // Paper / cartography theme — sits inside paper-textured surfaces (CountryList)
+  // Atlas theme — brass-framed parchment field, sits inside cartography paper (CountryList)
   &--paper {
-    background: rgba(255, 248, 215, 0.75);
-    border: 1px solid #9b7c2a;
-    border-bottom: 2px solid #6b4c14;
-    border-radius: 0;
-    box-shadow: inset 0 1px 3px rgba(100, 70, 10, 0.15);
-    color: darkslategray;
+    background: rgba(255, 244, 188, 0.88);
+    border: 1.5px solid #b08820;
+    border-radius: 2px;
+    box-shadow:
+      inset 0 1px 3px rgba(100, 60, 5, 0.14),
+      0 0 0 0.5px rgba(85, 45, 0, 0.18);
+    color: #2a1a00;
 
     &:focus {
-      border-color: #c8881a;
+      border-color: #c89820;
       box-shadow:
-        inset 0 1px 3px rgba(100, 70, 10, 0.15),
-        0 0 3px rgba(200, 136, 26, 0.4);
+        inset 0 1px 3px rgba(100, 60, 5, 0.14),
+        0 0 4px rgba(200, 152, 32, 0.45);
     }
 
     &::placeholder {
-      color: rgba(47, 79, 79, 0.4);
+      color: rgba(101, 67, 33, 0.4);
+      font-style: italic;
     }
   }
 }
@@ -113,11 +115,11 @@
   }
 
   &--paper {
-    color: rgba(47, 79, 79, 0.4);
+    color: rgba(101, 67, 33, 0.45);
 
     &:hover {
-      color: rgba(47, 79, 79, 0.75);
-      background: rgba(100, 70, 10, 0.08);
+      color: #c89820;
+      background: rgba(180, 120, 10, 0.08);
     }
   }
 }
