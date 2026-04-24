@@ -109,7 +109,7 @@ const GenreWindow = ({
           </div>
         </div>
         <div
-          className="window-content"
+          className="window-content--compact"
           style={
             isMaximized
               ? {

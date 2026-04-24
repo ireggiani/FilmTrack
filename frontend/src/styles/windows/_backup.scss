@@ -82,7 +82,11 @@
   }
 
   .window-content {
-    @include textures.fine-paper;
+    // ── OPTION A: corrugated steel (light surface — dark text) ──────────────
+    @include textures.corrugated-steel;
+    // ── OPTION B: powder-coated gunmetal (dark surface — change text below) ─
+    // @include textures.powder-coated-gunmetal;
+
     height: 100%;
     max-height: calc(80vh - 32px);
     display: flex;
@@ -95,11 +99,30 @@
     .backup-section,
     .restore-section,
     .export-section {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 15px;
+      // Phillips-head screw: circle + specular highlight + cross slot
+      $screw: "data:image/svg+xml,%3Csvg width='10' height='10' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='5' cy='5' r='4.3' fill='%23b8b8b8' stroke='%23484848' stroke-width='.5'/%3E%3Ccircle cx='3.6' cy='3.6' r='1.6' fill='white' fill-opacity='.32'/%3E%3Cline x1='5' y1='2' x2='5' y2='8' stroke='%23484848' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='2' y1='5' x2='8' y2='5' stroke='%23484848' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E";
+
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.7);
+      background-image:
+        url('#{$screw}'), url('#{$screw}'), url('#{$screw}'), url('#{$screw}');
+      background-repeat: no-repeat;
+      background-position:
+        7px 7px,
+        calc(100% - 7px) 7px,
+        7px calc(100% - 7px),
+        calc(100% - 7px) calc(100% - 7px);
+      background-size: 10px 10px;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 5px;
+      box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.28),
+        0 3px 10px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      padding: 15px 22px;
       margin: 10px 10px 0;
-      border: 1px solid grey;
 
       p,
       legend,
@@ -110,8 +133,8 @@
         font-size: 0.8em;
         margin-top: 0;
         margin-bottom: 10px;
-        color: black;
-        text-shadow: 0 1px 2px rgba(128, 128, 128, 0.8);
+        color: #1a2030;
+        text-shadow: none;
       }
     }
 
@@ -150,16 +173,14 @@
 
         legend {
           font-weight: bold;
-          color: black;
-          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+          color: #1a2030;
         }
 
         label {
           margin: 0;
           display: flex;
           align-items: baseline;
-          color: black;
-          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+          color: #1a2030;
 
           input {
             margin-right: 2px;
@@ -169,10 +190,18 @@
     }
 
     .message {
-      border-top: 1px solid black;
+      height: 100%;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      background-color: rgba(255, 255, 255, 0.7);
+      border-top: 1px solid rgba(0, 0, 0, 0.3);
+      box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.28),
+        0 3px 10px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95);
       text-align: center;
-      color: black;
-      font-weight: bold;
+      color: #1a2030;
+      font-weight: 600;
       margin-bottom: 0;
     }
   }

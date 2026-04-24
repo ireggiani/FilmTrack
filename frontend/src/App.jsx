@@ -412,31 +412,6 @@ function App() {
         e.preventDefault();
         openWindow("movies");
       }
-      // Ctrl/Cmd + G = Genres
-      else if ((e.ctrlKey || e.metaKey) && e.key === "g") {
-        e.preventDefault();
-        openWindow("genres");
-      }
-      // Ctrl/Cmd + D = Directors
-      else if ((e.ctrlKey || e.metaKey) && e.key === "d") {
-        e.preventDefault();
-        openWindow("directors");
-      }
-      // Ctrl/Cmd + Shift + A = Actors
-      else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "A") {
-        e.preventDefault();
-        openWindow("actors");
-      }
-      // Ctrl/Cmd + Shift + C = Countries
-      else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "C") {
-        e.preventDefault();
-        openWindow("countries");
-      }
-      // Ctrl/Cmd + B = Backup
-      else if ((e.ctrlKey || e.metaKey) && e.key === "b") {
-        e.preventDefault();
-        openWindow("backup");
-      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
