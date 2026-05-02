@@ -9,6 +9,7 @@ import CalculatorIcon from '../assets/icons/calculator.png';
 import CalendarIcon from '../assets/icons/calendar.png';
 import ClockIcon from '../assets/icons/clock.png';
 import notepadIcon from '../assets/icons/notepad-icon.png';
+import StatsIcon from '../assets/icons/stats.png'; // placeholder — replace with a dedicated icon
 
 export const WINDOWS = [
   { id: 'movies', title: 'Movies Collection', icon: MoviesIcon },
@@ -16,6 +17,7 @@ export const WINDOWS = [
   { id: 'directors', title: 'Directors Manager', icon: DirectorsIcon },
   { id: 'actors', title: 'Actors Manager', icon: ActorsIcon },
   { id: 'countries', title: 'Countries Manager', icon: CountriesIcon },
+  { id: 'stats', title: 'Statistics', icon: StatsIcon },
   { id: 'backup', title: 'Backup & Restore', icon: BackupIcon },
   { id: 'wallpaper', title: 'Wallpaper Settings', icon: WallpaperIcon },
   { id: 'calculator', title: 'Calculator', icon: CalculatorIcon },
@@ -25,3 +27,7 @@ export const WINDOWS = [
 ];
 
 export const WINDOW_MAP = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
+
+// IDs of windows that appear as desktop icons, in display order (top→bottom, then left→right).
+// Add an entry here to expose a new icon — no other files need changing.
+export const DESKTOP_ICON_IDS = ['movies', 'directors', 'genres'];

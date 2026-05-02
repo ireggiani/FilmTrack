@@ -10,6 +10,8 @@ const MovieFilters = ({
   setMaxYear,
   genreTerm,
   setGenreTerm,
+  directorTerm,
+  setDirectorTerm,
   countryTerm,
   setCountryTerm,
   minRating,
@@ -17,6 +19,7 @@ const MovieFilters = ({
   maxRating,
   setMaxRating,
   memoizedGenreOptions,
+  memoizedDirectorOptions,
   memoizedCountryOptions,
 }) => {
   return (
@@ -29,6 +32,8 @@ const MovieFilters = ({
       setMaxYear={setMaxYear}
       genreTerm={genreTerm}
       setGenreTerm={setGenreTerm}
+      directorTerm={directorTerm}
+      setDirectorTerm={setDirectorTerm}
       countryTerm={countryTerm}
       setCountryTerm={setCountryTerm}
       minRating={minRating}
@@ -36,6 +41,7 @@ const MovieFilters = ({
       maxRating={maxRating}
       setMaxRating={setMaxRating}
       memoizedGenreOptions={memoizedGenreOptions}
+      memoizedDirectorOptions={memoizedDirectorOptions}
       memoizedCountryOptions={memoizedCountryOptions}
     />
   );

@@ -6,7 +6,6 @@
 @use './decorative/textures';
 
 @mixin glass-inner-container {
-  background: rgba(100, 100, 255, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);

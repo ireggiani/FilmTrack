@@ -1,0 +1,88 @@
+// Desktop icon styles.
+// Icon and label sizing is driven entirely by CSS custom properties set on
+// .container so a future Control Panel component can change them in one place.
+
+.container {
+  position: relative; // offset context for absolutely-positioned icons
+  --desktop-icon-size: 48px;       // PNG image dimensions
+  --desktop-icon-font-size: 0.72rem;
+  --desktop-icon-width: 72px;      // total icon cell width (label wraps to this)
+}
+
+.desktop-icon {
+  // Absolutely positioned so icons sit above the flex content without
+  // affecting layout. react-draggable moves them via CSS transform.
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: var(--desktop-icon-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: default;
+  user-select: none;
+  outline: none;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.10);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.75);
+    outline-offset: 1px;
+  }
+
+  // Wrapper receives the selection highlight ring so the image stays crisp
+  &__img-wrap {
+    width: var(--desktop-icon-size);
+    height: var(--desktop-icon-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.1s ease;
+  }
+
+  &__img {
+    width: var(--desktop-icon-size);
+    height: var(--desktop-icon-size);
+    object-fit: contain;
+    pointer-events: none; // let drag events pass through to the wrapper
+  }
+
+  // High-contrast shadow stack keeps label readable on any wallpaper colour
+  &__label {
+    font-size: var(--desktop-icon-font-size);
+    color: white;
+    text-align: center;
+    line-height: 1.25;
+    max-width: var(--desktop-icon-width);
+    word-break: break-word;
+    padding: 1px 3px;
+    border-radius: 2px;
+    pointer-events: none;
+    text-shadow:
+       0  1px 3px rgba(0, 0, 0, 0.95),
+       0 -1px 3px rgba(0, 0, 0, 0.80),
+       1px 0   3px rgba(0, 0, 0, 0.80),
+      -1px 0   3px rgba(0, 0, 0, 0.80);
+  }
+
+  // Selected: blue highlight on image wrapper + solid tint on label
+  &--selected {
+    .desktop-icon__img-wrap {
+      background: rgba(66, 133, 244, 0.35);
+      box-shadow: 0 0 0 1px rgba(66, 133, 244, 0.65);
+    }
+
+    .desktop-icon__label {
+      background: rgba(66, 133, 244, 0.75);
+      text-shadow: none;
+    }
+  }
+}

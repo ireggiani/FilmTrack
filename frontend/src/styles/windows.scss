@@ -2,6 +2,7 @@
 @use './windows/metal';
 @use './windows/paper';
 @use './windows/backup';
+@use './windows/stats';
 
 // Sidebar is part of the window-system layout but not a draggable window theme
 .sidebar {

@@ -102,7 +102,7 @@ const DirectorForm = ({
             <button
               type="button"
               onClick={() => onEditComplete?.()}
-              className="btn"
+              className="btn--metal"
             >
               ← Cancel Edit
             </button>
@@ -110,7 +110,7 @@ const DirectorForm = ({
           {error && <p className="error">{error}</p>}
           <button
             type="submit"
-            className="btn submit"
+            className="btn--metal submit"
             disabled={loading || !name.trim()}
           >
             {loading

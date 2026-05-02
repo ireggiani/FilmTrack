@@ -1,13 +1,13 @@
-import { useState, useRef } from "react";
-import Draggable from "react-draggable";
-import PropTypes from "prop-types";
-import DirectorForm from "./DirectorForm";
-import DirectorList from "./DirectorList";
+import { useState, useRef } from 'react';
+import Draggable from 'react-draggable';
+import PropTypes from 'prop-types';
+import DirectorForm from './DirectorForm';
+import DirectorList from './DirectorList';
 
-import "../../styles/directors/_director-form.scss";
-import "../../styles/directors/_director-list.scss";
+import '../../styles/directors/_director-form.scss';
+import '../../styles/directors/_director-list.scss';
 
-import WindowIcon from "../ui/WindowIcon";
+import WindowIcon from '../ui/WindowIcon';
 
 const DirectorWindow = ({
   isOpen,
@@ -39,14 +39,14 @@ const DirectorWindow = ({
       const response = await fetch(
         `http://localhost:5000/api/directors/${directorId}`,
         {
-          method: "DELETE",
+          method: 'DELETE',
         },
       );
       if (response.ok) {
         onDirectorAdded(); // Refresh the list
       }
     } catch (error) {
-      console.error("Error deleting director:", error);
+      console.error('Error deleting director:', error);
     }
   };
 
@@ -60,24 +60,24 @@ const DirectorWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "window--metal maximized" : "window--metal"}
+        className={isMaximized ? 'window--metal maximized' : 'window--metal'}
         onClick={onFocus}
         style={{
           ...(isMaximized
             ? {
-                position: "fixed",
+                position: 'fixed',
                 top: 0,
                 left: 0,
-                width: "100vw",
-                height: "calc(100vh - 32px)",
-                maxHeight: "calc(100vh - 32px)",
+                width: '100vw',
+                height: 'calc(100vh - 32px)',
+                maxHeight: 'calc(100vh - 32px)',
                 borderRadius: 0,
                 zIndex: 300,
               }
             : { zIndex }),
           ...(isMinimized
             ? {
-                display: "none",
+                display: 'none',
               }
             : {}),
         }}
@@ -96,7 +96,7 @@ const DirectorWindow = ({
           <div className="titlebar-right">
             <button
               className={`titlebar-button paddle-switch${
-                hideDirectorForm ? " active" : ""
+                hideDirectorForm ? ' active' : ''
               }`}
               onClick={() => setHideDirectorForm(!hideDirectorForm)}
               title="Toggle add director form"
@@ -112,12 +112,12 @@ const DirectorWindow = ({
             </button>
             <button
               className={`titlebar-button window-maximize paddle-switch ${
-                isMaximized ? " active" : ""
+                isMaximized ? ' active' : ''
               }`}
               onClick={() => setIsMaximized(!isMaximized)}
-              title={isMaximized ? "Restore" : "Maximize"}
+              title={isMaximized ? 'Restore' : 'Maximize'}
             >
-              {isMaximized ? "🗗" : "🗖"}
+              {isMaximized ? '🗗' : '🗖'}
             </button>
             <button
               className="titlebar-button window-close paddle-switch"
@@ -128,12 +128,12 @@ const DirectorWindow = ({
           </div>
         </div>
         <div
-          className="window-content--compact"
+          className="window-content"
           style={
             isMaximized
               ? {
-                  maxHeight: "calc(100vh - 64px)",
-                  height: "calc(100vh - 64px)",
+                  maxHeight: 'calc(100vh - 64px)',
+                  height: 'calc(100vh - 64px)',
                 }
               : {}
           }

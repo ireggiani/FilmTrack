@@ -23,8 +23,11 @@ const Calendar = lazy(() => import("./components/accessories/Calendar"));
 const Clock = lazy(() => import("./components/accessories/Clock"));
 const Notepad = lazy(() => import("./components/accessories/Notepad"));
 import Taskbar from "./components/ui/Taskbar";
+import DesktopIconGrid from './components/desktop/DesktopIconGrid';
+import './styles/desktop/_desktop-icons.scss';
 
 const BackupWindow = lazy(() => import("./components/backup/BackupWindow"));
+const StatsWindow = lazy(() => import("./components/stats/StatsWindow"));
 const MoviesWindow = lazy(() => import("./components/movies/MoviesWindow"));
 import "./styles/globals.scss";
 import "./styles/windows.scss";
@@ -56,6 +59,7 @@ function App() {
   const [calendarWindowOpen, setCalendarWindowOpen] = useState(false);
   const [clockWindowOpen, setClockWindowOpen] = useState(false);
   const [notepadWindowOpen, setNotepadWindowOpen] = useState(false);
+  const [statsWindowOpen, setStatsWindowOpen] = useState(false);
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [genreMinimized, setGenreMinimized] = useState(false);
   const [wallpaperMinimized, setWallpaperMinimized] = useState(false);
@@ -68,7 +72,9 @@ function App() {
   const [calendarMinimized, setCalendarMinimized] = useState(false);
   const [clockMinimized, setClockMinimized] = useState(false);
   const [notepadMinimized, setNotepadMinimized] = useState(false);
+  const [statsMinimized, setStatsMinimized] = useState(false);
   const [windowStack, setWindowStack] = useState([]);
+  const [selectedDesktopIcon, setSelectedDesktopIcon] = useState(null);
 
   const handleGenreAdded = useCallback(() => {
     setRefreshGenres((prev) => prev + 1);
@@ -154,6 +160,7 @@ function App() {
       calendar: setCalendarMinimized,
       clock: setClockMinimized,
       notepad: setNotepadMinimized,
+      stats: setStatsMinimized,
     };
     minimizeSetters[windowId]?.(false);
 
@@ -183,6 +190,7 @@ function App() {
       calendar: () => handleWindowFocus("calendar"),
       clock: () => handleWindowFocus("clock"),
       notepad: () => handleWindowFocus("notepad"),
+      stats: () => handleWindowFocus("stats"),
     }),
     [handleWindowFocus],
   );
@@ -200,6 +208,7 @@ function App() {
       ...(calendarWindowOpen  ? [WINDOW_MAP.calendar]    : []),
       ...(clockWindowOpen     ? [WINDOW_MAP.clock]       : []),
       ...(notepadWindowOpen   ? [WINDOW_MAP.notepad]     : []),
+      ...(statsWindowOpen     ? [WINDOW_MAP.stats]       : []),
     ],
     [
       genreWindowOpen,
@@ -213,6 +222,7 @@ function App() {
       calendarWindowOpen,
       clockWindowOpen,
       notepadWindowOpen,
+      statsWindowOpen,
     ],
   );
 
@@ -251,6 +261,9 @@ function App() {
           break;
         case "notepad":
           setNotepadWindowOpen(true);
+          break;
+        case "stats":
+          setStatsWindowOpen(true);
           break;
         default:
           break;
@@ -294,6 +307,9 @@ function App() {
         break;
       case "notepad":
         setNotepadWindowOpen(false);
+        break;
+      case "stats":
+        setStatsWindowOpen(false);
         break;
       default:
         break;
@@ -400,6 +416,15 @@ function App() {
     [],
   );
 
+  const handleCloseStatsWindow = useCallback(
+    () => closeWindow("stats"),
+    [closeWindow],
+  );
+  const handleMinimizeStatsWindow = useCallback(
+    (e) => { e?.stopPropagation(); setStatsMinimized(true); },
+    [],
+  );
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -419,7 +444,12 @@ function App() {
   }, [openWindow]);
 
   return (
-    <main className="container">
+    <main className="container" onClick={() => setSelectedDesktopIcon(null)}>
+      <DesktopIconGrid
+        selectedId={selectedDesktopIcon}
+        onSelect={setSelectedDesktopIcon}
+        onOpen={openWindow}
+      />
       <h1
         style={{
           color: "white",
@@ -598,6 +628,19 @@ function App() {
             onFocus={windowFocusHandlers.notepad}
             zIndex={100 + windowStack.indexOf("notepad")}
             icon={WINDOW_MAP.notepad.icon}
+          />
+        </Suspense>
+      )}
+      {statsWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <StatsWindow
+            isOpen={statsWindowOpen}
+            isMinimized={statsMinimized}
+            onClose={handleCloseStatsWindow}
+            onMinimize={handleMinimizeStatsWindow}
+            onFocus={windowFocusHandlers.stats}
+            zIndex={100 + windowStack.indexOf("stats")}
+            icon={WINDOW_MAP.stats.icon}
           />
         </Suspense>
       )}
