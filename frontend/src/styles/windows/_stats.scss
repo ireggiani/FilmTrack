@@ -1,0 +1,166 @@
+@use '../ui';
+
+// Override the base 450px window width so the 2-column grid fits comfortably.
+.window--stats {
+  width: auto;
+  min-width: 700px;
+  max-width: min(920px, 90vw);
+}
+
+.stats-window {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem !important;
+}
+
+// ── Summary strip ─────────────────────────────────────────────────────────────
+
+.stats-summary {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  &__item {
+    @include ui.glass-inner-container;
+    flex: 1;
+    min-width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    gap: 2px;
+  }
+
+  &__value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  &__label {
+    font-size: 0.68rem;
+    color: rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+// ── Chart grid ────────────────────────────────────────────────────────────────
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+// ── Chart card ────────────────────────────────────────────────────────────────
+
+.stats-card {
+  @include ui.glass-inner-container;
+  background: rgba(255, 255, 255, 0.30);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &--wide {
+    grid-column: 1 / -1;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem 0.35rem;
+    background: rgba(0, 0, 0, 0.04);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.72);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+
+  &__toggles {
+    display: flex;
+    gap: 2px;
+  }
+
+  &__toggle {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.10);
+      color: rgba(0, 0, 0, 0.85);
+    }
+
+    &.active {
+      background: rgba(74, 158, 255, 0.20);
+      border-color: rgba(74, 158, 255, 0.55);
+      color: #1258b0;
+    }
+  }
+
+  &__body {
+    padding: 0.5rem 0.25rem 0.25rem;
+    flex: 1;
+  }
+
+  // ── Loading state ──────────────────────────────────────────────────────────
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+  }
+
+  &__spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(0, 0, 0, 0.10);
+    border-top-color: rgba(74, 158, 255, 0.8);
+    border-radius: 50%;
+    animation: stats-spin 0.7s linear infinite;
+  }
+}
+
+// ── Full-window loading state ─────────────────────────────────────────────────
+
+.stats-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 200px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+
+  &--error {
+    color: #c0392b;
+  }
+}
+
+@keyframes stats-spin {
+  to { transform: rotate(360deg); }
+}

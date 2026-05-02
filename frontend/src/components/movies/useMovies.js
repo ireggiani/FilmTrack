@@ -15,6 +15,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const [minRating, setMinRating] = useState("");
   const [maxRating, setMaxRating] = useState("");
   const [genreTerm, setGenreTerm] = useState([]);
+  const [directorTerm, setDirectorTerm] = useState([]);
   const [countryTerm, setCountryTerm] = useState([]);
 
   // Reference data
@@ -208,6 +209,13 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       }
 
       if (
+        directorTerm.length > 0 &&
+        !movie.Directors.some((d) => directorTerm.includes(d.id))
+      ) {
+        return false;
+      }
+
+      if (
         countryTerm.length > 0 &&
         !movie.Countries.some((c) => countryTerm.includes(c.id))
       ) {
@@ -223,7 +231,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
 
       return true;
     });
-  }, [movies, searchTerm, minYear, maxYear, minRating, maxRating, genreTerm, countryTerm]);
+  }, [movies, searchTerm, minYear, maxYear, minRating, maxRating, genreTerm, directorTerm, countryTerm]);
 
   const sortedMovies = useMemo(() => {
     let sortableMovies = [...filteredMovies];
@@ -255,10 +263,16 @@ export const useMovies = (refresh, onMoviesLoaded) => {
         if (aValue === null || aValue === undefined) aValue = "";
         if (bValue === null || bValue === undefined) bValue = "";
 
-        aValue = String(aValue);
-        bValue = String(bValue);
-
-        let comparison = aValue.localeCompare(bValue);
+        // rating and releaseYear are stored as strings in the DB but must sort numerically.
+        const NUMERIC_SORT_KEYS = new Set(['rating', 'releaseYear', 'id']);
+        let comparison;
+        if (NUMERIC_SORT_KEYS.has(sortConfig.key)) {
+          const aNum = parseFloat(String(aValue).replace(',', '.'));
+          const bNum = parseFloat(String(bValue).replace(',', '.'));
+          comparison = (isFinite(aNum) ? aNum : -Infinity) - (isFinite(bNum) ? bNum : -Infinity);
+        } else {
+          comparison = String(aValue).localeCompare(String(bValue));
+        }
 
         return sortConfig.direction === "ascending" ? comparison : -comparison;
       });
@@ -298,6 +312,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     minRating,
     maxRating,
     genreTerm,
+    directorTerm,
     countryTerm,
     genres,
     countries,
@@ -323,6 +338,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     setMinRating,
     setMaxRating,
     setGenreTerm,
+    setDirectorTerm,
     setCountryTerm,
     setSortConfig,
   };

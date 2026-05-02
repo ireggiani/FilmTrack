@@ -11,6 +11,7 @@ const ViewsManager = ({
   minRating,
   maxRating,
   genreTerm,
+  directorTerm,
   countryTerm,
   setSortConfig,
   setSearchTerm,
@@ -19,6 +20,7 @@ const ViewsManager = ({
   setMinRating,
   setMaxRating,
   setGenreTerm,
+  setDirectorTerm,
   setCountryTerm,
 }) => {
   const [views, setViews] = useState([]);
@@ -67,6 +69,7 @@ const ViewsManager = ({
         minRating,
         maxRating,
         genreTerm,
+        directorTerm,
         countryTerm,
       },
       sorting: sortConfig,
@@ -95,6 +98,7 @@ const ViewsManager = ({
       setMinRating("");
       setMaxRating("");
       setGenreTerm([]);
+      setDirectorTerm([]);
       setCountryTerm([]);
       setSortConfig({ key: "id", direction: "asc" });
       setSelectedView(null);
@@ -112,6 +116,7 @@ const ViewsManager = ({
       setMinRating(filters.minRating || "");
       setMaxRating(filters.maxRating || "");
       setGenreTerm(filters.genreTerm || []);
+      setDirectorTerm(filters.directorTerm || []);
       setCountryTerm(filters.countryTerm || []);
       setSortConfig(sorting);
       setSelectedView(selectedOption);
@@ -180,6 +185,7 @@ ViewsManager.propTypes = {
   minRating: PropTypes.string.isRequired,
   maxRating: PropTypes.string.isRequired,
   genreTerm: PropTypes.array.isRequired,
+  directorTerm: PropTypes.array.isRequired,
   countryTerm: PropTypes.array.isRequired,
   setSortConfig: PropTypes.func.isRequired,
   setSearchTerm: PropTypes.func.isRequired,
@@ -188,6 +194,7 @@ ViewsManager.propTypes = {
   setMinRating: PropTypes.func.isRequired,
   setMaxRating: PropTypes.func.isRequired,
   setGenreTerm: PropTypes.func.isRequired,
+  setDirectorTerm: PropTypes.func.isRequired,
   setCountryTerm: PropTypes.func.isRequired,
 };
 

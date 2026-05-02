@@ -52,6 +52,19 @@ const FilterControls = ({ ...props }) => {
         isMulti
         closeMenuOnScroll={false}
         closeMenuOnBlur={false}
+        options={props.memoizedDirectorOptions || []}
+        value={(props.memoizedDirectorOptions || []).filter((opt) =>
+          (props.directorTerm || []).includes(opt.value)
+        )}
+        onChange={(selected) =>
+          props.setDirectorTerm?.(selected ? selected.map((s) => s.value) : [])
+        }
+        placeholder="Select directors"
+      />
+      <StyledSelect
+        isMulti
+        closeMenuOnScroll={false}
+        closeMenuOnBlur={false}
         options={props.memoizedCountryOptions || []}
         value={(props.memoizedCountryOptions || []).filter((opt) =>
           (props.countryTerm || []).includes(opt.value)
