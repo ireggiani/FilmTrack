@@ -24,9 +24,15 @@ export const WINDOWS = [
   { id: 'calendar', title: 'Calendar', icon: CalendarIcon },
   { id: 'clock', title: 'Clock', icon: ClockIcon },
   { id: 'notepad', title: 'Notepad', icon: notepadIcon },
+  // Opened from the Movies Collection poster column — needs a target movie,
+  // so it's excluded from the start menu (startMenu: false).
+  { id: 'posterViewer', title: 'Poster Viewer', icon: MoviesIcon, startMenu: false },
 ];
 
 export const WINDOW_MAP = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
+
+// Windows the user can launch directly from the start menu
+export const START_MENU_WINDOWS = WINDOWS.filter((w) => w.startMenu !== false);
 
 // IDs of windows that appear as desktop icons, in display order (top→bottom, then left→right).
 // Add an entry here to expose a new icon — no other files need changing.

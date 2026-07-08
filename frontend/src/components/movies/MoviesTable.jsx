@@ -1,12 +1,13 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import AddMovieForm from "./AddMovieForm";
 import MovieFilters from "./MovieFilters";
 import MoviesList from "./MoviesList";
+import PosterSearchOverlay from "./PosterSearchOverlay";
 import ViewsManager from "./ViewsManager";
 import { useMovies } from "./useMovies";
 
-const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
+const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => {
   const {
     movies,
     loading,
@@ -32,6 +33,9 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
     handleAddMovie,
     handleUpdateMovie,
     handleDeleteMovie,
+    handleUploadPoster,
+    handleDeletePoster,
+    handleSetPosterFromTmdb,
     sortedMovies,
     requestSort,
     getSortIndicator,
@@ -45,6 +49,8 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
     setCountryTerm,
     setSortConfig,
   } = useMovies(refresh, onMoviesLoaded);
+
+  const [posterSearchMovie, setPosterSearchMovie] = useState(null);
 
   const addMovieFormProps = useMemo(
     () => ({
@@ -140,12 +146,23 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm }) => {
         getSortIndicator={getSortIndicator}
         handleUpdateMovie={handleUpdateMovie}
         handleDeleteMovie={handleDeleteMovie}
+        handleUploadPoster={handleUploadPoster}
+        handleDeletePoster={handleDeletePoster}
+        handleSearchPoster={setPosterSearchMovie}
+        handleViewPoster={onViewPoster}
         formatDate={formatDate}
         genres={genres}
         directors={directors}
         actors={actors}
         countries={countries}
       />
+      {posterSearchMovie && (
+        <PosterSearchOverlay
+          movie={posterSearchMovie}
+          onPick={handleSetPosterFromTmdb}
+          onClose={() => setPosterSearchMovie(null)}
+        />
+      )}
       {movies.length === 0 && (
         <p
           style={{
@@ -165,6 +182,7 @@ MoviesTable.propTypes = {
   refresh: PropTypes.number,
   onMoviesLoaded: PropTypes.func,
   hideAddForm: PropTypes.bool,
+  onViewPoster: PropTypes.func,
 };
 
 export default MoviesTable;

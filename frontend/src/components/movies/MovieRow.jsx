@@ -1,8 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import StyledSelect from "../ui/StyledSelect";
+import { ASSETS_BASE_URL } from "../../config/api";
 
-const MovieRow = ({ movie, onUpdate, onDelete, genres, directors, actors, countries, formatDate }) => {
+const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, onSearchPoster, onViewPoster, genres, directors, actors, countries, formatDate }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isUploadingPoster, setIsUploadingPoster] = useState(false);
+  const [posterPreviewPos, setPosterPreviewPos] = useState(null);
+  const [posterMenuPos, setPosterMenuPos] = useState(null);
+  const posterInputRef = useRef(null);
   const [editedMovie, setEditedMovie] = useState({
     ...movie,
     genreIds: movie.Genres ? movie.Genres.map((g) => g.id) : [],
@@ -42,6 +48,62 @@ const MovieRow = ({ movie, onUpdate, onDelete, genres, directors, actors, countr
   const startEditing = () => {
     setIsEditing(true);
   };
+
+  const openPosterPicker = () => {
+    posterInputRef.current?.click();
+  };
+
+  const handlePosterFileChange = async (e) => {
+    const file = e.target.files[0];
+    e.target.value = ""; // allow re-selecting the same file later
+    if (!file) return;
+    setIsUploadingPoster(true);
+    try {
+      await onUploadPoster(movie.id, file);
+    } catch {
+      // error is surfaced through the useMovies error state
+    } finally {
+      setIsUploadingPoster(false);
+    }
+  };
+
+  const handleRemovePoster = () => {
+    onDeletePoster(movie.id).catch(() => {});
+  };
+
+  const openPosterMenu = (e) => {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPosterMenuPos({ top: rect.bottom + 4, left: rect.right });
+  };
+
+  // Close the poster menu on any outside click or Escape. The listener is
+  // registered after the opening click has finished bubbling, so it won't
+  // close the menu immediately.
+  useEffect(() => {
+    if (!posterMenuPos) return undefined;
+    const close = () => setPosterMenuPos(null);
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("click", close);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("click", close);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [posterMenuPos]);
+
+  const showPosterPreview = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setPosterPreviewPos({
+      // keep the popup inside the viewport (matches its max-height + padding)
+      top: Math.min(rect.top, window.innerHeight - 320),
+      left: rect.left - 8,
+    });
+  };
+
+  const hidePosterPreview = () => setPosterPreviewPos(null);
 
   const saveChanges = () => {
     onUpdate(movie.id, editedMovie);
@@ -292,6 +354,102 @@ const MovieRow = ({ movie, onUpdate, onDelete, genres, directors, actors, countr
             {movie.Countries?.map((c) => c.flagEmoji).join(" ") || "-"}
           </span>
         )}
+      </td>
+      <td className="cell cell-poster">
+        <input
+          ref={posterInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          style={{ display: "none" }}
+          onChange={handlePosterFileChange}
+        />
+        {isEditing && movie.posterUrl ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.25rem",
+              alignItems: "center",
+            }}
+          >
+            <button
+              onClick={openPosterMenu}
+              className="btn editing"
+              disabled={isUploadingPoster}
+              title="Replace poster"
+            >
+              {isUploadingPoster ? "⏳" : "🖼️"}
+            </button>
+            <button
+              onClick={handleRemovePoster}
+              className="btn editing"
+              disabled={isUploadingPoster}
+              title="Remove poster"
+            >
+              🚫
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={
+              movie.posterUrl
+                ? (e) => {
+                    // Don't let the click bubble to the Movies window's focus
+                    // handler — it would immediately re-focus Movies over the viewer
+                    e.stopPropagation();
+                    hidePosterPreview();
+                    onViewPoster(movie);
+                  }
+                : openPosterMenu
+            }
+            onMouseEnter={movie.posterUrl ? showPosterPreview : undefined}
+            onMouseLeave={movie.posterUrl ? hidePosterPreview : undefined}
+            className={`btn poster-btn ${movie.posterUrl ? "has-poster" : "no-poster"}`}
+            disabled={isUploadingPoster}
+            title={movie.posterUrl ? "View poster" : "Add poster"}
+          >
+            {isUploadingPoster ? "⏳" : "🖼️"}
+          </button>
+        )}
+        {posterMenuPos &&
+          createPortal(
+            <div
+              className="poster-menu"
+              style={{ top: posterMenuPos.top, left: posterMenuPos.left }}
+            >
+              <button
+                onClick={() => {
+                  setPosterMenuPos(null);
+                  openPosterPicker();
+                }}
+              >
+                📁 Upload file…
+              </button>
+              <button
+                onClick={() => {
+                  setPosterMenuPos(null);
+                  onSearchPoster(movie);
+                }}
+              >
+                🔍 Search TMDB…
+              </button>
+            </div>,
+            document.body
+          )}
+        {posterPreviewPos &&
+          movie.posterUrl &&
+          createPortal(
+            <div
+              className="poster-preview"
+              style={{ top: posterPreviewPos.top, left: posterPreviewPos.left }}
+            >
+              <img
+                src={`${ASSETS_BASE_URL}${movie.posterThumbUrl || movie.posterUrl}`}
+                alt={`${movie.title} poster`}
+              />
+            </div>,
+            document.body
+          )}
       </td>
       <td className="cell cell-actions">
         <div style={{ display: "flex", gap: "0.25rem" }}>

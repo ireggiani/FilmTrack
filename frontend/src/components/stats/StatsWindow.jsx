@@ -19,10 +19,14 @@ const PALETTE = [
   '#74c0fc', '#a9e34b', '#e599f7', '#ffa94d',
 ];
 
+// Graphite gloss, matching the app's dark-aero chrome (table headers, menus)
 const TOOLTIP_STYLE = {
-  backgroundColor: 'rgba(15, 25, 45, 0.92)',
-  border: '1px solid rgba(255, 255, 255, 0.18)',
+  background:
+    'linear-gradient(to bottom, rgba(78, 87, 107, 0.95) 0%, rgba(48, 54, 70, 0.95) 42%, rgba(22, 25, 36, 0.96) 58%, rgba(33, 38, 54, 0.95) 100%)',
+  border: '1px solid rgba(255, 255, 255, 0.3)',
   borderRadius: '6px',
+  boxShadow:
+    'inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 12px rgba(0, 0, 0, 0.45)',
   color: '#d8eaff',
   fontSize: '0.75rem',
 };

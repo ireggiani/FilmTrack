@@ -32,13 +32,7 @@ h3 {
 
   &--metal {
     @extend .heading-centre;
-    @include textures.brushed-metal-grey;
-    border: unset;
-    box-shadow:
-      inset 0 -1px 0px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 8px 1px rgba(25, 25, 25, 0.5);
-    color: white;
-    margin-top: -1px;
+    @include textures.metal-nameplate;
   }
 
   &--paper {
@@ -65,16 +59,8 @@ h3 {
 
   &--metal {
     @extend .heading-centre;
-    @include textures.brushed-metal-grey;
-    border-right: unset;
-    border-bottom: unset;
-    border-bottom-left-radius: 0px;
-    box-shadow:
-      inset -1px -1px 0px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 8px 1px rgba(25, 25, 25, 0.5);
-    color: white;
-    margin-top: -6px;
-    margin-left: -1px;
+    @include textures.metal-nameplate;
+    margin-left: 0;
   }
 
   &--paper {

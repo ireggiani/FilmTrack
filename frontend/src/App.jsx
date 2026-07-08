@@ -6,7 +6,7 @@ import {
   lazy,
   Suspense,
 } from "react";
-import { WINDOWS, WINDOW_MAP } from "./config/windowRegistry";
+import { WINDOW_MAP, START_MENU_WINDOWS } from "./config/windowRegistry";
 const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
 const WallpaperWindow = lazy(
   () => import("./components/wallpapers/WallpaperWindow"),
@@ -29,6 +29,9 @@ import './styles/desktop/_desktop-icons.scss';
 const BackupWindow = lazy(() => import("./components/backup/BackupWindow"));
 const StatsWindow = lazy(() => import("./components/stats/StatsWindow"));
 const MoviesWindow = lazy(() => import("./components/movies/MoviesWindow"));
+const PosterViewerWindow = lazy(
+  () => import("./components/movies/PosterViewerWindow"),
+);
 import "./styles/globals.scss";
 import "./styles/windows.scss";
 import "./styles/scrollbar.scss";
@@ -60,6 +63,8 @@ function App() {
   const [clockWindowOpen, setClockWindowOpen] = useState(false);
   const [notepadWindowOpen, setNotepadWindowOpen] = useState(false);
   const [statsWindowOpen, setStatsWindowOpen] = useState(false);
+  const [posterViewerWindowOpen, setPosterViewerWindowOpen] = useState(false);
+  const [posterViewerMovie, setPosterViewerMovie] = useState(null);
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [genreMinimized, setGenreMinimized] = useState(false);
   const [wallpaperMinimized, setWallpaperMinimized] = useState(false);
@@ -73,6 +78,7 @@ function App() {
   const [clockMinimized, setClockMinimized] = useState(false);
   const [notepadMinimized, setNotepadMinimized] = useState(false);
   const [statsMinimized, setStatsMinimized] = useState(false);
+  const [posterViewerMinimized, setPosterViewerMinimized] = useState(false);
   const [windowStack, setWindowStack] = useState([]);
   const [selectedDesktopIcon, setSelectedDesktopIcon] = useState(null);
 
@@ -161,6 +167,7 @@ function App() {
       clock: setClockMinimized,
       notepad: setNotepadMinimized,
       stats: setStatsMinimized,
+      posterViewer: setPosterViewerMinimized,
     };
     minimizeSetters[windowId]?.(false);
 
@@ -191,6 +198,7 @@ function App() {
       clock: () => handleWindowFocus("clock"),
       notepad: () => handleWindowFocus("notepad"),
       stats: () => handleWindowFocus("stats"),
+      posterViewer: () => handleWindowFocus("posterViewer"),
     }),
     [handleWindowFocus],
   );
@@ -209,6 +217,7 @@ function App() {
       ...(clockWindowOpen     ? [WINDOW_MAP.clock]       : []),
       ...(notepadWindowOpen   ? [WINDOW_MAP.notepad]     : []),
       ...(statsWindowOpen     ? [WINDOW_MAP.stats]       : []),
+      ...(posterViewerWindowOpen ? [WINDOW_MAP.posterViewer] : []),
     ],
     [
       genreWindowOpen,
@@ -223,6 +232,7 @@ function App() {
       clockWindowOpen,
       notepadWindowOpen,
       statsWindowOpen,
+      posterViewerWindowOpen,
     ],
   );
 
@@ -264,6 +274,9 @@ function App() {
           break;
         case "stats":
           setStatsWindowOpen(true);
+          break;
+        case "posterViewer":
+          setPosterViewerWindowOpen(true);
           break;
         default:
           break;
@@ -310,6 +323,9 @@ function App() {
         break;
       case "stats":
         setStatsWindowOpen(false);
+        break;
+      case "posterViewer":
+        setPosterViewerWindowOpen(false);
         break;
       default:
         break;
@@ -423,6 +439,23 @@ function App() {
   const handleMinimizeStatsWindow = useCallback(
     (e) => { e?.stopPropagation(); setStatsMinimized(true); },
     [],
+  );
+
+  const handleClosePosterViewerWindow = useCallback(
+    () => closeWindow("posterViewer"),
+    [closeWindow],
+  );
+  const handleMinimizePosterViewerWindow = useCallback(
+    (e) => { e?.stopPropagation(); setPosterViewerMinimized(true); },
+    [],
+  );
+
+  const handleViewPoster = useCallback(
+    (movie) => {
+      setPosterViewerMovie(movie);
+      openWindow("posterViewer");
+    },
+    [openWindow],
   );
 
   // Keyboard shortcuts
@@ -561,6 +594,7 @@ function App() {
             refreshMovies={refreshMovies}
             setRefreshMovies={setRefreshMovies}
             onFocus={windowFocusHandlers.movies}
+            onViewPoster={handleViewPoster}
             zIndex={100 + windowStack.indexOf("movies")}
             icon={WINDOW_MAP.movies.icon}
           />
@@ -644,11 +678,25 @@ function App() {
           />
         </Suspense>
       )}
+      {posterViewerWindowOpen && posterViewerMovie && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PosterViewerWindow
+            isOpen={posterViewerWindowOpen}
+            isMinimized={posterViewerMinimized}
+            movie={posterViewerMovie}
+            onClose={handleClosePosterViewerWindow}
+            onMinimize={handleMinimizePosterViewerWindow}
+            onFocus={windowFocusHandlers.posterViewer}
+            zIndex={100 + windowStack.indexOf("posterViewer")}
+            icon={WINDOW_MAP.posterViewer.icon}
+          />
+        </Suspense>
+      )}
       <Taskbar
         openWindows={memoizedOpenWindows}
         onWindowFocus={handleWindowFocus}
         onOpenWindow={openWindow}
-        allWindows={WINDOWS}
+        allWindows={START_MENU_WINDOWS}
         focusedWindow={focusedWindow}
       />
     </main>

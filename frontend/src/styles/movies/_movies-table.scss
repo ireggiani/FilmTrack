@@ -7,7 +7,18 @@
   border: 1px solid rgba(0, 0, 0, 0.12);
 
   .table-header {
-    background: rgba(30, 30, 40, 0.9);
+    /* Dark aero / Oxygen graphite: glossy sheen above the midline, deep
+       blue-black below, crisp 1px light edge on top and shadow at the bottom. */
+    background: linear-gradient(
+      to bottom,
+      rgba(85, 95, 115, 0.95) 0%,
+      rgba(52, 58, 74, 0.95) 47%,
+      rgba(22, 25, 36, 0.97) 53%,
+      rgba(33, 38, 54, 0.95) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.65);
     backdrop-filter: blur(5px);
     border-top: none;
     border-bottom: none;
@@ -34,6 +45,11 @@
       max-width: 60px;
       width: 60px;
       text-align: center;
+    }
+
+    &.header-poster {
+      text-align: center;
+      cursor: default;
     }
   }
 
@@ -96,6 +112,22 @@
 
 /* ROWS */
 .movies-table-row {
+  /* Frutiger Aero hover: white gloss sheen on top, aqua glass below, soft cyan aura.
+     Editing rows keep their hazard stripes; the header row lives in thead and is unaffected. */
+  &:not(.editing):not(.header-row):hover {
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.22) 46%,
+      rgba(125, 205, 255, 0.2) 54%,
+      rgba(170, 235, 255, 0.42) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(125, 205, 255, 0.7),
+      0 0 10px rgba(125, 205, 255, 0.5);
+  }
+
   .cell {
     padding: 0 0.25rem;
 
@@ -123,6 +155,102 @@
       width: 100px;
     }
 
+    &-poster {
+      max-width: 52px;
+      width: 52px;
+      min-width: 52px;
+      text-align: center;
 
+      .poster-btn {
+        &.no-poster {
+          opacity: 0.35;
+          filter: grayscale(1);
+
+          &:hover {
+            opacity: 1;
+            filter: none;
+          }
+        }
+
+        &.has-poster {
+          cursor: default;
+        }
+
+        &:disabled {
+          cursor: wait;
+        }
+      }
+    }
+  }
+}
+
+/* Poster choice popover (Upload file / Search TMDB) — portaled to document.body.
+   Dark aero / Oxygen graphite, matching the table headers. */
+.poster-menu {
+  position: fixed;
+  transform: translateX(-100%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(
+    to bottom,
+    rgba(78, 87, 107, 0.96) 0%,
+    rgba(48, 54, 70, 0.96) 42%,
+    rgba(22, 25, 36, 0.97) 58%,
+    rgba(33, 38, 54, 0.96) 100%
+  );
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.65),
+    0 4px 16px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+
+  button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.8rem;
+    text-align: left;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+
+    /* Glassy aqua highlight bar, same anatomy as the row hover but in a dark key */
+    &:hover {
+      background: linear-gradient(
+        to bottom,
+        rgba(145, 210, 255, 0.38) 0%,
+        rgba(95, 170, 240, 0.24) 47%,
+        rgba(45, 115, 205, 0.32) 53%,
+        rgba(90, 175, 255, 0.42) 100%
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -1px 0 rgba(125, 205, 255, 0.5),
+        inset 0 0 8px rgba(125, 205, 255, 0.3);
+    }
+  }
+}
+
+/* Poster hover preview — portaled to document.body so it escapes the table's scroll container */
+.poster-preview {
+  position: fixed;
+  transform: translateX(-100%);
+  z-index: 99999;
+  background: rgba(30, 30, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+
+  img {
+    display: block;
+    max-width: 200px;
+    max-height: 300px;
   }
 }

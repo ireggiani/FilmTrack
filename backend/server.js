@@ -10,7 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(compression());
-app.use(helmet());
+// cross-origin CORP so the dev frontend (:5173) can load poster images from :5000
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 const corsOptions = {
   origin: 'http://localhost:5173',
   optionsSuccessStatus: 200
@@ -28,10 +29,14 @@ app.use('/api/actors', require('./routes/actors'));
 app.use('/api/database', require('./routes/database'));
 app.use('/api/views', require('./routes/views'));
 app.use('/api/notes', require('./routes/notes'));
+app.use('/api/tmdb', require('./routes/tmdb'));
 
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running!' });
 });
+
+// Movie posters (originals + on-demand thumbnails)
+app.use('/posters', require('./routes/posters'));
 
 // Serve static files from public directory with fallback to index.html for SPA
 app.use(express.static(path.join(__dirname, 'public'), {

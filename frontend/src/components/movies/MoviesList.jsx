@@ -74,6 +74,16 @@ const MoviesList = ({ sortedMovies, getInlineSelectStyles, ...props }) => {
               Countries{props.getSortIndicator("Countries")}
             </th>
             <th
+              className="table-header header-poster"
+              style={{
+                maxWidth: "52px",
+                width: "52px",
+              }}
+              title="Poster"
+            >
+              🖼️
+            </th>
+            <th
               className="table-header"
               style={{
                 maxWidth: "100px",
@@ -92,6 +102,10 @@ const MoviesList = ({ sortedMovies, getInlineSelectStyles, ...props }) => {
               movie={movie}
               onUpdate={props.handleUpdateMovie}
               onDelete={props.handleDeleteMovie}
+              onUploadPoster={props.handleUploadPoster}
+              onDeletePoster={props.handleDeletePoster}
+              onSearchPoster={props.handleSearchPoster}
+              onViewPoster={props.handleViewPoster}
               getInlineSelectStyles={getInlineSelectStyles}
               {...props}
             />

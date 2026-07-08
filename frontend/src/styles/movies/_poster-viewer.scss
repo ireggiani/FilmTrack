@@ -1,0 +1,57 @@
+/* Floating poster viewer — window chrome comes from the global window styles;
+   this only sizes the window and lays out toolbar + scrollable image area. */
+.poster-viewer-window {
+  top: 10vh;
+  left: calc(50vw - 230px);
+  width: 460px;
+  height: min(680px, 80vh);
+  display: flex;
+  flex-direction: column;
+}
+
+.poster-viewer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.5rem;
+  background: rgba(30, 30, 40, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+  .btn {
+    min-width: 2.2em;
+  }
+
+  .poster-viewer-zoom-level {
+    margin-left: auto;
+    color: white;
+    font-size: 0.8rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+  }
+}
+
+.poster-viewer-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  cursor: grab;
+
+  &.panning {
+    cursor: grabbing;
+    user-select: none;
+  }
+  background:
+    repeating-conic-gradient(
+      rgba(255, 255, 255, 0.05) 0% 25%,
+      rgba(0, 0, 0, 0.15) 0% 50%
+    )
+    0 0 / 24px 24px,
+    rgba(20, 20, 28, 0.95);
+
+  img {
+    display: block;
+    user-select: none;
+    /* centers when smaller than the viewport, stays scroll-reachable when larger */
+    margin: auto;
+    flex-shrink: 0;
+  }
+}

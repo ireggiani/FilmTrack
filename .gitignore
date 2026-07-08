@@ -11,6 +11,9 @@
 database.sqlite
 /backend/database.sqlite
 
+# User uploads (DB restore temp files, movie posters)
+/backend/uploads/
+
 # Build output
 /frontend/dist
 /backend/public/assets

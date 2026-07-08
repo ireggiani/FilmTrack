@@ -14,6 +14,7 @@ const MoviesWindow = ({
   refreshMovies,
   setRefreshMovies,
   onFocus,
+  onViewPoster,
   zIndex,
   icon,
 }) => {
@@ -126,6 +127,7 @@ const MoviesWindow = ({
             refresh={refreshMovies}
             onMoviesLoaded={onMoviesLoaded}
             hideAddForm={hideAddForm}
+            onViewPoster={onViewPoster}
           />
         </div>
       </div>
@@ -143,6 +145,7 @@ MoviesWindow.propTypes = {
   refreshMovies: PropTypes.number,
   setRefreshMovies: PropTypes.func,
   onFocus: PropTypes.func,
+  onViewPoster: PropTypes.func,
   zIndex: PropTypes.number,
 };
 

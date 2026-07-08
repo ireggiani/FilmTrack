@@ -1,0 +1,176 @@
+/* TMDB poster search — in-window modal overlay.
+   position: absolute resolves against the .window element (its transform from
+   react-draggable makes it the containing block), so the backdrop covers the
+   whole Movies Collection window. */
+.poster-search-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark aero / Oxygen graphite panel: the gloss sheen is concentrated near the
+   top (window-chrome style) rather than the 50% midline used on small controls. */
+.poster-search-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(640px, 92%);
+  max-height: 85%;
+  padding: 0.75rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(80, 89, 110, 0.96) 0%,
+    rgba(50, 56, 72, 0.96) 6%,
+    rgba(26, 29, 41, 0.97) 45%,
+    rgba(22, 25, 36, 0.97) 100%
+  );
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.65),
+    0 8px 32px rgba(0, 0, 0, 0.6);
+  color: white;
+}
+
+.poster-search-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  .poster-search-title {
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.poster-search-form {
+  display: flex;
+  gap: 0.5rem;
+
+  input {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  input:first-child {
+    flex: 1;
+  }
+
+  .poster-search-year {
+    width: 90px;
+  }
+
+  .alt-toggle.active {
+    background: rgba(120, 180, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.poster-search-results {
+  overflow-y: auto;
+  min-height: 120px;
+  /* Room inside the scroll viewport so the cards' lift + aura aren't clipped
+     at the container edges (overflow clips at the border box). */
+  padding: 12px 10px;
+}
+
+.poster-search-message {
+  text-align: center;
+  padding: 1.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+
+  &.error {
+    color: #ff6b6b;
+  }
+}
+
+.poster-search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.poster-search-candidate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease-out,
+    box-shadow 0.12s ease-out,
+    border-color 0.12s ease-out;
+
+  /* Aqua-glass selection: glossy highlight bar anatomy + cyan aura + slight lift */
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: linear-gradient(
+      to bottom,
+      rgba(145, 210, 255, 0.38) 0%,
+      rgba(95, 170, 240, 0.22) 47%,
+      rgba(45, 115, 205, 0.3) 53%,
+      rgba(90, 175, 255, 0.4) 100%
+    );
+    border-color: rgba(165, 225, 255, 0.85);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -1px 0 rgba(125, 205, 255, 0.5),
+      0 0 14px rgba(125, 205, 255, 0.55),
+      0 4px 10px rgba(0, 0, 0, 0.4);
+    transform: translateY(-2px);
+
+    .candidate-title {
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+    }
+
+    .candidate-year {
+      color: rgba(220, 240, 255, 0.9);
+    }
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.5;
+  }
+
+  img {
+    width: 100%;
+    border-radius: 3px;
+  }
+
+  .candidate-title {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .candidate-year {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.poster-search-attribution {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: right;
+  margin: 0;
+}

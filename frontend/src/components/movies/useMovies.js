@@ -179,6 +179,75 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     }
   }, []);
 
+  const handleUploadPoster = useCallback(async (movieId, file) => {
+    try {
+      const formData = new FormData();
+      formData.append("poster", file);
+      const response = await fetch(`${API_BASE_URL}/movies/${movieId}/poster`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.error || "Failed to upload poster");
+      }
+      const updatedMovieFromServer = await response.json();
+      setMovies((prevMovies) =>
+        prevMovies.map((m) => (m.id === movieId ? updatedMovieFromServer : m))
+      );
+      setError(null);
+    } catch (error) {
+      console.error("Error uploading poster:", error);
+      setError(error.message);
+      throw error;
+    }
+  }, []);
+
+  const handleSetPosterFromTmdb = useCallback(async (movieId, posterPath) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/movies/${movieId}/poster/tmdb`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ posterPath }),
+      });
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.error || "Failed to set poster from TMDB");
+      }
+      const updatedMovieFromServer = await response.json();
+      setMovies((prevMovies) =>
+        prevMovies.map((m) => (m.id === movieId ? updatedMovieFromServer : m))
+      );
+      setError(null);
+    } catch (error) {
+      console.error("Error setting poster from TMDB:", error);
+      setError(error.message);
+      throw error;
+    }
+  }, []);
+
+  const handleDeletePoster = useCallback(async (movieId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/movies/${movieId}/poster`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) throw new Error('Failed to delete poster');
+      setMovies((prevMovies) =>
+        prevMovies.map((m) => (m.id === movieId ? { ...m, posterUrl: null } : m))
+      );
+      setError(null);
+    } catch (error) {
+      console.error("Error deleting poster:", error);
+      setError(error.message);
+      throw error;
+    }
+  }, []);
+
   const filteredMovies = useMemo(() => {
     return movies.filter((movie) => {
       if (
@@ -328,6 +397,9 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     handleAddMovie,
     handleUpdateMovie,
     handleDeleteMovie,
+    handleUploadPoster,
+    handleDeletePoster,
+    handleSetPosterFromTmdb,
     filteredMovies,
     sortedMovies,
     requestSort,
