@@ -32,6 +32,7 @@ const MoviesWindow = lazy(() => import("./components/movies/MoviesWindow"));
 const PosterViewerWindow = lazy(
   () => import("./components/movies/PosterViewerWindow"),
 );
+const PairsGame = lazy(() => import("./components/games/PairsGame"));
 import "./styles/globals.scss";
 import "./styles/windows.scss";
 import "./styles/scrollbar.scss";
@@ -65,6 +66,7 @@ function App() {
   const [statsWindowOpen, setStatsWindowOpen] = useState(false);
   const [posterViewerWindowOpen, setPosterViewerWindowOpen] = useState(false);
   const [posterViewerMovie, setPosterViewerMovie] = useState(null);
+  const [pairsWindowOpen, setPairsWindowOpen] = useState(false);
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [genreMinimized, setGenreMinimized] = useState(false);
   const [wallpaperMinimized, setWallpaperMinimized] = useState(false);
@@ -79,6 +81,7 @@ function App() {
   const [notepadMinimized, setNotepadMinimized] = useState(false);
   const [statsMinimized, setStatsMinimized] = useState(false);
   const [posterViewerMinimized, setPosterViewerMinimized] = useState(false);
+  const [pairsMinimized, setPairsMinimized] = useState(false);
   const [windowStack, setWindowStack] = useState([]);
   const [selectedDesktopIcon, setSelectedDesktopIcon] = useState(null);
 
@@ -168,6 +171,7 @@ function App() {
       notepad: setNotepadMinimized,
       stats: setStatsMinimized,
       posterViewer: setPosterViewerMinimized,
+      pairs: setPairsMinimized,
     };
     minimizeSetters[windowId]?.(false);
 
@@ -199,6 +203,7 @@ function App() {
       notepad: () => handleWindowFocus("notepad"),
       stats: () => handleWindowFocus("stats"),
       posterViewer: () => handleWindowFocus("posterViewer"),
+      pairs: () => handleWindowFocus("pairs"),
     }),
     [handleWindowFocus],
   );
@@ -218,6 +223,7 @@ function App() {
       ...(notepadWindowOpen   ? [WINDOW_MAP.notepad]     : []),
       ...(statsWindowOpen     ? [WINDOW_MAP.stats]       : []),
       ...(posterViewerWindowOpen ? [WINDOW_MAP.posterViewer] : []),
+      ...(pairsWindowOpen     ? [WINDOW_MAP.pairs]       : []),
     ],
     [
       genreWindowOpen,
@@ -233,6 +239,7 @@ function App() {
       notepadWindowOpen,
       statsWindowOpen,
       posterViewerWindowOpen,
+      pairsWindowOpen,
     ],
   );
 
@@ -277,6 +284,9 @@ function App() {
           break;
         case "posterViewer":
           setPosterViewerWindowOpen(true);
+          break;
+        case "pairs":
+          setPairsWindowOpen(true);
           break;
         default:
           break;
@@ -326,6 +336,9 @@ function App() {
         break;
       case "posterViewer":
         setPosterViewerWindowOpen(false);
+        break;
+      case "pairs":
+        setPairsWindowOpen(false);
         break;
       default:
         break;
@@ -456,6 +469,15 @@ function App() {
       openWindow("posterViewer");
     },
     [openWindow],
+  );
+
+  const handleClosePairsWindow = useCallback(
+    () => closeWindow("pairs"),
+    [closeWindow],
+  );
+  const handleMinimizePairsWindow = useCallback(
+    (e) => { e?.stopPropagation(); setPairsMinimized(true); },
+    [],
   );
 
   // Keyboard shortcuts
@@ -675,6 +697,19 @@ function App() {
             onFocus={windowFocusHandlers.stats}
             zIndex={100 + windowStack.indexOf("stats")}
             icon={WINDOW_MAP.stats.icon}
+          />
+        </Suspense>
+      )}
+      {pairsWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <PairsGame
+            isOpen={pairsWindowOpen}
+            isMinimized={pairsMinimized}
+            onClose={handleClosePairsWindow}
+            onMinimize={handleMinimizePairsWindow}
+            onFocus={windowFocusHandlers.pairs}
+            zIndex={100 + windowStack.indexOf("pairs")}
+            icon={WINDOW_MAP.pairs.icon}
           />
         </Suspense>
       )}

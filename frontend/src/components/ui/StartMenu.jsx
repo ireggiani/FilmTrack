@@ -4,15 +4,16 @@ import WindowIcon from "./WindowIcon";
 const StartMenu = ({ onSelect, onClose, windows }) => {
   const menuRef = useRef(null);
 
+  const ACCESSORY_IDS = ["calculator", "calendar", "clock", "notepad"];
+  const SYSTEM_IDS = ["wallpaper", "backup"];
+  const GAME_IDS = ["pairs"];
+
   const mainWindows = windows.filter(
-    (w) => !["calculator", "calendar", "clock", "notepad", "wallpaper", "backup"].includes(w.id),
+    (w) => ![...ACCESSORY_IDS, ...SYSTEM_IDS, ...GAME_IDS].includes(w.id),
   );
-  const accessoryWindows = windows.filter((w) =>
-    ["calculator", "calendar", "clock", "notepad"].includes(w.id),
-  );
-  const systemWindows = windows.filter((w) =>
-    ["wallpaper", "backup"].includes(w.id),
-  );
+  const accessoryWindows = windows.filter((w) => ACCESSORY_IDS.includes(w.id));
+  const systemWindows = windows.filter((w) => SYSTEM_IDS.includes(w.id));
+  const gameWindows = windows.filter((w) => GAME_IDS.includes(w.id));
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,6 +61,19 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
               📁 Accessories
               <ul className="submenu-items">
                 {accessoryWindows.map((window) => (
+                  <li key={window.id} onClick={() => onSelect(window.id)}>
+                    <WindowIcon icon={window.icon} alt={window.title} />
+                    {window.title}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )}
+          {gameWindows.length > 0 && (
+            <li className="submenu">
+              📁 Games
+              <ul className="submenu-items">
+                {gameWindows.map((window) => (
                   <li key={window.id} onClick={() => onSelect(window.id)}>
                     <WindowIcon icon={window.icon} alt={window.title} />
                     {window.title}

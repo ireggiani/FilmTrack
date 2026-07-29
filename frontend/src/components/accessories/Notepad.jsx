@@ -139,7 +139,12 @@ const Notepad = ({
     }
   };
 
+  const confirmDiscard = () =>
+    !isDirty ||
+    window.confirm(`Discard unsaved changes to "${title}"?`);
+
   const newNote = () => {
+    if (!confirmDiscard()) return;
     setCurrentNote(null);
     setTitle('Untitled');
     editorRef.current.innerHTML = '';
@@ -147,6 +152,7 @@ const Notepad = ({
   };
 
   const loadNote = (note) => {
+    if (!confirmDiscard()) return;
     setCurrentNote(note);
     setTitle(note.title);
     editorRef.current.innerHTML = note.content;
@@ -448,7 +454,15 @@ const Notepad = ({
                   }`}
                   onClick={() => loadNote(note)}
                 >
-                  {note.title}
+                  <span className="note-item-title">{note.title}</span>
+                  {currentNote?.id === note.id && (
+                    <span
+                      className={`dirty-dot ${isDirty ? 'visible' : ''}`}
+                      title="Unsaved changes"
+                    >
+                      ●
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

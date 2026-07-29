@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const { fn, col } = require('sequelize');
 const { Note } = require('../models');
 
 // Get all notes
 router.get('/', async (req, res) => {
   try {
     const notes = await Note.findAll({
-      order: [['updatedAt', 'DESC']]
+      // lower() so SQLite doesn't sort all uppercase titles before lowercase ones
+      order: [[fn('lower', col('title')), 'ASC']]
     });
     res.json(notes);
   } catch (error) {

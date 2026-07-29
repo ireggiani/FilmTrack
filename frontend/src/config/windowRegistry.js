@@ -10,6 +10,7 @@ import CalendarIcon from '../assets/icons/calendar.png';
 import ClockIcon from '../assets/icons/clock.png';
 import notepadIcon from '../assets/icons/notepad-icon.png';
 import StatsIcon from '../assets/icons/stats.png'; // placeholder — replace with a dedicated icon
+import PairsIcon from '../assets/icons/pairs.png';
 
 export const WINDOWS = [
   { id: 'movies', title: 'Movies Collection', icon: MoviesIcon },
@@ -24,6 +25,7 @@ export const WINDOWS = [
   { id: 'calendar', title: 'Calendar', icon: CalendarIcon },
   { id: 'clock', title: 'Clock', icon: ClockIcon },
   { id: 'notepad', title: 'Notepad', icon: notepadIcon },
+  { id: 'pairs', title: 'Poster Pairs', icon: PairsIcon },
   // Opened from the Movies Collection poster column — needs a target movie,
   // so it's excluded from the start menu (startMenu: false).
   { id: 'posterViewer', title: 'Poster Viewer', icon: MoviesIcon, startMenu: false },

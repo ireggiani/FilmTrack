@@ -1,0 +1,207 @@
+/* Poster Pairs — memory game with the user's own poster collection.
+   Card backs speak the app's aqua-glass dialect; faces are poster thumbs. */
+
+.pairs-window {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.pairs-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  max-height: calc(88vh - 32px);
+  overflow-y: auto;
+}
+
+.pairs-message {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+
+  &--error {
+    color: #ff6b6b;
+  }
+}
+
+.pairs-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .pairs-stat {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  }
+
+  // Only in the toolbar does the button push to the far edge
+  .pairs-new-btn {
+    margin-left: auto;
+  }
+}
+
+.pairs-new-btn {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background: linear-gradient(to bottom, #fff 0%, #f2f2f2 47%, #e3e3e3 53%, #ededed 100%);
+  color: #222;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #7dbde8;
+    background: linear-gradient(to bottom, #f2fbff 0%, #ddf1fd 47%, #c2e5fa 53%, #d4eefc 100%);
+    box-shadow: 0 0 6px rgba(125, 205, 255, 0.6);
+  }
+
+  &:active {
+    background: linear-gradient(to bottom, #c2e5fa, #ddf1fd);
+    box-shadow: inset 0 1px 3px rgba(0, 60, 110, 0.3);
+  }
+}
+
+.pairs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.pairs-card {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  perspective: 600px;
+
+  .pairs-card-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.35s ease;
+  }
+
+  &.face-up .pairs-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .pairs-card-back,
+  .pairs-card-front {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  /* Aqua-glass card back: gloss sheen, hard midline stop, etched edges */
+  .pairs-card-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(190, 230, 255, 0.95) 0%,
+      rgba(130, 200, 250, 0.95) 47%,
+      rgba(70, 150, 220, 0.95) 53%,
+      rgba(110, 185, 245, 0.95) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgba(20, 80, 140, 0.5),
+      0 2px 5px rgba(0, 0, 0, 0.35);
+    text-shadow: 0 1px 3px rgba(0, 40, 80, 0.6);
+  }
+
+  &:hover:not(.face-up) .pairs-card-back {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(20, 80, 140, 0.5),
+      0 0 10px rgba(125, 205, 255, 0.7),
+      0 2px 5px rgba(0, 0, 0, 0.35);
+  }
+
+  .pairs-card-front {
+    transform: rotateY(180deg);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(10, 14, 22, 0.9);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  /* Matched pairs glow with the cyan aura and settle in */
+  &.matched {
+    cursor: default;
+
+    .pairs-card-front {
+      border-color: rgba(165, 225, 255, 0.9);
+      box-shadow:
+        0 0 12px rgba(125, 205, 255, 0.65),
+        0 2px 5px rgba(0, 0, 0, 0.35);
+    }
+  }
+}
+
+/* Win overlay — frosted glass over the board */
+.pairs-win {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 20, 35, 0.45);
+  backdrop-filter: blur(3px);
+  border-radius: inherit;
+}
+
+.pairs-win-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.2rem 2rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(80, 89, 110, 0.96) 0%,
+    rgba(50, 56, 72, 0.96) 8%,
+    rgba(26, 29, 41, 0.97) 55%,
+    rgba(33, 38, 54, 0.96) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(125, 205, 255, 0.45),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+
+  .pairs-win-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  }
+
+  .pairs-win-detail {
+    font-size: 0.8rem;
+    color: rgba(220, 240, 255, 0.85);
+  }
+}

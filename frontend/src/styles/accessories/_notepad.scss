@@ -1,8 +1,8 @@
 @use '../decorative/textures';
 
 .notepad-window {
-  width: 640px;
-  height: 520px;
+  width: 600px;
+  height: 720px;
   display: flex;
   flex-direction: column;
 }
@@ -12,6 +12,18 @@
   display: flex;
   flex-direction: column;
   /* padding: 8px; */
+
+  /* Shared by the toolbar (next to the title field) and the sidebar list item */
+  .dirty-dot {
+    color: #e67e22;
+    font-size: 10px;
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &.visible {
+      opacity: 1;
+    }
+  }
 }
 
 /* Shared chrome for toolbar controls — light aero: subtle gloss, aqua on hover,
@@ -21,7 +33,13 @@
   height: 28px;
   padding: 0 6px;
   border: 1px solid #999;
-  background: linear-gradient(to bottom, #fff 0%, #f2f2f2 47%, #e2e2e2 53%, #ececec 100%);
+  background: linear-gradient(
+    to bottom,
+    #fff 0%,
+    #f2f2f2 47%,
+    #e2e2e2 53%,
+    #ececec 100%
+  );
   border-radius: 3px;
   cursor: pointer;
   display: flex;
@@ -75,17 +93,6 @@
   .note-title {
     flex: 1;
     font-weight: bold;
-  }
-
-  .dirty-dot {
-    color: #e67e22;
-    font-size: 10px;
-    opacity: 0;
-    transition: opacity 0.15s;
-
-    &.visible {
-      opacity: 1;
-    }
   }
 
   .toolbar-buttons {
@@ -223,13 +230,25 @@
   }
 
   .note-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     padding: 2px 8px;
     cursor: pointer;
     border-radius: 4px;
     font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    /* The title ellipsizes; the dot never gets clipped by long titles */
+    .note-item-title {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dirty-dot {
+      flex-shrink: 0;
+    }
 
     &:hover {
       background: #f0f0f0;
