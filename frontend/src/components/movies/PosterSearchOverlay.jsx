@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
 import API_BASE_URL from "../../config/api.js";
 import "../../styles/movies/_poster-search.scss";
@@ -71,7 +72,10 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
     }
   };
 
-  return (
+  // Portalled to <body> so the modal is sized by the viewport, not by the
+  // Movies window — a heavily filtered list shrinks that window to a couple of
+  // rows, which used to squash the poster grid down with it.
+  return createPortal(
     <div className="poster-search-backdrop" onClick={onClose}>
       <div
         className="poster-search-panel"
@@ -159,7 +163,8 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
           Search results and images provided by TMDB
         </p>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -1,11 +1,13 @@
-/* TMDB poster search — in-window modal overlay.
-   position: absolute resolves against the .window element (its transform from
-   react-draggable makes it the containing block), so the backdrop covers the
-   whole Movies Collection window. */
+/* TMDB poster search — app-level modal overlay.
+   Portalled to <body> (see PosterSearchOverlay.jsx), so position: fixed covers
+   the whole desktop and the panel is sized by the viewport. Sitting inside the
+   Movies window instead would cap its height at the window's, which collapses
+   to a couple of rows once filters narrow the list.
+   z-index clears windows (200) and the taskbar (400). */
 .poster-search-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 1500;
   background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(2px);
   display: flex;
@@ -19,8 +21,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: min(640px, 92%);
-  max-height: 85%;
+  width: min(720px, 92vw);
+  max-height: min(820px, 85vh);
   padding: 0.75rem;
   background: linear-gradient(
     to bottom,
