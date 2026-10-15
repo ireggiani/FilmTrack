@@ -26,4 +26,17 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    files: ['**/*.test.{js,jsx}'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node, ...globals.jest },
+    },
+  },
+  {
+    // Jest's CommonJS asset mocks
+    files: ['styleMock.js', 'fileMock.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])

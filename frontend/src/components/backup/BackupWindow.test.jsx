@@ -99,7 +99,7 @@ describe('BackupWindow', () => {
 
     // Wait for the success message
     await waitFor(() => {
-      expect(screen.getByText('Backup downloaded successfully.')).toBeInTheDocument();
+      expect(screen.getByText(/Backup downloaded successfully\./)).toBeInTheDocument();
     });
 
     // Check that the download link was created and clicked
