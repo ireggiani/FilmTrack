@@ -19,17 +19,13 @@ npm run dev
 
 ### Production
 
-To build the frontend for production and start both servers:
+To build the frontend for production and start the server (it opens in the browser at http://localhost:5000):
 
 ```bash
 ./start_production.sh
 ```
 
-To stop the production servers:
-
-```bash
-./stop_production.sh
-```
+Close the terminal window or press Ctrl+C to stop it.
 
 ## Tech Stack
 
