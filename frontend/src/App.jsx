@@ -5,40 +5,65 @@ import {
   useMemo,
   lazy,
   Suspense,
-} from "react";
-import { WINDOW_MAP, START_MENU_WINDOWS } from "./config/windowRegistry";
-const GenreWindow = lazy(() => import("./components/genres/GenreWindow"));
+} from 'react';
+import {
+  WINDOW_MAP,
+  START_MENU_WINDOWS,
+  DEFAULT_DESKTOP_ICON_IDS,
+} from './config/windowRegistry';
+const GenreWindow = lazy(() => import('./components/genres/GenreWindow'));
 const WallpaperWindow = lazy(
-  () => import("./components/wallpapers/WallpaperWindow"),
+  () => import('./components/wallpapers/WallpaperWindow'),
 );
 const CountryWindow = lazy(
-  () => import("./components/countries/CountryWindow"),
+  () => import('./components/countries/CountryWindow'),
 );
 const DirectorWindow = lazy(
-  () => import("./components/directors/DirectorWindow"),
+  () => import('./components/directors/DirectorWindow'),
 );
-const ActorWindow = lazy(() => import("./components/actors/ActorWindow"));
-const Calculator = lazy(() => import("./components/accessories/Calculator"));
-const Calendar = lazy(() => import("./components/accessories/Calendar"));
-const Clock = lazy(() => import("./components/accessories/Clock"));
-const Notepad = lazy(() => import("./components/accessories/Notepad"));
-import Taskbar from "./components/ui/Taskbar";
+const ActorWindow = lazy(() => import('./components/actors/ActorWindow'));
+const Calculator = lazy(() => import('./components/accessories/Calculator'));
+const Calendar = lazy(() => import('./components/accessories/Calendar'));
+const Clock = lazy(() => import('./components/accessories/Clock'));
+const Notepad = lazy(() => import('./components/accessories/Notepad'));
+import Taskbar from './components/ui/Taskbar';
+import TooltipLayer from './components/ui/TooltipLayer';
 import DesktopIconGrid from './components/desktop/DesktopIconGrid';
 import './styles/desktop/_desktop-icons.scss';
 
-const BackupWindow = lazy(() => import("./components/backup/BackupWindow"));
-const StatsWindow = lazy(() => import("./components/stats/StatsWindow"));
-const MoviesWindow = lazy(() => import("./components/movies/MoviesWindow"));
+const BackupWindow = lazy(() => import('./components/backup/BackupWindow'));
+const StatsWindow = lazy(() => import('./components/stats/StatsWindow'));
+const MoviesWindow = lazy(() => import('./components/movies/MoviesWindow'));
 const PosterViewerWindow = lazy(
-  () => import("./components/movies/PosterViewerWindow"),
+  () => import('./components/movies/PosterViewerWindow'),
 );
-const PairsGame = lazy(() => import("./components/games/PairsGame"));
-import "./styles/globals.scss";
-import "./styles/windows.scss";
-import "./styles/scrollbar.scss";
-import "./styles/taskbar.scss";
-import "./styles/accessories/_notepad.scss";
+const PairsGame = lazy(() => import('./components/games/PairsGame'));
+const HelpWindow = lazy(() => import('./components/help/HelpWindow'));
+const DesktopIconsWindow = lazy(
+  () => import('./components/desktop/DesktopIconsWindow'),
+);
 
+// Desktop icon choice, kept in this browser like the wallpaper. Unknown or
+// non-launchable ids (e.g. from an older version) are dropped.
+const DESKTOP_ICONS_KEY = 'filmtrack-desktop-icons';
+const loadDesktopIconIds = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DESKTOP_ICONS_KEY));
+    if (Array.isArray(saved)) {
+      return saved.filter(
+        (id) => WINDOW_MAP[id] && WINDOW_MAP[id].startMenu !== false,
+      );
+    }
+  } catch {
+    // unreadable value — fall back to the defaults
+  }
+  return DEFAULT_DESKTOP_ICON_IDS;
+};
+import './styles/globals.scss';
+import './styles/windows.scss';
+import './styles/scrollbar.scss';
+import './styles/taskbar.scss';
+import './styles/accessories/_notepad.scss';
 
 function App() {
   const [refreshGenres, setRefreshGenres] = useState(0);
@@ -67,6 +92,8 @@ function App() {
   const [posterViewerWindowOpen, setPosterViewerWindowOpen] = useState(false);
   const [posterViewerMovie, setPosterViewerMovie] = useState(null);
   const [pairsWindowOpen, setPairsWindowOpen] = useState(false);
+  const [helpWindowOpen, setHelpWindowOpen] = useState(false);
+  const [desktopIconsWindowOpen, setDesktopIconsWindowOpen] = useState(false);
   const [focusedWindow, setFocusedWindow] = useState(null);
   const [genreMinimized, setGenreMinimized] = useState(false);
   const [wallpaperMinimized, setWallpaperMinimized] = useState(false);
@@ -82,6 +109,9 @@ function App() {
   const [statsMinimized, setStatsMinimized] = useState(false);
   const [posterViewerMinimized, setPosterViewerMinimized] = useState(false);
   const [pairsMinimized, setPairsMinimized] = useState(false);
+  const [helpMinimized, setHelpMinimized] = useState(false);
+  const [desktopIconsMinimized, setDesktopIconsMinimized] = useState(false);
+  const [desktopIconIds, setDesktopIconIds] = useState(loadDesktopIconIds);
   const [windowStack, setWindowStack] = useState([]);
   const [selectedDesktopIcon, setSelectedDesktopIcon] = useState(null);
 
@@ -125,27 +155,27 @@ function App() {
     setWallpaper(imageUrl);
 
     if (imageUrl) {
-      localStorage.setItem("filmtrack-wallpaper", imageUrl);
+      localStorage.setItem('filmtrack-wallpaper', imageUrl);
       document.body.style.backgroundImage = `url(${imageUrl})`;
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
     } else {
-      localStorage.removeItem("filmtrack-wallpaper");
-      document.body.style.backgroundImage = "";
+      localStorage.removeItem('filmtrack-wallpaper');
+      document.body.style.backgroundImage = '';
     }
   }, []);
 
   useEffect(() => {
-    const saved = localStorage.getItem("filmtrack-wallpaper");
-    if (saved && saved !== "") {
+    const saved = localStorage.getItem('filmtrack-wallpaper');
+    if (saved && saved !== '') {
       setWallpaper(saved);
       document.body.style.backgroundImage = `url(${saved})`;
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
     } else {
-      document.body.style.backgroundImage = "";
+      document.body.style.backgroundImage = '';
     }
   }, []);
 
@@ -172,15 +202,17 @@ function App() {
       stats: setStatsMinimized,
       posterViewer: setPosterViewerMinimized,
       pairs: setPairsMinimized,
+      help: setHelpMinimized,
+      desktopIcons: setDesktopIconsMinimized,
     };
     minimizeSetters[windowId]?.(false);
 
     const focusSelectors = {
-      genres: "#genreName",
+      genres: '#genreName',
       wallpaper: '.window input[type="radio"]',
-      countries: "#countryName",
-      directors: "#directorName",
-      actors: "#actorName",
+      countries: '#countryName',
+      directors: '#directorName',
+      actors: '#actorName',
     };
     const selector = focusSelectors[windowId];
     if (selector) {
@@ -190,40 +222,44 @@ function App() {
 
   const windowFocusHandlers = useMemo(
     () => ({
-      genres: () => handleWindowFocus("genres"),
-      wallpaper: () => handleWindowFocus("wallpaper"),
-      countries: () => handleWindowFocus("countries"),
-      directors: () => handleWindowFocus("directors"),
-      actors: () => handleWindowFocus("actors"),
-      movies: () => handleWindowFocus("movies"),
-      backup: () => handleWindowFocus("backup"),
-      calculator: () => handleWindowFocus("calculator"),
-      calendar: () => handleWindowFocus("calendar"),
-      clock: () => handleWindowFocus("clock"),
-      notepad: () => handleWindowFocus("notepad"),
-      stats: () => handleWindowFocus("stats"),
-      posterViewer: () => handleWindowFocus("posterViewer"),
-      pairs: () => handleWindowFocus("pairs"),
+      genres: () => handleWindowFocus('genres'),
+      wallpaper: () => handleWindowFocus('wallpaper'),
+      countries: () => handleWindowFocus('countries'),
+      directors: () => handleWindowFocus('directors'),
+      actors: () => handleWindowFocus('actors'),
+      movies: () => handleWindowFocus('movies'),
+      backup: () => handleWindowFocus('backup'),
+      calculator: () => handleWindowFocus('calculator'),
+      calendar: () => handleWindowFocus('calendar'),
+      clock: () => handleWindowFocus('clock'),
+      notepad: () => handleWindowFocus('notepad'),
+      stats: () => handleWindowFocus('stats'),
+      posterViewer: () => handleWindowFocus('posterViewer'),
+      pairs: () => handleWindowFocus('pairs'),
+      help: () => handleWindowFocus('help'),
+      desktopIcons: () => handleWindowFocus('desktopIcons'),
     }),
     [handleWindowFocus],
   );
 
   const memoizedOpenWindows = useMemo(
     () => [
-      ...(genreWindowOpen     ? [WINDOW_MAP.genres]      : []),
-      ...(wallpaperWindowOpen ? [WINDOW_MAP.wallpaper]   : []),
-      ...(countryWindowOpen   ? [WINDOW_MAP.countries]   : []),
-      ...(directorWindowOpen  ? [WINDOW_MAP.directors]   : []),
-      ...(actorWindowOpen     ? [WINDOW_MAP.actors]      : []),
-      ...(moviesWindowOpen    ? [WINDOW_MAP.movies]      : []),
-      ...(backupWindowOpen    ? [WINDOW_MAP.backup]      : []),
-      ...(calculatorWindowOpen? [WINDOW_MAP.calculator]  : []),
-      ...(calendarWindowOpen  ? [WINDOW_MAP.calendar]    : []),
-      ...(clockWindowOpen     ? [WINDOW_MAP.clock]       : []),
-      ...(notepadWindowOpen   ? [WINDOW_MAP.notepad]     : []),
-      ...(statsWindowOpen     ? [WINDOW_MAP.stats]       : []),
+      ...(genreWindowOpen ? [WINDOW_MAP.genres] : []),
+      ...(wallpaperWindowOpen ? [WINDOW_MAP.wallpaper] : []),
+      ...(countryWindowOpen ? [WINDOW_MAP.countries] : []),
+      ...(directorWindowOpen ? [WINDOW_MAP.directors] : []),
+      ...(actorWindowOpen ? [WINDOW_MAP.actors] : []),
+      ...(moviesWindowOpen ? [WINDOW_MAP.movies] : []),
+      ...(backupWindowOpen ? [WINDOW_MAP.backup] : []),
+      ...(calculatorWindowOpen ? [WINDOW_MAP.calculator] : []),
+      ...(calendarWindowOpen ? [WINDOW_MAP.calendar] : []),
+      ...(clockWindowOpen ? [WINDOW_MAP.clock] : []),
+      ...(notepadWindowOpen ? [WINDOW_MAP.notepad] : []),
+      ...(statsWindowOpen ? [WINDOW_MAP.stats] : []),
       ...(posterViewerWindowOpen ? [WINDOW_MAP.posterViewer] : []),
-      ...(pairsWindowOpen     ? [WINDOW_MAP.pairs]       : []),
+      ...(pairsWindowOpen ? [WINDOW_MAP.pairs] : []),
+      ...(helpWindowOpen ? [WINDOW_MAP.help] : []),
+      ...(desktopIconsWindowOpen ? [WINDOW_MAP.desktopIcons] : []),
     ],
     [
       genreWindowOpen,
@@ -240,53 +276,61 @@ function App() {
       statsWindowOpen,
       posterViewerWindowOpen,
       pairsWindowOpen,
+      helpWindowOpen,
+      desktopIconsWindowOpen,
     ],
   );
 
   const openWindow = useCallback(
     (windowId) => {
       switch (windowId) {
-        case "genres":
+        case 'genres':
           setGenreWindowOpen(true);
           break;
-        case "wallpaper":
+        case 'wallpaper':
           setWallpaperWindowOpen(true);
           break;
-        case "countries":
+        case 'countries':
           setCountryWindowOpen(true);
           break;
-        case "directors":
+        case 'directors':
           setDirectorWindowOpen(true);
           break;
-        case "actors":
+        case 'actors':
           setActorWindowOpen(true);
           break;
-        case "movies":
+        case 'movies':
           setMoviesWindowOpen(true);
           break;
-        case "backup":
+        case 'backup':
           setBackupWindowOpen(true);
           break;
-        case "calculator":
+        case 'calculator':
           setCalculatorWindowOpen(true);
           break;
-        case "calendar":
+        case 'calendar':
           setCalendarWindowOpen(true);
           break;
-        case "clock":
+        case 'clock':
           setClockWindowOpen(true);
           break;
-        case "notepad":
+        case 'notepad':
           setNotepadWindowOpen(true);
           break;
-        case "stats":
+        case 'stats':
           setStatsWindowOpen(true);
           break;
-        case "posterViewer":
+        case 'posterViewer':
           setPosterViewerWindowOpen(true);
           break;
-        case "pairs":
+        case 'pairs':
           setPairsWindowOpen(true);
+          break;
+        case 'help':
+          setHelpWindowOpen(true);
+          break;
+        case 'desktopIcons':
+          setDesktopIconsWindowOpen(true);
           break;
         default:
           break;
@@ -298,47 +342,53 @@ function App() {
 
   const closeWindow = useCallback((windowId) => {
     switch (windowId) {
-      case "genres":
+      case 'genres':
         setGenreWindowOpen(false);
         break;
-      case "wallpaper":
+      case 'wallpaper':
         setWallpaperWindowOpen(false);
         break;
-      case "countries":
+      case 'countries':
         setCountryWindowOpen(false);
         break;
-      case "directors":
+      case 'directors':
         setDirectorWindowOpen(false);
         break;
-      case "actors":
+      case 'actors':
         setActorWindowOpen(false);
         break;
-      case "movies":
+      case 'movies':
         setMoviesWindowOpen(false);
         break;
-      case "backup":
+      case 'backup':
         setBackupWindowOpen(false);
         break;
-      case "calculator":
+      case 'calculator':
         setCalculatorWindowOpen(false);
         break;
-      case "calendar":
+      case 'calendar':
         setCalendarWindowOpen(false);
         break;
-      case "clock":
+      case 'clock':
         setClockWindowOpen(false);
         break;
-      case "notepad":
+      case 'notepad':
         setNotepadWindowOpen(false);
         break;
-      case "stats":
+      case 'stats':
         setStatsWindowOpen(false);
         break;
-      case "posterViewer":
+      case 'posterViewer':
         setPosterViewerWindowOpen(false);
         break;
-      case "pairs":
+      case 'pairs':
         setPairsWindowOpen(false);
+        break;
+      case 'help':
+        setHelpWindowOpen(false);
+        break;
+      case 'desktopIcons':
+        setDesktopIconsWindowOpen(false);
         break;
       default:
         break;
@@ -347,171 +397,199 @@ function App() {
   }, []);
 
   const handleCloseGenreWindow = useCallback(
-    () => closeWindow("genres"),
+    () => closeWindow('genres'),
     [closeWindow],
   );
-  const handleMinimizeGenreWindow = useCallback(
-    (e) => { e?.stopPropagation(); setGenreMinimized(true); },
-    [],
-  );
+  const handleMinimizeGenreWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setGenreMinimized(true);
+  }, []);
 
   const handleCloseWallpaperWindow = useCallback(
-    () => closeWindow("wallpaper"),
+    () => closeWindow('wallpaper'),
     [closeWindow],
   );
-  const handleMinimizeWallpaperWindow = useCallback(
-    (e) => { e?.stopPropagation(); setWallpaperMinimized(true); },
-    [],
-  );
+  const handleMinimizeWallpaperWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setWallpaperMinimized(true);
+  }, []);
 
   const handleCloseCountryWindow = useCallback(
-    () => closeWindow("countries"),
+    () => closeWindow('countries'),
     [closeWindow],
   );
-  const handleMinimizeCountryWindow = useCallback(
-    (e) => { e?.stopPropagation(); setCountryMinimized(true); },
-    [],
-  );
+  const handleMinimizeCountryWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setCountryMinimized(true);
+  }, []);
 
   const handleCloseDirectorWindow = useCallback(
-    () => closeWindow("directors"),
+    () => closeWindow('directors'),
     [closeWindow],
   );
-  const handleMinimizeDirectorWindow = useCallback(
-    (e) => { e?.stopPropagation(); setDirectorMinimized(true); },
-    [],
-  );
+  const handleMinimizeDirectorWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setDirectorMinimized(true);
+  }, []);
 
   const handleCloseActorWindow = useCallback(
-    () => closeWindow("actors"),
+    () => closeWindow('actors'),
     [closeWindow],
   );
-  const handleMinimizeActorWindow = useCallback(
-    (e) => { e?.stopPropagation(); setActorMinimized(true); },
-    [],
-  );
+  const handleMinimizeActorWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setActorMinimized(true);
+  }, []);
 
   const handleCloseMoviesWindow = useCallback(
-    () => closeWindow("movies"),
+    () => closeWindow('movies'),
     [closeWindow],
   );
-  const handleMinimizeMoviesWindow = useCallback(
-    (e) => { e?.stopPropagation(); setMoviesMinimized(true); },
-    [],
-  );
+  const handleMinimizeMoviesWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setMoviesMinimized(true);
+  }, []);
 
   const handleCloseBackupWindow = useCallback(
-    () => closeWindow("backup"),
+    () => closeWindow('backup'),
     [closeWindow],
   );
-  const handleMinimizeBackupWindow = useCallback(
-    (e) => { e?.stopPropagation(); setBackupMinimized(true); },
-    [],
-  );
+  const handleMinimizeBackupWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setBackupMinimized(true);
+  }, []);
 
   const handleCloseCalculatorWindow = useCallback(
-    () => closeWindow("calculator"),
+    () => closeWindow('calculator'),
     [closeWindow],
   );
-  const handleMinimizeCalculatorWindow = useCallback(
-    (e) => { e?.stopPropagation(); setCalculatorMinimized(true); },
-    [],
-  );
+  const handleMinimizeCalculatorWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setCalculatorMinimized(true);
+  }, []);
 
   const handleCloseCalendarWindow = useCallback(
-    () => closeWindow("calendar"),
+    () => closeWindow('calendar'),
     [closeWindow],
   );
-  const handleMinimizeCalendarWindow = useCallback(
-    (e) => { e?.stopPropagation(); setCalendarMinimized(true); },
-    [],
-  );
+  const handleMinimizeCalendarWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setCalendarMinimized(true);
+  }, []);
 
   const handleCloseClockWindow = useCallback(
-    () => closeWindow("clock"),
+    () => closeWindow('clock'),
     [closeWindow],
   );
-  const handleMinimizeClockWindow = useCallback(
-    (e) => { e?.stopPropagation(); setClockMinimized(true); },
-    [],
-  );
+  const handleMinimizeClockWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setClockMinimized(true);
+  }, []);
 
   const handleCloseNotepadWindow = useCallback(
-    () => closeWindow("notepad"),
+    () => closeWindow('notepad'),
     [closeWindow],
   );
-  const handleMinimizeNotepadWindow = useCallback(
-    (e) => { e?.stopPropagation(); setNotepadMinimized(true); },
-    [],
-  );
+  const handleMinimizeNotepadWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setNotepadMinimized(true);
+  }, []);
 
   const handleCloseStatsWindow = useCallback(
-    () => closeWindow("stats"),
+    () => closeWindow('stats'),
     [closeWindow],
   );
-  const handleMinimizeStatsWindow = useCallback(
-    (e) => { e?.stopPropagation(); setStatsMinimized(true); },
-    [],
-  );
+  const handleMinimizeStatsWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setStatsMinimized(true);
+  }, []);
 
   const handleClosePosterViewerWindow = useCallback(
-    () => closeWindow("posterViewer"),
+    () => closeWindow('posterViewer'),
     [closeWindow],
   );
-  const handleMinimizePosterViewerWindow = useCallback(
-    (e) => { e?.stopPropagation(); setPosterViewerMinimized(true); },
-    [],
-  );
+  const handleMinimizePosterViewerWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setPosterViewerMinimized(true);
+  }, []);
 
   const handleViewPoster = useCallback(
     (movie) => {
       setPosterViewerMovie(movie);
-      openWindow("posterViewer");
+      openWindow('posterViewer');
     },
     [openWindow],
   );
 
   const handleClosePairsWindow = useCallback(
-    () => closeWindow("pairs"),
+    () => closeWindow('pairs'),
     [closeWindow],
   );
-  const handleMinimizePairsWindow = useCallback(
-    (e) => { e?.stopPropagation(); setPairsMinimized(true); },
-    [],
+  const handleMinimizePairsWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setPairsMinimized(true);
+  }, []);
+
+  const handleCloseHelpWindow = useCallback(
+    () => closeWindow('help'),
+    [closeWindow],
   );
+  const handleMinimizeHelpWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setHelpMinimized(true);
+  }, []);
+
+  const handleCloseDesktopIconsWindow = useCallback(
+    () => closeWindow('desktopIcons'),
+    [closeWindow],
+  );
+  const handleMinimizeDesktopIconsWindow = useCallback((e) => {
+    e?.stopPropagation();
+    setDesktopIconsMinimized(true);
+  }, []);
+
+  const handleDesktopIconsChange = useCallback((ids) => {
+    setDesktopIconIds(ids);
+    try {
+      localStorage.setItem(DESKTOP_ICONS_KEY, JSON.stringify(ids));
+    } catch {
+      // storage unavailable — the choice just won't survive a reload
+    }
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Ignore if user is typing in an input/textarea
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')
         return;
 
       // Ctrl/Cmd + M = Movies
-      if ((e.ctrlKey || e.metaKey) && e.key === "m") {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
         e.preventDefault();
-        openWindow("movies");
+        openWindow('movies');
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [openWindow]);
 
   return (
     <main className="container" onClick={() => setSelectedDesktopIcon(null)}>
       <DesktopIconGrid
+        ids={desktopIconIds}
         selectedId={selectedDesktopIcon}
         onSelect={setSelectedDesktopIcon}
         onOpen={openWindow}
       />
       <h1
         style={{
-          color: "white",
-          textAlign: "center",
-          fontSize: "3rem",
+          color: 'white',
+          textAlign: 'center',
+          fontSize: '3rem',
           textShadow:
-            "0 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.3)",
+            '0 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 0, 0, 0.3)',
         }}
       >
         FilmTrack
@@ -519,7 +597,7 @@ function App() {
       <p id="system-watermark">
         FilmTrack⁰⁶
         <br />
-        Build 2100
+        Build 2900
       </p>
       {genreWindowOpen && (
         <Suspense fallback={<div>Loading...</div>}>
@@ -533,7 +611,7 @@ function App() {
             onGenresLoaded={handleGenresLoaded}
             refreshGenres={refreshGenres}
             onFocus={windowFocusHandlers.genres}
-            zIndex={100 + windowStack.indexOf("genres")}
+            zIndex={100 + windowStack.indexOf('genres')}
             icon={WINDOW_MAP.genres.icon}
           />
         </Suspense>
@@ -548,7 +626,7 @@ function App() {
             currentWallpaper={wallpaper}
             onWallpaperChange={handleWallpaperChange}
             onFocus={windowFocusHandlers.wallpaper}
-            zIndex={100 + windowStack.indexOf("wallpaper")}
+            zIndex={100 + windowStack.indexOf('wallpaper')}
             icon={WINDOW_MAP.wallpaper.icon}
           />
         </Suspense>
@@ -565,7 +643,7 @@ function App() {
             onCountriesLoaded={handleCountriesLoaded}
             refreshCountries={refreshCountries}
             onFocus={windowFocusHandlers.countries}
-            zIndex={100 + windowStack.indexOf("countries")}
+            zIndex={100 + windowStack.indexOf('countries')}
             icon={WINDOW_MAP.countries.icon}
           />
         </Suspense>
@@ -582,7 +660,7 @@ function App() {
             onDirectorsLoaded={handleDirectorsLoaded}
             refreshDirectors={refreshDirectors}
             onFocus={windowFocusHandlers.directors}
-            zIndex={100 + windowStack.indexOf("directors")}
+            zIndex={100 + windowStack.indexOf('directors')}
             icon={WINDOW_MAP.directors.icon}
           />
         </Suspense>
@@ -599,7 +677,7 @@ function App() {
             onActorsLoaded={handleActorsLoaded}
             refreshActors={refreshActors}
             onFocus={windowFocusHandlers.actors}
-            zIndex={100 + windowStack.indexOf("actors")}
+            zIndex={100 + windowStack.indexOf('actors')}
             icon={WINDOW_MAP.actors.icon}
           />
         </Suspense>
@@ -617,7 +695,7 @@ function App() {
             setRefreshMovies={setRefreshMovies}
             onFocus={windowFocusHandlers.movies}
             onViewPoster={handleViewPoster}
-            zIndex={100 + windowStack.indexOf("movies")}
+            zIndex={100 + windowStack.indexOf('movies')}
             icon={WINDOW_MAP.movies.icon}
           />
         </Suspense>
@@ -630,7 +708,7 @@ function App() {
             onClose={handleCloseBackupWindow}
             onMinimize={handleMinimizeBackupWindow}
             onFocus={windowFocusHandlers.backup}
-            zIndex={100 + windowStack.indexOf("backup")}
+            zIndex={100 + windowStack.indexOf('backup')}
             icon={WINDOW_MAP.backup.icon}
           />
         </Suspense>
@@ -643,7 +721,7 @@ function App() {
             onClose={handleCloseCalculatorWindow}
             onMinimize={handleMinimizeCalculatorWindow}
             onFocus={windowFocusHandlers.calculator}
-            zIndex={100 + windowStack.indexOf("calculator")}
+            zIndex={100 + windowStack.indexOf('calculator')}
             icon={WINDOW_MAP.calculator.icon}
           />
         </Suspense>
@@ -656,7 +734,7 @@ function App() {
             onClose={handleCloseCalendarWindow}
             onMinimize={handleMinimizeCalendarWindow}
             onFocus={windowFocusHandlers.calendar}
-            zIndex={100 + windowStack.indexOf("calendar")}
+            zIndex={100 + windowStack.indexOf('calendar')}
             icon={WINDOW_MAP.calendar.icon}
           />
         </Suspense>
@@ -669,7 +747,7 @@ function App() {
             onClose={handleCloseClockWindow}
             onMinimize={handleMinimizeClockWindow}
             onFocus={windowFocusHandlers.clock}
-            zIndex={100 + windowStack.indexOf("clock")}
+            zIndex={100 + windowStack.indexOf('clock')}
             icon={WINDOW_MAP.clock.icon}
           />
         </Suspense>
@@ -682,7 +760,7 @@ function App() {
             onClose={handleCloseNotepadWindow}
             onMinimize={handleMinimizeNotepadWindow}
             onFocus={windowFocusHandlers.notepad}
-            zIndex={100 + windowStack.indexOf("notepad")}
+            zIndex={100 + windowStack.indexOf('notepad')}
             icon={WINDOW_MAP.notepad.icon}
           />
         </Suspense>
@@ -695,7 +773,7 @@ function App() {
             onClose={handleCloseStatsWindow}
             onMinimize={handleMinimizeStatsWindow}
             onFocus={windowFocusHandlers.stats}
-            zIndex={100 + windowStack.indexOf("stats")}
+            zIndex={100 + windowStack.indexOf('stats')}
             icon={WINDOW_MAP.stats.icon}
           />
         </Suspense>
@@ -708,8 +786,37 @@ function App() {
             onClose={handleClosePairsWindow}
             onMinimize={handleMinimizePairsWindow}
             onFocus={windowFocusHandlers.pairs}
-            zIndex={100 + windowStack.indexOf("pairs")}
+            zIndex={100 + windowStack.indexOf('pairs')}
             icon={WINDOW_MAP.pairs.icon}
+          />
+        </Suspense>
+      )}
+      {helpWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <HelpWindow
+            isOpen={helpWindowOpen}
+            isMinimized={helpMinimized}
+            onClose={handleCloseHelpWindow}
+            onMinimize={handleMinimizeHelpWindow}
+            onFocus={windowFocusHandlers.help}
+            onOpenWindow={openWindow}
+            zIndex={100 + windowStack.indexOf('help')}
+            icon={WINDOW_MAP.help.icon}
+          />
+        </Suspense>
+      )}
+      {desktopIconsWindowOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <DesktopIconsWindow
+            isOpen={desktopIconsWindowOpen}
+            isMinimized={desktopIconsMinimized}
+            onClose={handleCloseDesktopIconsWindow}
+            onMinimize={handleMinimizeDesktopIconsWindow}
+            onFocus={windowFocusHandlers.desktopIcons}
+            zIndex={100 + windowStack.indexOf('desktopIcons')}
+            icon={WINDOW_MAP.desktopIcons.icon}
+            selectedIds={desktopIconIds}
+            onChange={handleDesktopIconsChange}
           />
         </Suspense>
       )}
@@ -722,7 +829,7 @@ function App() {
             onClose={handleClosePosterViewerWindow}
             onMinimize={handleMinimizePosterViewerWindow}
             onFocus={windowFocusHandlers.posterViewer}
-            zIndex={100 + windowStack.indexOf("posterViewer")}
+            zIndex={100 + windowStack.indexOf('posterViewer')}
             icon={WINDOW_MAP.posterViewer.icon}
           />
         </Suspense>
@@ -734,6 +841,7 @@ function App() {
         allWindows={START_MENU_WINDOWS}
         focusedWindow={focusedWindow}
       />
+      <TooltipLayer />
     </main>
   );
 }

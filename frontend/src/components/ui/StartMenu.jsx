@@ -1,19 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import WindowIcon from "./WindowIcon";
+import { START_MENU_FOLDERS as FOLDERS } from "../../config/windowRegistry";
+
+const FOLDER_IDS = FOLDERS.flatMap((folder) => folder.ids);
 
 const StartMenu = ({ onSelect, onClose, windows }) => {
   const menuRef = useRef(null);
 
-  const ACCESSORY_IDS = ["calculator", "calendar", "clock", "notepad"];
-  const SYSTEM_IDS = ["wallpaper", "backup"];
-  const GAME_IDS = ["pairs"];
-
-  const mainWindows = windows.filter(
-    (w) => ![...ACCESSORY_IDS, ...SYSTEM_IDS, ...GAME_IDS].includes(w.id),
-  );
-  const accessoryWindows = windows.filter((w) => ACCESSORY_IDS.includes(w.id));
-  const systemWindows = windows.filter((w) => SYSTEM_IDS.includes(w.id));
-  const gameWindows = windows.filter((w) => GAME_IDS.includes(w.id));
+  const mainWindows = windows.filter((w) => !FOLDER_IDS.includes(w.id));
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -37,51 +31,29 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
     <div className="start-menu" ref={menuRef}>
       <div className="start-menu-inner">
         <ul>
+          {FOLDERS.map((folder) => {
+            const folderWindows = windows.filter((w) => folder.ids.includes(w.id));
+            if (folderWindows.length === 0) return null;
+            return (
+              <li key={folder.name} className="submenu">
+                📁 {folder.name}
+                <ul className="submenu-items">
+                  {folderWindows.map((window) => (
+                    <li key={window.id} onClick={() => onSelect(window.id)}>
+                      <WindowIcon icon={window.icon} alt={window.title} />
+                      {window.title}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
           {mainWindows.map((window) => (
             <li key={window.id} onClick={() => onSelect(window.id)}>
               <WindowIcon icon={window.icon} alt={window.title} />
               {window.title}
             </li>
           ))}
-          {systemWindows.length > 0 && (
-            <li className="submenu">
-              📁 System
-              <ul className="submenu-items">
-                {systemWindows.map((window) => (
-                  <li key={window.id} onClick={() => onSelect(window.id)}>
-                    <WindowIcon icon={window.icon} alt={window.title} />
-                    {window.title}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
-          {accessoryWindows.length > 0 && (
-            <li className="submenu">
-              📁 Accessories
-              <ul className="submenu-items">
-                {accessoryWindows.map((window) => (
-                  <li key={window.id} onClick={() => onSelect(window.id)}>
-                    <WindowIcon icon={window.icon} alt={window.title} />
-                    {window.title}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
-          {gameWindows.length > 0 && (
-            <li className="submenu">
-              📁 Games
-              <ul className="submenu-items">
-                {gameWindows.map((window) => (
-                  <li key={window.id} onClick={() => onSelect(window.id)}>
-                    <WindowIcon icon={window.icon} alt={window.title} />
-                    {window.title}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          )}
         </ul>
       </div>
     </div>

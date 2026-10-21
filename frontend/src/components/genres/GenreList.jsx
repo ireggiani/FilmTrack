@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
-import GlassCheckbox from "../ui/GlassCheckbox";
-import FilterInput from "../ui/FilterInput";
-import PillItem from "../ui/PillItem";
+import { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import GlassCheckbox from '../ui/GlassCheckbox';
+import FilterInput from '../ui/FilterInput';
+import PillItem from '../ui/PillItem';
 
 const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
   const [genres, setGenres] = useState([]);
@@ -12,12 +12,12 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
 
   const fetchGenres = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/genres");
+      const response = await fetch('http://localhost:5000/api/genres');
       const data = await response.json();
       setGenres(data);
       onGenresLoaded?.(data);
     } catch (error) {
-      console.error("Error fetching genres:", error);
+      console.error('Error fetching genres:', error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
   return (
     <div className="genre-list">
       <div className="list-header">
-        <h3 className="heading-left">Existing Genres</h3>
+        <h3 className="heading-left">Genres</h3>
         {genres.length > 0 && (
           <FilterInput
             value={filterText}
@@ -56,15 +56,23 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
         />
       </div>
       {genres.length === 0 ? (
-        <p style={{ color: "rgba(255, 255, 255, 0.8)" }}>No genres added yet</p>
+        <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>No genres added yet</p>
       ) : filteredGenres.length === 0 ? (
-        <p style={{ color: "rgba(255,255,255,0.5)", fontStyle: "italic", fontSize: "0.8rem", padding: "0.25rem 0.5rem" }}>
+        <p
+          style={{
+            color: 'rgba(255,255,255,0.5)',
+            fontStyle: 'italic',
+            fontSize: '0.8rem',
+            padding: '0.25rem 0.5rem',
+          }}
+        >
           No genres match &ldquo;{filterText}&rdquo;
         </p>
       ) : (
         <div className="list">
           {filteredGenres.map((genre) => (
             <PillItem
+              itemType="Genre"
               key={genre.id}
               id={genre.id}
               name={genre.name}
@@ -72,7 +80,7 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
               onEdit={() => {
                 onGenreEdit?.(genre);
                 setTimeout(() => {
-                  const input = document.querySelector("#genreName");
+                  const input = document.querySelector('#genreName');
                   input?.focus();
                 }, 10);
               }}

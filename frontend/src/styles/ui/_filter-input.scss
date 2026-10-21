@@ -15,6 +15,9 @@
   // right padding reserves space for the clear button
   padding: 0.1rem 1.4rem 0.1rem 0.5rem;
   font-family: inherit;
+  // Segoe UI Variable has no italic face and :root disables synthesis — allow a
+  // synthesized slant so the italic placeholder actually renders
+  font-synthesis: style;
   font-size: 0.8rem;
   outline: none;
 
@@ -56,7 +59,7 @@
     }
 
     &::placeholder {
-      color: rgba(180, 180, 180, 0.35);
+      color: rgba(180, 180, 180, 0.75);
     }
   }
 

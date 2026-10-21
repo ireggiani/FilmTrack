@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { DESKTOP_ICON_IDS, WINDOW_MAP } from '../../config/windowRegistry';
+import { WINDOW_MAP } from '../../config/windowRegistry';
 import DesktopIcon from './DesktopIcon';
 
 // Initial grid layout (pixels). Mirrors the CSS custom property defaults so
@@ -19,17 +19,19 @@ const getInitialPosition = (index) => ({
 });
 
 /**
- * Renders every icon listed in DESKTOP_ICON_IDS.
- * To expose a new window as a desktop icon, add its id to that array in
- * windowRegistry.js — no changes are needed here.
+ * Renders the given desktop icons (ids from the window registry), in order.
+ * The key includes the slot index so that adding or removing an icon re-lays
+ * every icon out on the grid, instead of leaving gaps or stacking a new icon
+ * on top of one that kept its old slot. (Dragged positions aren't persisted
+ * yet, so nothing is lost.)
  */
-const DesktopIconGrid = ({ selectedId, onSelect, onOpen }) => (
+const DesktopIconGrid = ({ ids, selectedId, onSelect, onOpen }) => (
   <>
-    {DESKTOP_ICON_IDS.map((id, index) => {
+    {ids.map((id, index) => {
       const { icon, title } = WINDOW_MAP[id];
       return (
         <DesktopIcon
-          key={id}
+          key={`${id}@${index}`}
           icon={icon}
           label={title}
           isSelected={selectedId === id}
@@ -43,6 +45,7 @@ const DesktopIconGrid = ({ selectedId, onSelect, onOpen }) => (
 );
 
 DesktopIconGrid.propTypes = {
+  ids: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedId: PropTypes.string,
   onSelect: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,

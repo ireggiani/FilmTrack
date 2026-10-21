@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
-import GlassCheckbox from "../ui/GlassCheckbox";
-import FilterInput from "../ui/FilterInput";
-import PillItem from "../ui/PillItem";
+import { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import GlassCheckbox from '../ui/GlassCheckbox';
+import FilterInput from '../ui/FilterInput';
+import PillItem from '../ui/PillItem';
 
 const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
   const [actors, setActors] = useState([]);
@@ -12,12 +12,12 @@ const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
 
   const fetchActors = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/actors");
+      const response = await fetch('http://localhost:5000/api/actors');
       const data = await response.json();
       setActors(data);
       onActorsLoaded?.(data);
     } catch (error) {
-      console.error("Error fetching actors:", error);
+      console.error('Error fetching actors:', error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
   return (
     <div className="actor-list">
       <div className="list-header">
-        <h3 className="heading-left">Existing Actors</h3>
+        <h3 className="heading-left">Actors</h3>
         {actors.length > 0 && (
           <FilterInput
             value={filterText}
@@ -56,15 +56,23 @@ const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
         />
       </div>
       {actors.length === 0 ? (
-        <p style={{ color: "rgba(255, 255, 255, 0.8)" }}>No actors added yet</p>
+        <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>No actors added yet</p>
       ) : filteredActors.length === 0 ? (
-        <p style={{ color: "rgba(255,255,255,0.5)", fontStyle: "italic", fontSize: "0.8rem", padding: "0.25rem 0.5rem" }}>
+        <p
+          style={{
+            color: 'rgba(255,255,255,0.5)',
+            fontStyle: 'italic',
+            fontSize: '0.8rem',
+            padding: '0.25rem 0.5rem',
+          }}
+        >
           No actors match &ldquo;{filterText}&rdquo;
         </p>
       ) : (
         <div className="list">
           {filteredActors.map((actor) => (
             <PillItem
+              itemType="Actor"
               key={actor.id}
               id={actor.id}
               name={actor.name}
@@ -72,7 +80,7 @@ const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
               onEdit={() => {
                 onActorEdit?.(actor);
                 setTimeout(() => {
-                  const input = document.querySelector("#actorName");
+                  const input = document.querySelector('#actorName');
                   input?.focus();
                 }, 10);
               }}

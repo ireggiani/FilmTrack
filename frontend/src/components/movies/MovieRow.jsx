@@ -2,6 +2,17 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import StyledSelect from "../ui/StyledSelect";
 import { ASSETS_BASE_URL } from "../../config/api";
+import { parseWatchedDate, toDateInput, tidyDateInput, DATE_HINT } from "./watchedDate";
+
+// Edit-mode copy of a movie: relation ids, and the date as DD/MM/YYYY text
+const toEditable = (movie) => ({
+  ...movie,
+  watchedDate: toDateInput(movie.watchedDate),
+  genreIds: movie.Genres ? movie.Genres.map((g) => g.id) : [],
+  directorIds: movie.Directors ? movie.Directors.map((d) => d.id) : [],
+  actorIds: movie.Actors ? movie.Actors.map((a) => a.id) : [],
+  countryIds: movie.Countries ? movie.Countries.map((c) => c.id) : [],
+});
 
 const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, onSearchPoster, onViewPoster, genres, directors, actors, countries, formatDate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -9,13 +20,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
   const [posterPreviewPos, setPosterPreviewPos] = useState(null);
   const [posterMenuPos, setPosterMenuPos] = useState(null);
   const posterInputRef = useRef(null);
-  const [editedMovie, setEditedMovie] = useState({
-    ...movie,
-    genreIds: movie.Genres ? movie.Genres.map((g) => g.id) : [],
-    directorIds: movie.Directors ? movie.Directors.map((d) => d.id) : [],
-    actorIds: movie.Actors ? movie.Actors.map((a) => a.id) : [],
-    countryIds: movie.Countries ? movie.Countries.map((c) => c.id) : [],
-  });
+  const [editedMovie, setEditedMovie] = useState(() => toEditable(movie));
+  const [dateError, setDateError] = useState(false);
 
   const handleInputChange = (field, value) => {
     setEditedMovie((prev) => ({ ...prev, [field]: value }));
@@ -27,16 +33,9 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
   };
 
   const handleDateBlur = (e) => {
-    let value = e.target.value;
-    const match = value.match(/^(\d{1,2})\/(\d{1,2})$/);
-
-    if (match) {
-      const day = match[1].padStart(2, "0");
-      const month = match[2].padStart(2, "0");
-      const year = new Date().getFullYear();
-      const formattedDate = `${year}-${month}-${day}`;
-      setEditedMovie((prev) => ({ ...prev, watchedDate: formattedDate }));
-    }
+    const { value } = e.target;
+    setEditedMovie((prev) => ({ ...prev, watchedDate: tidyDateInput(value) }));
+    setDateError(!parseWatchedDate(value).valid);
   };
 
   const handleKeyDown = (e) => {
@@ -105,19 +104,27 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
 
   const hidePosterPreview = () => setPosterPreviewPos(null);
 
+  // Title and year are mandatory, as in the add form
+  const missingTitle = !String(editedMovie.title ?? "").trim();
+  const missingYear = !editedMovie.releaseYear;
+  const canSave = !missingTitle && !missingYear;
+
+  // Also reached by Enter in any field, so the date may not have been
+  // blurred/tidied yet — parse it here rather than trusting the text
   const saveChanges = () => {
-    onUpdate(movie.id, editedMovie);
+    if (!canSave) return;
+    const date = parseWatchedDate(editedMovie.watchedDate);
+    if (!date.valid) {
+      setDateError(true);
+      return;
+    }
+    onUpdate(movie.id, { ...editedMovie, watchedDate: date.iso });
     setIsEditing(false);
   };
 
   const cancelEditing = () => {
-    setEditedMovie({
-      ...movie,
-      genreIds: movie.Genres ? movie.Genres.map((g) => g.id) : [],
-      directorIds: movie.Directors ? movie.Directors.map((d) => d.id) : [],
-      actorIds: movie.Actors ? movie.Actors.map((a) => a.id) : [],
-      countryIds: movie.Countries ? movie.Countries.map((c) => c.id) : [],
-    });
+    setEditedMovie(toEditable(movie));
+    setDateError(false);
     setIsEditing(false);
   };
 
@@ -164,7 +171,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
               value={editedMovie.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               onKeyDown={handleKeyDown}
-              className="text-field"
+              className={`text-field${missingTitle ? " invalid" : ""}`}
+              title={missingTitle ? "Required" : undefined}
               style={{ width: "100%" }}
               autoFocus
             />
@@ -213,7 +221,8 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
                 handleInputChange("releaseYear", parseInt(e.target.value) || "")
               }
               onKeyDown={handleKeyDown}
-              className="text-field"
+              className={`text-field${missingYear ? " invalid" : ""}`}
+              title={missingYear ? "Required" : undefined}
               style={{ width: "80px" }}
             />
           ) : (
@@ -255,10 +264,14 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
             <input
               type="text"
               value={editedMovie.watchedDate || ""}
-              onChange={(e) => handleInputChange("watchedDate", e.target.value)}
+              onChange={(e) => {
+                handleInputChange("watchedDate", e.target.value);
+                setDateError(false);
+              }}
               onBlur={handleDateBlur}
               onKeyDown={handleKeyDown}
-              className="text-field"
+              className={`text-field${dateError ? " invalid" : ""}`}
+              title={dateError ? `Not a valid date. ${DATE_HINT}` : undefined}
               style={{ width: "100%" }}
               placeholder="DD/MM or DD/MM/YYYY"
             />
@@ -455,7 +468,12 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
         <div style={{ display: "flex", gap: "0.25rem" }}>
           {isEditing ? (
             <>
-              <button onClick={saveChanges} className="btn editing">
+              <button
+                onClick={saveChanges}
+                className="btn editing"
+                disabled={!canSave}
+                title={canSave ? undefined : "Title and release year are required"}
+              >
                 ✅
               </button>
               <button onClick={cancelEditing} className="btn editing">

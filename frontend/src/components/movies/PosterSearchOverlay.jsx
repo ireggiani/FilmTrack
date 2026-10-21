@@ -59,12 +59,12 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
     runSearch(nextQuery, year);
   };
 
-  const handlePick = async (posterPath) => {
+  const handlePick = async (result) => {
     if (isSaving) return;
     setIsSaving(true);
     setError(null);
     try {
-      await onPick(movie.id, posterPath);
+      await onPick(movie.id, result.posterPath, result);
       onClose();
     } catch (err) {
       setError(err.message);
@@ -83,7 +83,8 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
       >
         <div className="poster-search-header">
           <span className="poster-search-title">
-            Find poster — {movie.title} ({movie.releaseYear})
+            Find poster — {movie.title}
+            {movie.releaseYear ? ` (${movie.releaseYear})` : ""}
           </span>
           <button className="btn" onClick={onClose} title="Close">
             ✖
@@ -143,7 +144,7 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
                 <button
                   key={result.tmdbId}
                   className="poster-search-candidate"
-                  onClick={() => handlePick(result.posterPath)}
+                  onClick={() => handlePick(result)}
                   disabled={isSaving}
                   title={`Use this poster for ${movie.title}`}
                 >
@@ -170,7 +171,8 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
 
 PosterSearchOverlay.propTypes = {
   movie: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    // absent when picking for a movie that hasn't been created yet
+    id: PropTypes.number,
     title: PropTypes.string.isRequired,
     alternativeTitle: PropTypes.string,
     releaseYear: PropTypes.number,

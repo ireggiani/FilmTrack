@@ -1,7 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
+import ConfirmDialog from "./ConfirmDialog";
 
-const PillItem = ({ id, name, icon, onEdit, onDelete, className }) => {
+const PillItem = ({ id, name, icon, itemType, onEdit, onDelete, className }) => {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
   const handleEditClick = (e) => {
     e.target.blur();
     onEdit?.({ id, name, icon });
@@ -10,9 +13,7 @@ const PillItem = ({ id, name, icon, onEdit, onDelete, className }) => {
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
-    if (window.confirm(`Delete ${name}?`)) {
-      onDelete?.(id);
-    }
+    setConfirmingDelete(true);
   };
 
   return (
@@ -32,6 +33,21 @@ const PillItem = ({ id, name, icon, onEdit, onDelete, className }) => {
       >
         ×
       </button>
+      {confirmingDelete && (
+        <ConfirmDialog
+          title={itemType ? `Delete ${itemType}` : "Delete"}
+          heading={`Delete “${name}”?`}
+          confirmLabel="Delete"
+          onConfirm={() => {
+            setConfirmingDelete(false);
+            onDelete?.(id);
+          }}
+          onCancel={() => setConfirmingDelete(false)}
+        >
+          It will be removed from every movie that has it. This can&apos;t be
+          undone.
+        </ConfirmDialog>
+      )}
     </div>
   );
 };
@@ -40,6 +56,8 @@ PillItem.propTypes = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   icon: PropTypes.string,
+  // Shown in the delete dialog's title, e.g. "Genre"
+  itemType: PropTypes.string,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   className: PropTypes.string,

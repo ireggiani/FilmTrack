@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 import WindowIcon from '../ui/WindowIcon';
+import ConfirmDialog from '../ui/ConfirmDialog';
 import API_BASE_URL from '../../config/api.js';
 
 const FORE_COLORS = [
@@ -44,6 +45,9 @@ const Notepad = ({
   const [isDirty, setIsDirty] = useState(false);
   const [activeFormats, setActiveFormats] = useState({});
   const [openPalette, setOpenPalette] = useState(null); // 'fore' | 'hilite' | null
+  // Action waiting on the Save / Don't Save / Cancel prompt
+  const [pendingAction, setPendingAction] = useState(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const editorRef = useRef(null);
 
   const updateActiveFormats = useCallback(() => {
@@ -114,6 +118,7 @@ const Notepad = ({
     }
   };
 
+  // Resolves true once saved, false if the save failed
   const saveNote = async () => {
     const content = editorRef.current.innerHTML;
     try {
@@ -134,37 +139,64 @@ const Notepad = ({
       }
       setIsDirty(false);
       loadNotes(); // refresh the sidebar without touching the editor
+      return true;
     } catch (error) {
       console.error('Error saving note:', error);
+      return false;
     }
   };
 
-  const confirmDiscard = () =>
-    !isDirty ||
-    window.confirm(`Discard unsaved changes to "${title}"?`);
+  // Runs the action right away, or first asks whether to save unsaved changes
+  const guardUnsaved = (action) => {
+    if (isDirty) setPendingAction(() => action);
+    else action();
+  };
 
-  const newNote = () => {
-    if (!confirmDiscard()) return;
+  const resolvePending = async (save) => {
+    const action = pendingAction;
+    setPendingAction(null);
+    if (save && !(await saveNote())) return;
+    action();
+  };
+
+  const startNewNote = () => {
     setCurrentNote(null);
     setTitle('Untitled');
     editorRef.current.innerHTML = '';
     setIsDirty(false);
   };
 
-  const loadNote = (note) => {
-    if (!confirmDiscard()) return;
-    setCurrentNote(note);
-    setTitle(note.title);
-    editorRef.current.innerHTML = note.content;
-    setIsDirty(false);
-  };
+  const newNote = () => guardUnsaved(startNewNote);
 
-  const deleteNote = async () => {
+  const handleClose = () => guardUnsaved(onClose);
+
+  // Leaving the page (reload, closing the tab) can't use the app dialog —
+  // browsers only allow their own generic prompt there
+  useEffect(() => {
+    if (!isDirty) return undefined;
+    const warn = (e) => e.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [isDirty]);
+
+  const loadNote = (note) =>
+    guardUnsaved(() => {
+      setCurrentNote(note);
+      setTitle(note.title);
+      editorRef.current.innerHTML = note.content;
+      setIsDirty(false);
+    });
+
+  const deleteNote = () => {
     if (!currentNote) {
       newNote();
       return;
     }
-    if (!window.confirm(`Delete note "${title}"?`)) return;
+    setConfirmingDelete(true);
+  };
+
+  const confirmDelete = async () => {
+    setConfirmingDelete(false);
     try {
       await fetch(`${API_BASE_URL}/notes/${currentNote.id}`, {
         method: 'DELETE',
@@ -250,7 +282,7 @@ const Notepad = ({
         <div className="window-titlebar leather">
           <div className="titlebar-left">
             <span
-              onDoubleClick={onClose}
+              onDoubleClick={handleClose}
               title="Double-click to close"
               className="window-icon-container"
             >
@@ -266,7 +298,7 @@ const Notepad = ({
             >
               🗕
             </button>
-            <button className="titlebar-button window-close" onClick={onClose}>
+            <button className="titlebar-button window-close" onClick={handleClose}>
               🗙
             </button>
           </div>
@@ -478,6 +510,30 @@ const Notepad = ({
             />
           </div>
         </div>
+        {pendingAction && (
+          <ConfirmDialog
+            title="Notepad"
+            heading={`Save changes to “${title}”?`}
+            confirmLabel="Save"
+            extraLabel="Don't Save"
+            onConfirm={() => resolvePending(true)}
+            onExtra={() => resolvePending(false)}
+            onCancel={() => setPendingAction(null)}
+          >
+            Your changes will be lost if you don&apos;t save them.
+          </ConfirmDialog>
+        )}
+        {confirmingDelete && (
+          <ConfirmDialog
+            title="Delete Note"
+            heading={`Delete “${title}”?`}
+            confirmLabel="Delete"
+            onConfirm={confirmDelete}
+            onCancel={() => setConfirmingDelete(false)}
+          >
+            The note will be permanently removed. This can&apos;t be undone.
+          </ConfirmDialog>
+        )}
       </div>
     </Draggable>
   );

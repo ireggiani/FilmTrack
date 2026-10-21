@@ -1,0 +1,186 @@
+/* Desktop Icons — System settings window. Glass frame like Wallpaper
+   Settings; inside, an Aero list box with Explorer-style group headers and
+   glossy Murrine-style checkboxes. */
+
+.desktop-icons-window {
+  width: 470px;
+}
+
+.desktop-icons-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+}
+
+// Dark text with a white halo, like the title bar: legible on the pale glass
+.desktop-icons-intro,
+.desktop-icons-count {
+  color: #1e1e1e;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+}
+
+.desktop-icons-intro {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+// White inset list box
+.desktop-icons-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  align-items: start;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px 6px 6px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #8e9fb5;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.6);
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// Explorer group header: blue label with a fading rule to the right
+.desktop-icons-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 2px 2px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #1e3f8c;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, #b6c9e4, transparent);
+  }
+}
+
+.desktop-icons-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #1e1e1e;
+  font-size: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background: linear-gradient(to bottom, #f1f8fd 0%, #d5effc 100%);
+    border-color: #8fc6ea;
+  }
+}
+
+.desktop-icons-item-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+// Glossy check box: pale gel well that fills with blue gel when ticked
+.aero-check {
+  appearance: none;
+  flex-shrink: 0;
+  position: relative;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid #6f87a8;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #fdfeff 0%, #e6edf6 50%, #d6e1ee 51%, #eef3f9 100%);
+  box-shadow: inset 0 1px 0 #fff;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #3c8fd6;
+    background: linear-gradient(to bottom, #f7fcff 0%, #def1fd 50%, #c6e6fb 51%, #e4f4fd 100%);
+  }
+
+  &:checked {
+    border-color: #1f5ea8;
+    background: linear-gradient(to bottom, #8fd0ff 0%, #3d9ae8 50%, #1f78d1 51%, #4aa3ee 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      filter: drop-shadow(0 0 1px rgba(0, 40, 90, 0.7));
+    }
+  }
+
+  &:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: 2px;
+  }
+}
+
+.desktop-icons-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.desktop-icons-count {
+  font-size: 0.75rem;
+}
+
+// Standard Aero push button (same anatomy as the confirm dialog's buttons)
+.aero-push-btn {
+  height: 24px;
+  padding: 0 14px;
+  border: 1px solid #707070;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  color: #111;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: normal;
+  cursor: pointer;
+  transition: none;
+
+  &:hover:not(:disabled) {
+    border-color: #3c7fb1;
+    background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+  }
+
+  &:active:not(:disabled) {
+    border-color: #2c628b;
+    background: linear-gradient(to bottom, #e5f4fc 0%, #c4e5f6 49%, #98d1ef 50%, #68b3db 100%);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: -4px;
+  }
+}

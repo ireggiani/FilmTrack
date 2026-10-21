@@ -3,6 +3,8 @@
 @use './ui/_pill-item.scss';
 @use './ui/_start-menu.scss';
 @use './ui/_filter-input.scss';
+@use './ui/_tooltip.scss';
+@use './ui/_confirm-dialog.scss';
 @use './decorative/textures';
 
 @mixin glass-inner-container {

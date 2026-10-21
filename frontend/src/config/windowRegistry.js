@@ -11,6 +11,8 @@ import ClockIcon from '../assets/icons/clock.png';
 import notepadIcon from '../assets/icons/notepad-icon.png';
 import StatsIcon from '../assets/icons/stats.png'; // placeholder — replace with a dedicated icon
 import PairsIcon from '../assets/icons/pairs.png';
+import HelpIcon from '../assets/icons/help.png';
+import DesktopIconsIcon from '../assets/icons/desktop-icons.png';
 
 export const WINDOWS = [
   { id: 'movies', title: 'Movies Collection', icon: MoviesIcon },
@@ -21,11 +23,13 @@ export const WINDOWS = [
   { id: 'stats', title: 'Statistics', icon: StatsIcon },
   { id: 'backup', title: 'Backup & Restore', icon: BackupIcon },
   { id: 'wallpaper', title: 'Wallpaper Settings', icon: WallpaperIcon },
+  { id: 'desktopIcons', title: 'Desktop Icons', icon: DesktopIconsIcon },
   { id: 'calculator', title: 'Calculator', icon: CalculatorIcon },
   { id: 'calendar', title: 'Calendar', icon: CalendarIcon },
   { id: 'clock', title: 'Clock', icon: ClockIcon },
   { id: 'notepad', title: 'Notepad', icon: notepadIcon },
   { id: 'pairs', title: 'Poster Pairs', icon: PairsIcon },
+  { id: 'help', title: 'FilmTrack Help', icon: HelpIcon },
   // Opened from the Movies Collection poster column — needs a target movie,
   // so it's excluded from the start menu (startMenu: false).
   { id: 'posterViewer', title: 'Poster Viewer', icon: MoviesIcon, startMenu: false },
@@ -36,6 +40,14 @@ export const WINDOW_MAP = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
 // Windows the user can launch directly from the start menu
 export const START_MENU_WINDOWS = WINDOWS.filter((w) => w.startMenu !== false);
 
-// IDs of windows that appear as desktop icons, in display order (top→bottom, then left→right).
-// Add an entry here to expose a new icon — no other files need changing.
-export const DESKTOP_ICON_IDS = ['movies', 'directors', 'genres'];
+// Start menu folders, listed first and alphabetically, like the classic
+// Windows "Programs" menu. Windows not in a folder follow them.
+export const START_MENU_FOLDERS = [
+  { name: 'Accessories', ids: ['calculator', 'calendar', 'clock', 'notepad'] },
+  { name: 'Games', ids: ['pairs'] },
+  { name: 'System', ids: ['wallpaper', 'desktopIcons', 'backup'] },
+];
+
+// Desktop icons shown until the user picks their own in the Desktop Icons
+// window (saved in this browser). Display order: top→bottom, then left→right.
+export const DEFAULT_DESKTOP_ICON_IDS = ['movies', 'directors', 'genres', 'notepad', 'help'];

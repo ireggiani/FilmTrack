@@ -128,6 +128,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       const addedMovie = await response.json();
       setMovies((prevMovies) => [...prevMovies, addedMovie]);
       setError(null);
+      return addedMovie;
     } catch (error) {
       console.error("Error adding movie:", error);
       setError(error.message);
@@ -306,6 +307,11 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     let sortableMovies = [...filteredMovies];
     if (sortConfig.key !== null) {
       sortableMovies.sort((a, b) => {
+        // Undated movies always go to the bottom, in either direction
+        if (sortConfig.key === "watchedDate" && !a.watchedDate !== !b.watchedDate) {
+          return a.watchedDate ? -1 : 1;
+        }
+
         let aValue = a[sortConfig.key];
         let bValue = b[sortConfig.key];
 

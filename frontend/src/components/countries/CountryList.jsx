@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, memo } from "react";
-import PropTypes from "prop-types";
-import GlassCheckbox from "../ui/GlassCheckbox";
-import FilterInput from "../ui/FilterInput";
-import PillItem from "../ui/PillItem";
+import { useState, useEffect, useCallback, memo } from 'react';
+import PropTypes from 'prop-types';
+import GlassCheckbox from '../ui/GlassCheckbox';
+import FilterInput from '../ui/FilterInput';
+import PillItem from '../ui/PillItem';
 
 const CountryList = ({
   refresh,
@@ -17,12 +17,12 @@ const CountryList = ({
 
   const fetchCountries = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/countries");
+      const response = await fetch('http://localhost:5000/api/countries');
       const data = await response.json();
       setCountries(data);
       onCountriesLoaded?.(data);
     } catch (error) {
-      console.error("Error fetching countries:", error);
+      console.error('Error fetching countries:', error);
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ const CountryList = ({
   return (
     <div className="country-list">
       <div className="list-header">
-        <h3 className="heading-left--paper">Existing Countries</h3>
+        <h3 className="heading-left--paper">Countries</h3>
         {countries.length > 0 && (
           <FilterInput
             value={filterText}
@@ -63,20 +63,29 @@ const CountryList = ({
         />
       </div>
       {countries.length === 0 ? (
-        <p style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+        <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
           No countries added yet
         </p>
       ) : filteredCountries.length === 0 ? (
-        <p style={{ color: "darkslategray", fontStyle: "italic", fontSize: "0.8rem", padding: "0.25rem 0.5rem", opacity: 0.7 }}>
+        <p
+          style={{
+            color: 'darkslategray',
+            fontStyle: 'italic',
+            fontSize: '0.8rem',
+            padding: '0.25rem 0.5rem',
+            opacity: 0.7,
+          }}
+        >
           No countries match &ldquo;{filterText}&rdquo;
         </p>
       ) : (
         <div
           className="list"
-          style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}
         >
           {filteredCountries.map((country) => (
             <PillItem
+              itemType="Country"
               key={country.id}
               id={country.id}
               name={country.name}
@@ -85,7 +94,7 @@ const CountryList = ({
               onEdit={() => {
                 onCountryEdit?.(country);
                 setTimeout(() => {
-                  const input = document.querySelector("#countryName");
+                  const input = document.querySelector('#countryName');
                   input?.focus();
                 }, 10);
               }}

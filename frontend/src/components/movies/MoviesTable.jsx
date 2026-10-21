@@ -5,6 +5,7 @@ import MovieFilters from "./MovieFilters";
 import MoviesList from "./MoviesList";
 import PosterSearchOverlay from "./PosterSearchOverlay";
 import ViewsManager from "./ViewsManager";
+import ConfirmDialog from "../ui/ConfirmDialog";
 import { useMovies } from "./useMovies";
 
 const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => {
@@ -51,10 +52,15 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => 
   } = useMovies(refresh, onMoviesLoaded);
 
   const [posterSearchMovie, setPosterSearchMovie] = useState(null);
+  // Rows only report which movie to delete; the dialog asks before it happens
+  const [pendingDeleteId, setPendingDeleteId] = useState(null);
+  const pendingDeleteMovie = movies.find((m) => m.id === pendingDeleteId);
 
   const addMovieFormProps = useMemo(
     () => ({
       handleAddMovie,
+      handleUploadPoster,
+      handleSetPosterFromTmdb,
       memoizedGenreOptions,
       memoizedDirectorOptions,
       memoizedActorOptions,
@@ -62,6 +68,8 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => 
     }),
     [
       handleAddMovie,
+      handleUploadPoster,
+      handleSetPosterFromTmdb,
       memoizedGenreOptions,
       memoizedDirectorOptions,
       memoizedActorOptions,
@@ -145,7 +153,7 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => 
         requestSort={requestSort}
         getSortIndicator={getSortIndicator}
         handleUpdateMovie={handleUpdateMovie}
-        handleDeleteMovie={handleDeleteMovie}
+        handleDeleteMovie={setPendingDeleteId}
         handleUploadPoster={handleUploadPoster}
         handleDeletePoster={handleDeletePoster}
         handleSearchPoster={setPosterSearchMovie}
@@ -162,6 +170,23 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => 
           onPick={handleSetPosterFromTmdb}
           onClose={() => setPosterSearchMovie(null)}
         />
+      )}
+      {pendingDeleteMovie && (
+        <ConfirmDialog
+          title="Delete Movie"
+          heading={`Delete “${pendingDeleteMovie.title}”?`}
+          confirmLabel="Delete"
+          onConfirm={() => {
+            handleDeleteMovie(pendingDeleteMovie.id).catch(() => {
+              // error is surfaced through the useMovies error state
+            });
+            setPendingDeleteId(null);
+          }}
+          onCancel={() => setPendingDeleteId(null)}
+        >
+          The movie{pendingDeleteMovie.posterUrl ? " and its poster" : ""} will
+          be permanently removed. This can&apos;t be undone.
+        </ConfirmDialog>
       )}
       {movies.length === 0 && (
         <p

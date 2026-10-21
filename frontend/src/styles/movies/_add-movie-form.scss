@@ -11,4 +11,40 @@
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
   margin-bottom: 1rem;
   padding: 0.5rem;
+
+  /* Shares the last grid cell: poster picker + Add Movie */
+  .add-movie-actions {
+    display: flex;
+    gap: 0.5rem;
+
+    .add-movie-btn {
+      flex-grow: 1;
+    }
+  }
+
+  .poster-btn {
+    flex-shrink: 0;
+    width: 32px;
+    padding: 0;
+
+    &.no-poster {
+      opacity: 0.35;
+
+      &:hover {
+        opacity: 1;
+        filter: none;
+      }
+    }
+
+    &.has-poster {
+      filter: none;
+      overflow: hidden;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
 }

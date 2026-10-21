@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
-import GlassCheckbox from "../ui/GlassCheckbox";
-import FilterInput from "../ui/FilterInput";
-import PillItem from "../ui/PillItem";
+import { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import GlassCheckbox from '../ui/GlassCheckbox';
+import FilterInput from '../ui/FilterInput';
+import PillItem from '../ui/PillItem';
 
 const DirectorList = ({
   refresh,
@@ -17,12 +17,12 @@ const DirectorList = ({
 
   const fetchDirectors = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/directors");
+      const response = await fetch('http://localhost:5000/api/directors');
       const data = await response.json();
       setDirectors(data);
       onDirectorsLoaded?.(data);
     } catch (error) {
-      console.error("Error fetching directors:", error);
+      console.error('Error fetching directors:', error);
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ const DirectorList = ({
   return (
     <div className="director-list">
       <div className="list-header">
-        <h3 className="heading-left--metal">Existing Directors</h3>
+        <h3 className="heading-left--metal">Directors</h3>
         {directors.length > 0 && (
           <FilterInput
             value={filterText}
@@ -63,24 +63,32 @@ const DirectorList = ({
         />
       </div>
       {directors.length === 0 ? (
-        <p style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+        <p style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
           No directors added yet
         </p>
       ) : filteredDirectors.length === 0 ? (
-        <p style={{ color: "rgba(255,255,255,0.5)", fontStyle: "italic", fontSize: "0.8rem", padding: "0.25rem 0.5rem" }}>
+        <p
+          style={{
+            color: 'rgba(255,255,255,0.5)',
+            fontStyle: 'italic',
+            fontSize: '0.8rem',
+            padding: '0.25rem 0.5rem',
+          }}
+        >
           No directors match &ldquo;{filterText}&rdquo;
         </p>
       ) : (
         <div className="list">
           {filteredDirectors.map((director) => (
             <PillItem
+              itemType="Director"
               key={director.id}
               id={director.id}
               name={director.name}
               onEdit={() => {
                 onDirectorEdit?.(director);
                 setTimeout(() => {
-                  const input = document.querySelector("#directorName");
+                  const input = document.querySelector('#directorName');
                   input?.focus();
                 }, 10);
               }}

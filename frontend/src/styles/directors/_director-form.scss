@@ -1,5 +1,5 @@
-@use "../ui";
-@use "../decorative/textures";
+@use '../ui';
+@use '../decorative/textures';
 
 .director-form {
   @include textures.brushed-metal;
@@ -37,7 +37,7 @@
       }
 
       &::placeholder {
-        color: rgba(180, 180, 180, 0.32);
+        color: rgba(180, 180, 180, 0.75);
         font-style: italic;
       }
     }
@@ -59,7 +59,8 @@
       border-radius: 5px;
       // Tight 1px top shade (a wide blurred band reads as empty space above
       // the buttons) and a softer bottom lip so brightness doesn't pool there.
-      box-shadow: inset 0 -1px 0px rgba(255, 255, 255, 0.55),
+      box-shadow:
+        inset 0 -1px 0px rgba(255, 255, 255, 0.55),
         inset 0 1px 3px 0px rgba(40, 40, 40, 0.6);
       // 1px extra below compensates for the shade hugging the top edge.
       padding: 2px 2px 3px;

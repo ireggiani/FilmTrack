@@ -52,8 +52,13 @@ router.post('/', async (req, res) => {
   try {
     const { title, alternativeTitle, releaseYear, rating, watchedDate, genreIds, countryIds, directorIds, actorIds } = req.body;
 
+    if (!String(title ?? '').trim() || !releaseYear) {
+      return res.status(400).json({ error: 'Title and release year are required' });
+    }
+
     const movie = await Movie.create({
-      title, alternativeTitle, releaseYear, rating, watchedDate
+      // A blank date must be null — Sequelize stores "" as "Invalid date"
+      title, alternativeTitle, releaseYear, rating, watchedDate: watchedDate || null
     });
 
     if (genreIds) await movie.setGenres(genreIds);
@@ -76,10 +81,14 @@ router.put('/:id', async (req, res) => {
   try {
     const { title, alternativeTitle, releaseYear, rating, watchedDate, genreIds, countryIds, directorIds, actorIds } = req.body;
 
+    if (!String(title ?? '').trim() || !releaseYear) {
+      return res.status(400).json({ error: 'Title and release year are required' });
+    }
+
     const movie = await Movie.findByPk(req.params.id);
     if (!movie) return res.status(404).json({ error: 'Movie not found' });
 
-    await movie.update({ title, alternativeTitle, releaseYear, rating, watchedDate });
+    await movie.update({ title, alternativeTitle, releaseYear, rating, watchedDate: watchedDate || null });
 
     if (genreIds) await movie.setGenres(genreIds);
     if (countryIds) await movie.setCountries(countryIds);
