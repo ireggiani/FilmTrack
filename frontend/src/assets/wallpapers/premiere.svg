@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <!-- Premiere Night: navy-to-violet dusk, searchlights sweeping up from the
+       theatre, and warm out-of-focus marquee lights below -->
+  <defs>
+    <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a1238"/>
+      <stop offset="0.55" stop-color="#2b2266"/>
+      <stop offset="0.85" stop-color="#6a3a7c"/>
+      <stop offset="1" stop-color="#b8607a"/>
+    </linearGradient>
+    <radialGradient id="horizon" cx="0.5" cy="1.05" r="0.7">
+      <stop offset="0" stop-color="#ffc98a" stop-opacity="0.6"/>
+      <stop offset="0.4" stop-color="#ff9a8a" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#ff9a8a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="searchlight" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#fff6dc" stop-opacity="0.5"/>
+      <stop offset="0.6" stop-color="#fff6dc" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#fff6dc" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="bokehWarm" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd58a" stop-opacity="0.32"/>
+      <stop offset="0.82" stop-color="#ffc46b" stop-opacity="0.38"/>
+      <stop offset="0.95" stop-color="#ffe2a8" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bokehPink" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ff9cc8" stop-opacity="0.28"/>
+      <stop offset="0.82" stop-color="#ff8fc0" stop-opacity="0.34"/>
+      <stop offset="0.95" stop-color="#ffc4dc" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#ffc4dc" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bokehBlue" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#9fd0ff" stop-opacity="0.22"/>
+      <stop offset="0.82" stop-color="#8fc8ff" stop-opacity="0.28"/>
+      <stop offset="0.95" stop-color="#cfe6ff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#cfe6ff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur" x="-30%" y="-10%" width="160%" height="120%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="bokehBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#dusk)"/>
+  <rect width="1920" height="1080" fill="url(#horizon)"/>
+
+  <!-- Searchlights, each a narrow cone fanning out from below the frame -->
+  <g fill="url(#searchlight)" filter="url(#blur)">
+    <path d="M610 1120 L 660 1120 L 330 -60 L 170 -60 Z"/>
+    <path d="M860 1120 L 905 1120 L 1020 -60 L 880 -60 Z" opacity="0.8"/>
+    <path d="M1180 1120 L 1225 1120 L 1580 -60 L 1420 -60 Z"/>
+    <path d="M1420 1120 L 1460 1120 L 1900 -60 L 1780 -60 Z" opacity="0.7"/>
+  </g>
+
+  <!-- Stars -->
+  <g fill="#fff">
+    <circle cx="120" cy="80" r="1.5" opacity="0.8"/>
+    <circle cx="520" cy="140" r="1.2" opacity="0.6"/>
+    <circle cx="760" cy="60" r="1.6" opacity="0.8"/>
+    <circle cx="1120" cy="120" r="1.3" opacity="0.6"/>
+    <circle cx="1340" cy="50" r="1.7" opacity="0.8"/>
+    <circle cx="1700" cy="160" r="1.2" opacity="0.6"/>
+    <circle cx="300" cy="260" r="1.1" opacity="0.5"/>
+    <circle cx="1560" cy="300" r="1.1" opacity="0.5"/>
+  </g>
+
+  <!-- Marquee bokeh -->
+  <g filter="url(#bokehBlur)">
+    <circle cx="140" cy="900" r="70" fill="url(#bokehWarm)"/>
+    <circle cx="300" cy="980" r="46" fill="url(#bokehPink)"/>
+    <circle cx="420" cy="840" r="34" fill="url(#bokehWarm)" opacity="0.8"/>
+    <circle cx="560" cy="960" r="88" fill="url(#bokehWarm)" opacity="0.85"/>
+    <circle cx="760" cy="870" r="40" fill="url(#bokehBlue)"/>
+    <circle cx="900" cy="1000" r="58" fill="url(#bokehPink)" opacity="0.85"/>
+    <circle cx="1040" cy="880" r="30" fill="url(#bokehWarm)"/>
+    <circle cx="1190" cy="960" r="76" fill="url(#bokehWarm)" opacity="0.8"/>
+    <circle cx="1360" cy="860" r="44" fill="url(#bokehPink)"/>
+    <circle cx="1500" cy="990" r="60" fill="url(#bokehBlue)" opacity="0.9"/>
+    <circle cx="1650" cy="880" r="36" fill="url(#bokehWarm)"/>
+    <circle cx="1800" cy="970" r="84" fill="url(#bokehWarm)" opacity="0.85"/>
+    <circle cx="660" cy="790" r="18" fill="url(#bokehWarm)" opacity="0.7"/>
+    <circle cx="1280" cy="780" r="16" fill="url(#bokehWarm)" opacity="0.7"/>
+    <circle cx="1880" cy="800" r="22" fill="url(#bokehPink)" opacity="0.7"/>
+    <circle cx="40" cy="780" r="20" fill="url(#bokehBlue)" opacity="0.7"/>
+  </g>
+</svg>

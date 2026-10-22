@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- Stars & Popcorn tile: glossy gold stars and popcorn on cinema blue.
+       Nothing crosses the tile edges, so tiles join seamlessly. -->
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3b0"/>
+      <stop offset="0.5" stop-color="#ffd24a"/>
+      <stop offset="0.51" stop-color="#f0b323"/>
+      <stop offset="1" stop-color="#ffd86a"/>
+    </linearGradient>
+    <radialGradient id="kernel" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.6" stop-color="#fff4d6"/>
+      <stop offset="1" stop-color="#f2cf86"/>
+    </radialGradient>
+    <path id="star" d="M0 -14 L4.1 -4.6 L13.3 -4.3 L6.1 2.1 L8.2 11.3 L0 6.4 L-8.2 11.3 L-6.1 2.1 L-13.3 -4.3 L-4.1 -4.6 Z"/>
+    <g id="popcorn">
+      <circle cx="-6" cy="2" r="7" fill="url(#kernel)"/>
+      <circle cx="5" cy="3" r="6.5" fill="url(#kernel)"/>
+      <circle cx="0" cy="-5" r="7.5" fill="url(#kernel)"/>
+      <circle cx="-1" cy="7" r="5" fill="url(#kernel)"/>
+      <circle cx="-3" cy="-7" r="2.2" fill="#fff" fill-opacity="0.9"/>
+    </g>
+  </defs>
+
+  <rect width="200" height="200" fill="#1c3f86"/>
+  <rect width="200" height="200" fill="#4a7fd6" fill-opacity="0.12"/>
+
+  <g stroke="#a87410" stroke-width="1" stroke-linejoin="round">
+    <use href="#star" x="40" y="44" fill="url(#gold)" transform="rotate(-12 40 44)"/>
+    <use href="#star" x="150" y="128" fill="url(#gold)" transform="rotate(10 150 128) scale(1)"/>
+  </g>
+  <g fill="#fff">
+    <use href="#star" x="128" y="36" transform="translate(128 36) scale(0.45) translate(-128 -36)" fill-opacity="0.75"/>
+    <use href="#star" x="64" y="150" transform="translate(64 150) scale(0.4) translate(-64 -150)" fill-opacity="0.6"/>
+  </g>
+  <use href="#popcorn" x="104" y="88" transform="rotate(15 104 88)"/>
+  <use href="#popcorn" x="36" y="112" transform="translate(36 112) scale(0.75) translate(-36 -112)"/>
+  <use href="#popcorn" x="170" y="40" transform="translate(170 40) scale(0.7) rotate(-30) translate(-170 -40)"/>
+  <g fill="#fff">
+    <circle cx="90" cy="20" r="1.5" fill-opacity="0.7"/>
+    <circle cx="180" cy="178" r="1.2" fill-opacity="0.6"/>
+    <circle cx="16" cy="180" r="1.4" fill-opacity="0.6"/>
+    <circle cx="112" cy="168" r="1" fill-opacity="0.6"/>
+  </g>
+</svg>

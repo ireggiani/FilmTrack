@@ -11,6 +11,7 @@ import {
   START_MENU_WINDOWS,
   DEFAULT_DESKTOP_ICON_IDS,
 } from './config/windowRegistry';
+import { useWallpaper } from './components/wallpapers/useWallpaper';
 const GenreWindow = lazy(() => import('./components/genres/GenreWindow'));
 const WallpaperWindow = lazy(
   () => import('./components/wallpapers/WallpaperWindow'),
@@ -71,7 +72,6 @@ function App() {
   const [refreshDirectors, setRefreshDirectors] = useState(0);
   const [refreshActors, setRefreshActors] = useState(0);
   const [refreshMovies, setRefreshMovies] = useState(0);
-  const [wallpaper, setWallpaper] = useState(null);
   const [genres, setGenres] = useState([]);
   const [countries, setCountries] = useState([]);
   const [directors, setDirectors] = useState([]);
@@ -151,33 +151,8 @@ function App() {
     setMovies(loadedMovies);
   }, []);
 
-  const handleWallpaperChange = useCallback((imageUrl) => {
-    setWallpaper(imageUrl);
-
-    if (imageUrl) {
-      localStorage.setItem('filmtrack-wallpaper', imageUrl);
-      document.body.style.backgroundImage = `url(${imageUrl})`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
-    } else {
-      localStorage.removeItem('filmtrack-wallpaper');
-      document.body.style.backgroundImage = '';
-    }
-  }, []);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('filmtrack-wallpaper');
-    if (saved && saved !== '') {
-      setWallpaper(saved);
-      document.body.style.backgroundImage = `url(${saved})`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundAttachment = 'fixed';
-    } else {
-      document.body.style.backgroundImage = '';
-    }
-  }, []);
+  // Selection, saving and painting the body background all live in the hook
+  const wallpaper = useWallpaper();
 
   const handleWindowFocus = useCallback((windowId) => {
     setWindowStack((prevStack) => {
@@ -209,7 +184,7 @@ function App() {
 
     const focusSelectors = {
       genres: '#genreName',
-      wallpaper: '.window input[type="radio"]',
+      wallpaper: '.wallpaper-thumb.selected',
       countries: '#countryName',
       directors: '#directorName',
       actors: '#actorName',
@@ -597,7 +572,7 @@ function App() {
       <p id="system-watermark">
         FilmTrack⁰⁶
         <br />
-        Build 2900
+        Build 3000
       </p>
       {genreWindowOpen && (
         <Suspense fallback={<div>Loading...</div>}>
@@ -623,8 +598,14 @@ function App() {
             isMinimized={wallpaperMinimized}
             onClose={handleCloseWallpaperWindow}
             onMinimize={handleMinimizeWallpaperWindow}
-            currentWallpaper={wallpaper}
-            onWallpaperChange={handleWallpaperChange}
+            selectedId={wallpaper.selection}
+            customImage={wallpaper.customImage}
+            customMode={wallpaper.customMode}
+            customSaved={wallpaper.customSaved}
+            onSelect={wallpaper.selectWallpaper}
+            onCustomPicture={wallpaper.setCustomPicture}
+            onCustomRemove={wallpaper.removeCustomPicture}
+            onCustomModeChange={wallpaper.changeCustomMode}
             onFocus={windowFocusHandlers.wallpaper}
             zIndex={100 + windowStack.indexOf('wallpaper')}
             icon={WINDOW_MAP.wallpaper.icon}

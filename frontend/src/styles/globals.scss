@@ -15,7 +15,12 @@
 body {
   font-family: "Segoe UI Variable", "Inter", -apple-system, BlinkMacSystemFont,
     sans-serif;
-  background: linear-gradient(135deg, #338070 0%, #78af4a 100%);
+  // Default wallpaper (DEFAULT_WALLPAPER_ID in config/wallpapers.js), so it
+  // shows before React loads; useWallpaper then sets the chosen one inline.
+  // The gradient shows while the SVG loads.
+  background: url('../assets/wallpapers/filmstrip.svg') center / cover fixed
+      no-repeat,
+    linear-gradient(135deg, #338070 0%, #78af4a 100%);
   min-height: 100vh;
   color: #333;
 }

@@ -8,7 +8,7 @@ import BackupIcon from '../assets/icons/backup.png';
 import CalculatorIcon from '../assets/icons/calculator.png';
 import CalendarIcon from '../assets/icons/calendar.png';
 import ClockIcon from '../assets/icons/clock.png';
-import notepadIcon from '../assets/icons/notepad-icon.png';
+import notepadIcon from '../assets/icons/notepad.png';
 import StatsIcon from '../assets/icons/stats.png'; // placeholder — replace with a dedicated icon
 import PairsIcon from '../assets/icons/pairs.png';
 import HelpIcon from '../assets/icons/help.png';
@@ -32,7 +32,12 @@ export const WINDOWS = [
   { id: 'help', title: 'FilmTrack Help', icon: HelpIcon },
   // Opened from the Movies Collection poster column — needs a target movie,
   // so it's excluded from the start menu (startMenu: false).
-  { id: 'posterViewer', title: 'Poster Viewer', icon: MoviesIcon, startMenu: false },
+  {
+    id: 'posterViewer',
+    title: 'Poster Viewer',
+    icon: MoviesIcon,
+    startMenu: false,
+  },
 ];
 
 export const WINDOW_MAP = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
@@ -50,4 +55,10 @@ export const START_MENU_FOLDERS = [
 
 // Desktop icons shown until the user picks their own in the Desktop Icons
 // window (saved in this browser). Display order: top→bottom, then left→right.
-export const DEFAULT_DESKTOP_ICON_IDS = ['movies', 'directors', 'genres', 'notepad', 'help'];
+export const DEFAULT_DESKTOP_ICON_IDS = [
+  'movies',
+  'directors',
+  'genres',
+  'notepad',
+  'help',
+];

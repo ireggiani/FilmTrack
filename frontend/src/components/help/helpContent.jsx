@@ -566,18 +566,31 @@ export const TOPICS = {
 
   wallpaper: {
     title: "Changing the wallpaper",
-    keywords: ["wallpaper", "background", "desktop image", "tile", "cover"],
+    keywords: ["wallpaper", "background", "desktop image", "tile", "fill", "pattern"],
     related: ["desktop"],
     body: (
       <>
+        <p>
+          Wallpaper Settings shows a preview of your current wallpaper and
+          thumbnails to choose from. Click a thumbnail to use it right away.
+        </p>
         <ul>
-          <li><b>Select New</b> — choose any image from your computer.</li>
-          <li><b>Cover</b> stretches the image to fill the screen; <b>Tile</b> repeats it.</li>
-          <li><b>Remove</b> goes back to the default background.</li>
+          <li><b>FilmTrack</b> — wallpapers made for FilmTrack. They always fill the screen.</li>
+          <li><b>Patterns</b> — small designs repeated across the screen.</li>
+          <li>
+            <b>Your picture</b> — click <b>Browse…</b> to use any image from
+            your computer. Choose <b>Fill</b> to stretch it over the screen or{" "}
+            <b>Tile</b> to repeat it. The × on its thumbnail removes it.
+          </li>
         </ul>
+        <p>
+          FilmTrack remembers your last picture, so you can switch to a
+          built-in wallpaper and back without choosing it again.
+        </p>
         <Callout type="note">
           The wallpaper is remembered by this browser only. It isn&apos;t part
-          of your backups.
+          of your backups. Very large pictures may be too big to remember and
+          are gone after a reload.
         </Callout>
         <OpenWindow id="wallpaper" />
       </>

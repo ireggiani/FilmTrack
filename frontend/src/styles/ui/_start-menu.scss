@@ -126,4 +126,66 @@
   &:focus-visible {
     outline: none;
   }
+
+  // Open state: a soft halo grows out from behind the orb, then pulses, like
+  // Vista's lit Start orb. It's an absolutely positioned pseudo-element, so it
+  // spills outside the 38px box without changing the button's size or the
+  // taskbar layout.
+  .start-button {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(140, 240, 255, 0.95) 0%,
+      rgba(60, 200, 235, 0.7) 45%,
+      rgba(30, 150, 220, 0) 72%
+    );
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  // The pulse runs alternate-reverse so it starts from the bright end, exactly
+  // where the grow-in finishes, and dims from there without a jump
+  &.is-open::before {
+    animation:
+      start-orb-glow-in 0.22s ease-out,
+      start-orb-glow 1.8s ease-in-out 0.22s infinite alternate-reverse;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &.is-open::before {
+      animation: none;
+      opacity: 0.85;
+      transform: scale(1);
+    }
+  }
+}
+
+@keyframes start-orb-glow-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6); // hidden behind the orb
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes start-orb-glow {
+  from {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.06);
+  }
 }

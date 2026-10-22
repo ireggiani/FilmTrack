@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <!-- Meadow Matinee: Aero sky over a rolling green hill, with a glass
+       clapperboard catching the light -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f6fd1"/>
+      <stop offset="0.6" stop-color="#5fa8ee"/>
+      <stop offset="1" stop-color="#bfe3ff"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.78" cy="0.12" r="0.45">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="0.25" stop-color="#e8f6ff" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#e8f6ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hillBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7cc443"/>
+      <stop offset="1" stop-color="#3f8f2a"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8fd24a"/>
+      <stop offset="0.45" stop-color="#4fa82e"/>
+      <stop offset="1" stop-color="#2c7a22"/>
+    </linearGradient>
+    <linearGradient id="hillShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4ffd8" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#f4ffd8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#e8f4ff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.35"/>
+    </linearGradient>
+    <linearGradient id="glassShine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="cloud" x="-30%" y="-60%" width="160%" height="220%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <!-- Diagonal stripes for the clapper sticks -->
+    <pattern id="stripes" width="56" height="56" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)">
+      <rect width="28" height="56" fill="#1d2b44" fill-opacity="0.55"/>
+      <rect x="28" width="28" height="56" fill="#ffffff" fill-opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#sun)"/>
+
+  <!-- Clouds: clusters of blurred ellipses -->
+  <g fill="#fff" filter="url(#cloud)">
+    <g opacity="0.85">
+      <ellipse cx="300" cy="230" rx="170" ry="48"/>
+      <ellipse cx="390" cy="200" rx="110" ry="58"/>
+      <ellipse cx="230" cy="210" rx="90" ry="44"/>
+    </g>
+    <g opacity="0.7">
+      <ellipse cx="1050" cy="150" rx="200" ry="40"/>
+      <ellipse cx="1130" cy="125" rx="120" ry="50"/>
+    </g>
+    <g opacity="0.75">
+      <ellipse cx="1600" cy="380" rx="180" ry="44"/>
+      <ellipse cx="1670" cy="355" rx="100" ry="48"/>
+    </g>
+    <ellipse cx="720" cy="420" rx="140" ry="30" opacity="0.55"/>
+  </g>
+
+  <!-- Hills -->
+  <path d="M-50 760 C 300 640, 700 660, 1000 720 S 1600 640, 1980 700 L 1980 1120 L -50 1120 Z" fill="url(#hillBack)"/>
+  <path d="M-50 860 C 400 700, 900 700, 1300 780 S 1800 820, 1980 760 L 1980 1120 L -50 1120 Z" fill="url(#hill)"/>
+  <path d="M-50 860 C 400 700, 900 700, 1300 780 S 1800 820, 1980 760 L 1980 800 C 1800 860, 1300 830, 900 760 S 300 790, -50 900 Z" fill="url(#hillShine)"/>
+
+  <!-- Glass clapperboard -->
+  <g transform="translate(1480 640) rotate(-6)">
+    <ellipse cx="10" cy="235" rx="200" ry="22" fill="#1b4d14" opacity="0.35" filter="url(#shadow)"/>
+    <!-- Slate -->
+    <rect x="-170" y="0" width="340" height="230" rx="14" fill="url(#glass)" stroke="#ffffff" stroke-opacity="0.8" stroke-width="3"/>
+    <path d="M-160 8 H 160 A 6 6 0 0 1 166 14 V 90 Q 0 60 -166 110 V 14 A 6 6 0 0 1 -160 8 Z" fill="url(#glassShine)" opacity="0.7"/>
+    <g stroke="#ffffff" stroke-opacity="0.55" stroke-width="2">
+      <line x1="-140" y1="90" x2="140" y2="90"/>
+      <line x1="-140" y1="150" x2="140" y2="150"/>
+      <line x1="0" y1="90" x2="0" y2="210"/>
+    </g>
+    <!-- Fixed bottom stick -->
+    <rect x="-170" y="-48" width="340" height="44" rx="6" fill="url(#stripes)" stroke="#ffffff" stroke-opacity="0.8" stroke-width="3"/>
+    <!-- Hinged top stick, open -->
+    <g transform="translate(-170 -48) rotate(-18)">
+      <rect x="0" y="-46" width="340" height="44" rx="6" fill="url(#stripes)" stroke="#ffffff" stroke-opacity="0.8" stroke-width="3"/>
+      <rect x="4" y="-42" width="332" height="14" rx="5" fill="#fff" opacity="0.35"/>
+    </g>
+    <circle cx="-158" cy="-50" r="9" fill="#ffffff" fill-opacity="0.85"/>
+  </g>
+</svg>

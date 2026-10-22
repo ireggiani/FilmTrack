@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <!-- FilmTrack default wallpaper: Aero-style light ribbons over the app's
+       teal-to-green gradient, with one ribbon drawn as a glassy film strip -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f6f78"/>
+      <stop offset="0.45" stop-color="#338070"/>
+      <stop offset="1" stop-color="#86b94a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.3" cy="0.12" r="0.75">
+      <stop offset="0" stop-color="#eafff6" stop-opacity="0.55"/>
+      <stop offset="0.35" stop-color="#bff3e0" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#bff3e0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="floor" cx="0.55" cy="1.05" r="0.6">
+      <stop offset="0" stop-color="#d9f7a0" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#d9f7a0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="0.3" stop-color="#fff" stop-opacity="0.35"/>
+      <stop offset="0.7" stop-color="#fff" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="strip" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0c3a3a" stop-opacity="0"/>
+      <stop offset="0.18" stop-color="#0c3a3a" stop-opacity="0.42"/>
+      <stop offset="0.82" stop-color="#0c3a3a" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#0c3a3a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="frames" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e8fff4" stop-opacity="0"/>
+      <stop offset="0.2" stop-color="#e8fff4" stop-opacity="0.32"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="0.8" stop-color="#e8fff4" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#e8fff4" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="holes" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="0.2" stop-color="#fff" stop-opacity="0.55"/>
+      <stop offset="0.8" stop-color="#fff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="bubble" cx="0.35" cy="0.3" r="0.7">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0.12"/>
+      <stop offset="0.9" stop-color="#fff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0.35"/>
+    </radialGradient>
+    <filter id="soft" x="-10%" y="-50%" width="120%" height="200%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <filter id="haze" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <!-- The film strip's centre line, reused for the band, frames and sprockets -->
+    <path id="reel" d="M-120 820 C 380 640, 760 900, 1180 700 S 1800 420, 2060 520"/>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <rect width="1920" height="1080" fill="url(#floor)"/>
+
+  <!-- Light rays from the top-left glow -->
+  <g fill="#fff" opacity="0.07">
+    <path d="M560 -40 L 760 -40 L 1500 1120 L 1180 1120 Z"/>
+    <path d="M420 -40 L 500 -40 L 820 1120 L 640 1120 Z"/>
+    <path d="M880 -40 L 940 -40 L 2160 1120 L 2020 1120 Z"/>
+  </g>
+
+  <!-- Soft glossy ribbons -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M-100 560 C 400 380, 900 640, 1400 460 S 1900 300, 2040 340"
+          stroke="url(#ribbon)" stroke-width="90" opacity="0.5" filter="url(#soft)"/>
+    <path d="M-100 600 C 420 430, 880 690, 1420 500 S 1880 360, 2040 380"
+          stroke="url(#ribbon)" stroke-width="3" opacity="0.9"/>
+    <path d="M-100 980 C 500 860, 1000 1060, 1500 880 S 1900 820, 2040 840"
+          stroke="url(#ribbon)" stroke-width="60" opacity="0.4" filter="url(#soft)"/>
+    <path d="M-100 1010 C 520 900, 980 1090, 1520 910 S 1890 860, 2040 870"
+          stroke="url(#ribbon)" stroke-width="2" opacity="0.8"/>
+  </g>
+
+  <!-- Film strip: dark glass band, lit frames, sprocket holes along both edges -->
+  <g fill="none">
+    <use href="#reel" stroke="url(#strip)" stroke-width="150" filter="url(#haze)" opacity="0.6"/>
+    <use href="#reel" stroke="url(#strip)" stroke-width="130"/>
+    <use href="#reel" stroke="url(#frames)" stroke-width="82" stroke-dasharray="118 14"/>
+    <use href="#reel" transform="translate(0 -52)" stroke="url(#holes)" stroke-width="12" stroke-dasharray="12 21"/>
+    <use href="#reel" transform="translate(0 52)" stroke="url(#holes)" stroke-width="12" stroke-dasharray="12 21"/>
+    <!-- Glass highlight along the top edge -->
+    <use href="#reel" transform="translate(0 -62)" stroke="url(#holes)" stroke-width="2" opacity="0.8"/>
+  </g>
+
+  <!-- Bokeh bubbles -->
+  <g>
+    <circle cx="1560" cy="210" r="70" fill="url(#bubble)"/>
+    <circle cx="1680" cy="330" r="34" fill="url(#bubble)"/>
+    <circle cx="1450" cy="120" r="22" fill="url(#bubble)"/>
+    <circle cx="260" cy="300" r="46" fill="url(#bubble)"/>
+    <circle cx="180" cy="420" r="18" fill="url(#bubble)"/>
+    <circle cx="920" cy="250" r="28" fill="url(#bubble)" opacity="0.8"/>
+    <circle cx="1240" cy="960" r="40" fill="url(#bubble)" opacity="0.8"/>
+    <circle cx="420" cy="940" r="26" fill="url(#bubble)" opacity="0.7"/>
+    <circle cx="1800" cy="760" r="52" fill="url(#bubble)" opacity="0.7"/>
+  </g>
+  <g fill="#fff">
+    <circle cx="1100" cy="380" r="5" opacity="0.5"/>
+    <circle cx="700" cy="160" r="4" opacity="0.45"/>
+    <circle cx="1350" cy="640" r="3" opacity="0.5"/>
+    <circle cx="560" cy="560" r="3" opacity="0.4"/>
+    <circle cx="1720" cy="560" r="4" opacity="0.4"/>
+    <circle cx="80" cy="700" r="5" opacity="0.35"/>
+  </g>
+</svg>
