@@ -1,6 +1,7 @@
 /// Glass / frosted theme — the default window style.
 /// Used by: GenreWindow, ActorWindow, MoviesWindow, WallpaperWindow,
-///           Notepad, Clock, Calendar, Calculator.
+///           Clock, Calendar, Calculator. (Notepad also has the .window class
+///           but restyles itself as aqua — see accessories/_notepad.scss.)
 @use './base';
 
 .window {

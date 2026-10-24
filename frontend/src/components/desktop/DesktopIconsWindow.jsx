@@ -15,7 +15,10 @@ const folderIds = START_MENU_FOLDERS.flatMap((folder) => folder.ids);
 const COLUMNS = [
   START_MENU_FOLDERS.map((folder) => ({
     name: folder.name,
-    windows: START_MENU_WINDOWS.filter((w) => folder.ids.includes(w.id)),
+    // Alphabetical, like the Start menu's folders
+    windows: START_MENU_WINDOWS.filter((w) => folder.ids.includes(w.id)).sort(
+      (a, b) => a.title.localeCompare(b.title)
+    ),
   })),
   [
     {

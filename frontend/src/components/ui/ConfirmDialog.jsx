@@ -15,7 +15,8 @@ const ICONS = {
 // focused), Esc cancels, Tab / Shift+Tab cycle through the buttons. Clicking
 // outside doesn't dismiss it; like a real modal dialog, an answer is required.
 // Passing extraLabel + onExtra adds a middle button (e.g. Save / Don't Save /
-// Cancel).
+// Cancel); cancelLabel={null} drops the Cancel button for a plain message
+// (Esc and ✕ still call onCancel).
 const ConfirmDialog = ({
   title,
   heading,
@@ -32,6 +33,7 @@ const ConfirmDialog = ({
   const extraRef = useRef(null);
   const cancelRef = useRef(null);
   const hasExtra = Boolean(extraLabel && onExtra);
+  const hasCancel = cancelLabel !== null;
 
   useEffect(() => {
     confirmRef.current?.focus();
@@ -54,9 +56,11 @@ const ConfirmDialog = ({
         else onConfirm();
       } else if (e.key === "Tab") {
         e.preventDefault();
-        const order = hasExtra
-          ? [confirmRef, extraRef, cancelRef]
-          : [confirmRef, cancelRef];
+        const order = [
+          confirmRef,
+          hasExtra && extraRef,
+          hasCancel && cancelRef,
+        ].filter(Boolean);
         const current = order.findIndex(
           (ref) => ref.current === document.activeElement
         );
@@ -67,7 +71,7 @@ const ConfirmDialog = ({
     };
     window.addEventListener("keydown", onKeyDown, true);
     return () => window.removeEventListener("keydown", onKeyDown, true);
-  }, [onConfirm, onExtra, onCancel, hasExtra]);
+  }, [onConfirm, onExtra, onCancel, hasExtra, hasCancel]);
 
   return createPortal(
     <div
@@ -129,14 +133,16 @@ const ConfirmDialog = ({
               {extraLabel}
             </button>
           )}
-          <button
-            ref={cancelRef}
-            type="button"
-            className="aero-dialog-btn"
-            onClick={onCancel}
-          >
-            {cancelLabel}
-          </button>
+          {hasCancel && (
+            <button
+              ref={cancelRef}
+              type="button"
+              className="aero-dialog-btn"
+              onClick={onCancel}
+            >
+              {cancelLabel}
+            </button>
+          )}
         </div>
       </div>
     </div>,

@@ -1,6 +1,6 @@
 /// Brushed metal theme.
 /// Used by: DirectorWindow.
-/// Titlebar buttons use the paddle-switch (light-switch) style.
+/// Titlebar buttons form a switch bank of latching keys (paddle-switch).
 @use '../decorative/textures';
 @use './base';
 
@@ -8,75 +8,162 @@
   @include base.window-base;
   @include textures.brushed-metal-grey;
   backdrop-filter: unset;
-  border-radius: 0 0 8px 8px;
-  border: 1px solid #666;
-  box-shadow: 0 4px 16px 0 rgba(38, 38, 38, 0.75);
+  // Machined edge: even rounding, a dark outer line and a 1px light inner rim
+  border-radius: 8px;
+  border: 1px solid #4f4f4f;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 4px 16px 0 rgba(38, 38, 38, 0.75);
+
+  // Sheen that drifts as the window is dragged, as if the light stayed put
+  // while the metal moved under it. DirectorWindow sets this element's
+  // transform on drag — see the comment there for why it's done this way.
+  .metal-sheen {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    // 800px past each side of the window: the drag offset wraps within one
+    // pattern period (~711px horizontally, see DirectorWindow), so this
+    // always covers the window, at any position and when maximized
+    left: -800px;
+    width: calc(100% + 1600px);
+    z-index: 1;
+    // A band of light every 700px, with faint shade between bands — on light
+    // metal a highlight alone barely registers, the light/shade contrast is
+    // what makes it read. Repeating, so dragging far never leaves the window
+    // without one.
+    background: repeating-linear-gradient(
+      80deg,
+      rgba(0, 0, 0, 0.1) 0,
+      transparent 190px,
+      transparent 270px,
+      rgba(255, 255, 255, 0.18) 320px,
+      rgba(255, 255, 255, 0.4) 350px,
+      rgba(255, 255, 255, 0.18) 380px,
+      transparent 430px,
+      transparent 510px,
+      rgba(0, 0, 0, 0.1) 700px
+    );
+    will-change: transform;
+    pointer-events: none;
+  }
 
   .window-titlebar {
-    @include textures.brushed-metal;
+    @include textures.brushed-metal(48%);
     border-bottom: 1px solid #444;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+    // Tall enough for the switch bank to sit centred with even space above
+    // and below
+    height: 28px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0.4rem;
 
+    // Stamped into the metal: dark letters with a light lower edge
     .window-title {
-      color: white;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      color: #2b2b2b;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
     }
 
-    .titlebar-button {
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    // The switch bank: one recessed channel; the keys sit in it separated by
+    // thin dark gaps
+    .titlebar-right {
+      gap: 1px;
+      padding: 2px;
+      border-radius: 5px;
+      background: linear-gradient(to bottom, #2e2e2e, #4a4a4a);
+      box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.7),
+        0 1px 0 rgba(255, 255, 255, 0.55);
     }
 
-    // Paddle-switch: raised/flat light-switch skeuomorphic buttons
+    // Latching keys: raised with a thick lower lip; pressed (while held, or
+    // latched via .active) they sink, the lip disappears and the symbol drops
+    // 1px
     .paddle-switch {
-      background: linear-gradient(
-        180deg,
-        hsl(0, 0%, 70%) 0%,
-        hsl(0, 0%, 88%) 47%,
-        hsl(0, 0%, 98%) 53%,
-        hsl(0, 0%, 90%) 100%
-      );
-      border: 1px solid black;
-      border-bottom: 3px solid #444;
-      color: #444;
-      text-shadow: unset;
+      position: relative;
+      width: 26px;
+      height: 19px;
+      margin: 0;
+      padding: 0 0 2px;
+      border: none;
+      border-radius: 0;
+      background: linear-gradient(to bottom, #fafafa 0%, #e4e4e4 48%, #d2d2d2 52%, #dcdcdc 100%);
+      box-shadow:
+        inset 0 1px 0 #fff,
+        inset 0 -3px 0 #8d8d8d,
+        inset 1px 0 0 rgba(255, 255, 255, 0.6),
+        inset -1px 0 0 rgba(0, 0, 0, 0.12);
+      // Engraved symbols
+      color: #333;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+      font-size: 0.7rem;
       outline: none;
+      transition:
+        box-shadow 60ms ease-out,
+        background 60ms ease-out,
+        padding 60ms ease-out;
+
+      &:first-child {
+        border-radius: 3px 0 0 3px;
+      }
+
+      &:last-child {
+        border-radius: 0 3px 3px 0;
+      }
 
       &:hover,
-      &:focus,
       &:focus-visible {
-        background: linear-gradient(
-          180deg,
-          hsl(0, 0%, 75%) 0%,
-          hsl(0, 0%, 93%) 47%,
-          hsl(0, 0%, 100%) 53%,
-          hsl(0, 0%, 95%) 100%
-        );
-        outline: none;
+        background: linear-gradient(to bottom, #ffffff 0%, #ececec 48%, #dcdcdc 52%, #e6e6e6 100%);
       }
 
       &:active,
       &.active {
-        background: linear-gradient(
-          0deg,
-          hsl(0, 0%, 70%) 0%,
-          hsl(0, 0%, 88%) 47%,
-          hsl(0, 0%, 78%) 53%,
-          hsl(0, 0%, 50%) 100%
-        );
-        border-top: 4px solid #ededed;
-        border-bottom: 1px solid #444;
-        outline: none;
+        padding: 2px 0 0;
+        background: linear-gradient(to bottom, #b9b9b9 0%, #cbcbcb 50%, #d6d6d6 100%);
+        box-shadow:
+          inset 0 2px 4px rgba(0, 0, 0, 0.45),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.35);
+      }
+
+      &:focus-visible {
+        outline: 1px dotted #222;
+        outline-offset: -4px;
       }
     }
 
+    // Close: the engraved × turns red and glows, instead of a flat overlay
     .window-close {
-      &:hover {
-        background: rgba(200, 50, 50, 0.5);
-      }
+      margin: 0;
 
-      &:active {
-        background: rgba(200, 50, 50, 0.8);
+      &:hover {
+        color: #c0392b;
+        text-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.6),
+          0 0 4px rgba(255, 70, 50, 0.6);
+      }
+    }
+
+    // Indicator LED in a key's top-right corner; fades in and out
+    .paddle-switch .led {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #8a8a8a, #4a4a4a);
+      box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.6);
+      transition:
+        background 250ms ease-out,
+        box-shadow 250ms ease-out;
+
+      &.on {
+        background: radial-gradient(circle at 40% 35%, #fff6c8, #ffb020 60%, #d97a00);
+        box-shadow:
+          0 0 3px 1px rgba(255, 170, 30, 0.75),
+          0 0 6px rgba(255, 170, 30, 0.45);
       }
     }
   }
@@ -92,5 +179,11 @@
     padding: 0;
     max-height: calc(80vh - 32px);
     overflow-y: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window--metal .metal-sheen {
+    transform: none !important; // overrides the inline drag transform
   }
 }

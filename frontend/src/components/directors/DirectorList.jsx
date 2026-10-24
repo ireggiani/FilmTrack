@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import GlassCheckbox from '../ui/GlassCheckbox';
+import LedSwitch from '../ui/LedSwitch';
 import FilterInput from '../ui/FilterInput';
 import PillItem from '../ui/PillItem';
 
@@ -55,11 +55,10 @@ const DirectorList = ({
             placeholder="Filter directors…"
           />
         )}
-        <GlassCheckbox
+        <LedSwitch
           checked={alphabetical}
-          onChange={(e) => setAlphabetical(e.target.checked)}
+          onChange={setAlphabetical}
           label="Alphabetical"
-          labelClassName="metal"
         />
       </div>
       {directors.length === 0 ? (

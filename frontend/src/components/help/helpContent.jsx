@@ -48,7 +48,7 @@ export const TOPICS = {
 
   desktop: {
     title: "The desktop and taskbar",
-    keywords: ["desktop", "icons", "taskbar", "start menu", "start button", "launch"],
+    keywords: ["desktop", "icons", "taskbar", "start menu", "start button", "launch", "right-click", "context menu", "sort icons", "arrange icons", "new note", "new movie", "show desktop", "minimize all"],
     related: ["desktop-icons", "windows", "shortcuts"],
     body: (
       <>
@@ -65,13 +65,37 @@ export const TOPICS = {
           You choose which icons appear — see{" "}
           <TopicLink to="desktop-icons">Choosing desktop icons</TopicLink>.
         </p>
+        <h2>Desktop menu</h2>
+        <p>Right-click an empty spot on the desktop, or an icon, for a menu of shortcuts:</p>
+        <ul>
+          <li><b>Show Desktop</b> minimizes every window. Click a window&apos;s taskbar button to bring it back.</li>
+          <li><b>New Note</b> opens Notepad on a blank note.</li>
+          <li><b>New Movie</b> opens the Movies Collection, ready to type a title.</li>
+          <li>
+            <b>Sort icons by</b> — the order you chose in Desktop Icons, or by
+            name from A to Z or Z to A.
+          </li>
+          <li>
+            <b>Arrange icons in</b> — columns (down, then across) or rows
+            (across, then down).
+          </li>
+          <li>
+            <b>Desktop Icons…</b>, <b>Wallpaper Settings…</b> and <b>Help</b>{" "}
+            open those windows.
+          </li>
+        </ul>
+        <Callout type="note">
+          Sorting or arranging puts every icon back on the grid, including any
+          you dragged somewhere else. Your sort and arrangement are remembered
+          by this browser.
+        </Callout>
         <h2>Start menu</h2>
         <p>
           Click the round Start button at the bottom-left corner to see every
           window. Folders come first — <b>Accessories</b> (Calculator,
           Calendar, Clock, Notepad), <b>Games</b> and <b>System</b>{" "}
-          (Wallpaper Settings, Backup &amp; Restore) — followed by the main
-          tools.
+          (Backup &amp; Restore, Desktop Icons, Wallpaper Settings) — followed
+          by the main tools.
         </p>
         <h2>Taskbar</h2>
         <p>
@@ -599,7 +623,7 @@ export const TOPICS = {
 
   notepad: {
     title: "Notepad",
-    keywords: ["notepad", "notes", "write", "formatting", "text", "bold", "save note"],
+    keywords: ["notepad", "notes", "write", "formatting", "text", "bold", "save note", "right-click", "context menu", "cut", "copy", "paste", "spelling"],
     related: ["shortcuts"],
     body: (
       <>
@@ -612,8 +636,9 @@ export const TOPICS = {
           <li><b>🗑️</b> deletes the open note, after asking.</li>
         </ul>
         <p>
-          A <b>●</b> dot means there are unsaved changes. If you switch notes
-          or start a new one, FilmTrack asks before throwing changes away.
+          A <b>●</b> dot means there are unsaved changes. If you switch notes,
+          start a new one or close Notepad, FilmTrack asks whether to save
+          them first.
         </p>
         <h2>Formatting</h2>
         <p>
@@ -622,6 +647,33 @@ export const TOPICS = {
           text and highlight colours, lists, indents, alignment, quote
           blocks, separator lines, and clear formatting.
         </p>
+        <h2>Right-click menu</h2>
+        <p>
+          Right-click in the text for quick access to the same tools. They
+          apply to the text you had selected, or at the cursor:
+        </p>
+        <ul>
+          <li>
+            The top rows hold <b>Cut</b>, <b>Copy</b>, <b>Paste</b> and{" "}
+            <b>Select all</b>, then bold, italic, underline, strikethrough,
+            superscript and subscript. A highlighted button means the selected
+            text already has that formatting.
+          </li>
+          <li>
+            <b>Paragraph style</b> opens a list of headings; the colour dots
+            set the text and highlight colours.
+          </li>
+          <li>Lists, quote, clear formatting, separator line and <b>Save note</b> follow.</li>
+        </ul>
+        <Callout type="note">
+          <b>Paste</b> in this menu inserts plain text. To paste with
+          formatting, press <Kbd>Ctrl</Kbd> + <Kbd>V</Kbd>. The first time, your
+          browser may ask whether FilmTrack can see the clipboard.
+        </Callout>
+        <Callout type="tip">
+          For spelling suggestions, hold <Kbd>Shift</Kbd> while you
+          right-click: that shows your browser&apos;s own menu.
+        </Callout>
         <Callout type="tip">
           While writing, <Kbd>Tab</Kbd> indents. Press <Kbd>Esc</Kbd> to leave
           the text so <Kbd>Tab</Kbd> moves between buttons again.

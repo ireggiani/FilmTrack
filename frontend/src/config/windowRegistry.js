@@ -46,7 +46,8 @@ export const WINDOW_MAP = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
 export const START_MENU_WINDOWS = WINDOWS.filter((w) => w.startMenu !== false);
 
 // Start menu folders, listed first and alphabetically, like the classic
-// Windows "Programs" menu. Windows not in a folder follow them.
+// Windows "Programs" menu; their contents are sorted by title too. Windows
+// not in a folder follow them, in WINDOWS order.
 export const START_MENU_FOLDERS = [
   { name: 'Accessories', ids: ['calculator', 'calendar', 'clock', 'notepad'] },
   { name: 'Games', ids: ['pairs'] },

@@ -1,0 +1,65 @@
+/// Frutiger Aero "aqua" building blocks, shared by the aqua context menu
+/// (ui/_aqua-menu.scss) and the Notepad (accessories/_notepad.scss) so both
+/// read as one family: pale aqua glass, white rims, glossy gel highlights.
+
+$text: #0e3346;
+$accent: #2a7da6;
+$muted: rgba(14, 51, 70, 0.6);
+
+/// Pale aqua glass panel with a specular highlight across the top
+@mixin panel($alpha: 0.78) {
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 45%, transparent 60%),
+    linear-gradient(to bottom, rgba(222, 248, 255, $alpha) 0%, rgba(176, 228, 246, $alpha - 0.08) 100%);
+  backdrop-filter: blur(16px) saturate(1.5);
+  box-shadow:
+    0 10px 28px rgba(0, 60, 90, 0.35),
+    0 0 0 1px rgba(70, 150, 190, 0.35),
+    inset 0 -6px 14px rgba(120, 210, 240, 0.35),
+    inset 0 1px 0 #fff;
+}
+
+/// Glossy aqua gel: hovered entries and buttons, the selected list item
+@mixin gel {
+  border-color: #3c9fd0;
+  background: linear-gradient(to bottom, #b9ecff 0%, #6fcbf3 49%, #3fb2e8 50%, #7fd6f7 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 8px rgba(60, 180, 240, 0.55);
+  color: #032a40;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/// Quieter, pressed-in gel: a toggle that's already on
+@mixin gel-quiet {
+  border-color: rgba(60, 159, 208, 0.6);
+  background: linear-gradient(to bottom, rgba(185, 236, 255, 0.9), rgba(127, 214, 247, 0.7));
+  box-shadow: inset 0 1px 2px rgba(0, 70, 110, 0.25);
+  color: #032a40;
+}
+
+/// Resting glass button: frosted white with a bright top edge
+@mixin glass-button {
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.55) 49%, rgba(225, 245, 252, 0.5) 50%, rgba(240, 251, 255, 0.7) 100%);
+  box-shadow:
+    0 0 0 1px rgba(70, 150, 190, 0.3),
+    0 1px 2px rgba(0, 60, 90, 0.15),
+    inset 0 1px 0 #fff;
+  color: $text;
+}
+
+/// Round gel bead (check marks, status dots)
+@mixin bead($size: 9px, $mid: #8fe0ff, $deep: #1b8fd0, $glow: rgba(30, 150, 220, 0.8)) {
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, $mid 35%, $deep 100%);
+  box-shadow: 0 0 4px $glow;
+}
+
+/// Line that fades out at both ends
+@mixin fade-rule($direction: to right) {
+  background: linear-gradient($direction, transparent, rgba(40, 130, 170, 0.45), transparent);
+}

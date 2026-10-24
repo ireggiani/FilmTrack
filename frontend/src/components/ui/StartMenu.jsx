@@ -32,7 +32,9 @@ const StartMenu = ({ onSelect, onClose, windows }) => {
       <div className="start-menu-inner">
         <ul>
           {FOLDERS.map((folder) => {
-            const folderWindows = windows.filter((w) => folder.ids.includes(w.id));
+            const folderWindows = windows
+              .filter((w) => folder.ids.includes(w.id))
+              .sort((a, b) => a.title.localeCompare(b.title));
             if (folderWindows.length === 0) return null;
             return (
               <li key={folder.name} className="submenu">

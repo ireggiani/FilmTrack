@@ -2,7 +2,7 @@
 @use '../decorative/textures';
 
 .director-list {
-  @include textures.brushed-metal;
+  @include textures.brushed-metal(68%);
   @include textures.bolted-plate;
 
   padding: 0.5rem 1.1rem 0.65rem;
@@ -20,10 +20,6 @@
       width: auto;
       margin-bottom: 0;
     }
-
-    .checkbox {
-      margin-top: 0.25rem;
-    }
   }
 
   .list {
@@ -31,5 +27,12 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     padding: 0 0 0 0.5rem;
+  }
+
+  // Pills: a soft dark shadow lifts the white names off the grey metal
+  .pill-item .pill-edit-button {
+    text-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.75),
+      0 0 3px rgba(0, 0, 0, 0.35);
   }
 }

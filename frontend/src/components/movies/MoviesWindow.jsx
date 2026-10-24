@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import MoviesTable from "./MoviesTable";
@@ -17,10 +17,23 @@ const MoviesWindow = ({
   onViewPoster,
   zIndex,
   icon,
+  newMovieRequested,
+  onNewMovieHandled,
 }) => {
   const nodeRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
   const [hideAddForm, setHideAddForm] = useState(false);
+  // Passed down to the add form, which focuses its title once it exists
+  // (it only renders after the movies have loaded)
+  const [focusNewMovieTitle, setFocusNewMovieTitle] = useState(false);
+
+  // "New Movie" from the desktop menu: show the add form and focus its title
+  useEffect(() => {
+    if (!newMovieRequested) return;
+    setHideAddForm(false);
+    setFocusNewMovieTitle(true);
+    onNewMovieHandled?.();
+  }, [newMovieRequested, onNewMovieHandled]);
 
   if (!isOpen) return null;
 
@@ -127,6 +140,8 @@ const MoviesWindow = ({
             refresh={refreshMovies}
             onMoviesLoaded={onMoviesLoaded}
             hideAddForm={hideAddForm}
+            focusTitle={focusNewMovieTitle}
+            onTitleFocused={() => setFocusNewMovieTitle(false)}
             onViewPoster={onViewPoster}
           />
         </div>
@@ -147,6 +162,8 @@ MoviesWindow.propTypes = {
   onFocus: PropTypes.func,
   onViewPoster: PropTypes.func,
   zIndex: PropTypes.number,
+  newMovieRequested: PropTypes.bool,
+  onNewMovieHandled: PropTypes.func,
 };
 
 export default MoviesWindow;

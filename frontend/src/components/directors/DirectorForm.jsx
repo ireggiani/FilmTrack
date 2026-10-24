@@ -96,7 +96,10 @@ const DirectorForm = ({
           className="text-field"
         />
       </div>
+      {/* A control strip that fits its buttons: secondary (Cancel Edit, only
+          while editing) to the left of the primary submit button */}
       <div className="buttons">
+        {error && <p className="error">{error}</p>}
         <div className="buttons-inner">
           {isEditing && (
             <button
@@ -107,12 +110,12 @@ const DirectorForm = ({
               ← Cancel Edit
             </button>
           )}
-          {error && <p className="error">{error}</p>}
           <button
             type="submit"
             className="btn--metal submit"
             disabled={loading || !name.trim()}
           >
+            <span className="led" aria-hidden="true" />
             {loading
               ? isEditing
                 ? "Updating..."

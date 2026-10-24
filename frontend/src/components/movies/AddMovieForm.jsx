@@ -10,6 +10,8 @@ const AddMovieForm = ({
   handleUploadPoster,
   handleSetPosterFromTmdb,
   hideAddForm,
+  focusTitle,
+  onTitleFocused,
   ...props
 }) => {
   const [newMovie, setNewMovie] = useState({
@@ -37,6 +39,13 @@ const AddMovieForm = ({
   const dateInputRef = useRef(null);
   const addButtonRef = useRef(null);
   const posterInputRef = useRef(null);
+
+  // Asked to focus the title (the desktop menu's "New Movie")
+  useEffect(() => {
+    if (!focusTitle) return;
+    titleInputRef.current?.focus();
+    onTitleFocused?.();
+  }, [focusTitle, onTitleFocused]);
 
   // Release the object URL of a replaced/cleared uploaded file
   useEffect(() => {

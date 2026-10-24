@@ -30,6 +30,7 @@ const Notepad = lazy(() => import('./components/accessories/Notepad'));
 import Taskbar from './components/ui/Taskbar';
 import TooltipLayer from './components/ui/TooltipLayer';
 import DesktopIconGrid from './components/desktop/DesktopIconGrid';
+import DesktopContextMenu from './components/desktop/DesktopContextMenu';
 import './styles/desktop/_desktop-icons.scss';
 
 const BackupWindow = lazy(() => import('./components/backup/BackupWindow'));
@@ -59,6 +60,26 @@ const loadDesktopIconIds = () => {
     // unreadable value — fall back to the defaults
   }
   return DEFAULT_DESKTOP_ICON_IDS;
+};
+
+// Desktop icon sort order and arrangement, chosen from the desktop's
+// right-click menu. Kept in this browser like the icon choice.
+const DESKTOP_LAYOUT_KEY = 'filmtrack-desktop-layout';
+const DEFAULT_DESKTOP_LAYOUT = { sort: 'default', arrange: 'columns' };
+const loadDesktopLayout = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(DESKTOP_LAYOUT_KEY));
+    return {
+      sort: ['default', 'az', 'za'].includes(saved?.sort)
+        ? saved.sort
+        : DEFAULT_DESKTOP_LAYOUT.sort,
+      arrange: ['columns', 'rows'].includes(saved?.arrange)
+        ? saved.arrange
+        : DEFAULT_DESKTOP_LAYOUT.arrange,
+    };
+  } catch {
+    return DEFAULT_DESKTOP_LAYOUT;
+  }
 };
 import './styles/globals.scss';
 import './styles/windows.scss';
@@ -112,6 +133,11 @@ function App() {
   const [helpMinimized, setHelpMinimized] = useState(false);
   const [desktopIconsMinimized, setDesktopIconsMinimized] = useState(false);
   const [desktopIconIds, setDesktopIconIds] = useState(loadDesktopIconIds);
+  const [desktopLayout, setDesktopLayout] = useState(loadDesktopLayout);
+  const [desktopMenuPos, setDesktopMenuPos] = useState(null); // { x, y } while open
+  // One-shot requests from the desktop menu, cleared by the window once acted on
+  const [newNoteRequested, setNewNoteRequested] = useState(false);
+  const [newMovieRequested, setNewMovieRequested] = useState(false);
   const [windowStack, setWindowStack] = useState([]);
   const [selectedDesktopIcon, setSelectedDesktopIcon] = useState(null);
 
@@ -154,15 +180,10 @@ function App() {
   // Selection, saving and painting the body background all live in the hook
   const wallpaper = useWallpaper();
 
-  const handleWindowFocus = useCallback((windowId) => {
-    setWindowStack((prevStack) => {
-      const newStack = prevStack.filter((id) => id !== windowId);
-      newStack.push(windowId);
-      return newStack;
-    });
-    setFocusedWindow(windowId);
-
-    const minimizeSetters = {
+  // Every window's minimized-state setter (setters are stable, so this never
+  // changes); used to restore one window on focus or minimize them all
+  const minimizeSetters = useMemo(
+    () => ({
       genres: setGenreMinimized,
       wallpaper: setWallpaperMinimized,
       countries: setCountryMinimized,
@@ -179,7 +200,24 @@ function App() {
       pairs: setPairsMinimized,
       help: setHelpMinimized,
       desktopIcons: setDesktopIconsMinimized,
-    };
+    }),
+    [],
+  );
+
+  // Show Desktop: minimize every window (closed ones too — harmless, since
+  // opening a window always un-minimizes it)
+  const minimizeAllWindows = useCallback(() => {
+    Object.values(minimizeSetters).forEach((setMinimized) => setMinimized(true));
+  }, [minimizeSetters]);
+
+  const handleWindowFocus = useCallback((windowId) => {
+    setWindowStack((prevStack) => {
+      const newStack = prevStack.filter((id) => id !== windowId);
+      newStack.push(windowId);
+      return newStack;
+    });
+    setFocusedWindow(windowId);
+
     minimizeSetters[windowId]?.(false);
 
     const focusSelectors = {
@@ -193,7 +231,7 @@ function App() {
     if (selector) {
       setTimeout(() => document.querySelector(selector)?.focus(), 10);
     }
-  }, []);
+  }, [minimizeSetters]);
 
   const windowFocusHandlers = useMemo(
     () => ({
@@ -532,6 +570,54 @@ function App() {
     }
   }, []);
 
+  const updateDesktopLayout = useCallback((changes) => {
+    setDesktopLayout((prev) => {
+      const next = { ...prev, ...changes };
+      try {
+        localStorage.setItem(DESKTOP_LAYOUT_KEY, JSON.stringify(next));
+      } catch {
+        // storage unavailable — the layout just won't survive a reload
+      }
+      return next;
+    });
+  }, []);
+
+  // "Default order" is the order chosen in the Desktop Icons window
+  const sortedDesktopIconIds = useMemo(() => {
+    if (desktopLayout.sort === 'default') return desktopIconIds;
+    const sorted = [...desktopIconIds].sort((a, b) =>
+      WINDOW_MAP[a].title.localeCompare(WINDOW_MAP[b].title),
+    );
+    return desktopLayout.sort === 'za' ? sorted.reverse() : sorted;
+  }, [desktopIconIds, desktopLayout.sort]);
+
+  // Our menu only on the desktop itself (background, icons, watermark);
+  // windows, fields and the rest keep the browser's own menu
+  const handleDesktopContextMenu = useCallback((e) => {
+    if (e.target !== e.currentTarget && !e.target.closest('[data-desktop]')) {
+      return;
+    }
+    e.preventDefault();
+    // Opened from the keyboard (Menu key / Shift+F10) there's no pointer position
+    const fromKeyboard = e.clientX === 0 && e.clientY === 0;
+    setDesktopMenuPos(fromKeyboard ? { x: 16, y: 16 } : { x: e.clientX, y: e.clientY });
+  }, []);
+
+  const closeDesktopMenu = useCallback(() => setDesktopMenuPos(null), []);
+
+  const handleNewNote = useCallback(() => {
+    setNewNoteRequested(true);
+    openWindow('notepad');
+  }, [openWindow]);
+
+  const handleNewMovie = useCallback(() => {
+    setNewMovieRequested(true);
+    openWindow('movies');
+  }, [openWindow]);
+
+  const handleNewNoteHandled = useCallback(() => setNewNoteRequested(false), []);
+  const handleNewMovieHandled = useCallback(() => setNewMovieRequested(false), []);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -551,14 +637,20 @@ function App() {
   }, [openWindow]);
 
   return (
-    <main className="container" onClick={() => setSelectedDesktopIcon(null)}>
+    <main
+      className="container"
+      onClick={() => setSelectedDesktopIcon(null)}
+      onContextMenu={handleDesktopContextMenu}
+    >
       <DesktopIconGrid
-        ids={desktopIconIds}
+        ids={sortedDesktopIconIds}
+        arrange={desktopLayout.arrange}
         selectedId={selectedDesktopIcon}
         onSelect={setSelectedDesktopIcon}
         onOpen={openWindow}
       />
       <h1
+        data-desktop
         style={{
           color: 'white',
           textAlign: 'center',
@@ -569,7 +661,7 @@ function App() {
       >
         FilmTrack
       </h1>
-      <p id="system-watermark">
+      <p id="system-watermark" data-desktop>
         FilmTrack⁰⁶
         <br />
         Build 3000
@@ -676,6 +768,8 @@ function App() {
             setRefreshMovies={setRefreshMovies}
             onFocus={windowFocusHandlers.movies}
             onViewPoster={handleViewPoster}
+            newMovieRequested={newMovieRequested}
+            onNewMovieHandled={handleNewMovieHandled}
             zIndex={100 + windowStack.indexOf('movies')}
             icon={WINDOW_MAP.movies.icon}
           />
@@ -741,6 +835,8 @@ function App() {
             onClose={handleCloseNotepadWindow}
             onMinimize={handleMinimizeNotepadWindow}
             onFocus={windowFocusHandlers.notepad}
+            newNoteRequested={newNoteRequested}
+            onNewNoteHandled={handleNewNoteHandled}
             zIndex={100 + windowStack.indexOf('notepad')}
             icon={WINDOW_MAP.notepad.icon}
           />
@@ -822,6 +918,21 @@ function App() {
         allWindows={START_MENU_WINDOWS}
         focusedWindow={focusedWindow}
       />
+      {desktopMenuPos && (
+        <DesktopContextMenu
+          x={desktopMenuPos.x}
+          y={desktopMenuPos.y}
+          sort={desktopLayout.sort}
+          arrange={desktopLayout.arrange}
+          onSortChange={(sort) => updateDesktopLayout({ sort })}
+          onArrangeChange={(arrange) => updateDesktopLayout({ arrange })}
+          onNewNote={handleNewNote}
+          onNewMovie={handleNewMovie}
+          onShowDesktop={minimizeAllWindows}
+          onOpenWindow={openWindow}
+          onClose={closeDesktopMenu}
+        />
+      )}
       <TooltipLayer />
     </main>
   );

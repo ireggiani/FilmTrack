@@ -57,6 +57,7 @@ const DesktopIcon = ({ icon, label, isSelected, onSelect, onOpen, initialPositio
       <div
         ref={nodeRef}
         className={`desktop-icon${isSelected ? ' desktop-icon--selected' : ''}`}
+        data-desktop
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         onKeyDown={handleKeyDown}

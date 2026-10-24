@@ -1,129 +1,53 @@
-@mixin brushed-metal {
-  background-image: -webkit-repeating-linear-gradient(
-      top,
-      hsla(0, 0%, 100%, 0) 0%,
-      hsla(0, 0%, 100%, 0) 3%,
-      hsla(0, 0%, 100%, 0.1) 4.5%
-    ),
-    -webkit-repeating-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(
-            0,
-            0%,
-            0%,
-            0
-          )
-          2%, hsla(0, 0%, 0%, 0.03) 2.5%),
-    -webkit-repeating-linear-gradient(top, hsla(0, 0%, 100%, 0) 0%, hsla(
-            0,
-            0%,
-            100%,
-            0
-          )
-          0.6%, hsla(0, 0%, 100%, 0.15) 1.2%),
-    linear-gradient(
-      80deg,
-      #a6a6a6 0%,
-      #d9d9d9 45%,
-      #e0e0e0 55%,
-      #e0e0e0 65%,
-      #d9d9d9 75%,
-      #a6a6a6 100%
-    );
-  background-size: 4px 100%, 2px 100%, 100% 100%, 100% 100%;
+// ---- Brushed metal ----------------------------------------------------------
+// A fine, irregular grain (SVG fractal noise stretched along the brushing
+// direction, fixed pixel scale, seamless tile) blended over a base gradient
+// that carries the sheen: the soft band of light running across the grain.
+// $sheen moves that band, so neighbouring plates read as separate pieces.
+
+/// Grain tile as a data URI. $direction: h (streaks run left-right) or v.
+/// $contrast scales the streaks around mid-grey (which the overlay blend
+/// leaves neutral): 1 is the raw noise, lower is subtler. The filter works in
+/// sRGB: in the default linearRGB, mid-grey noise comes out ~74% bright and
+/// the overlay lightens the whole surface.
+@function _metal-grain($direction: h, $contrast: 1.6) {
+  $freq: if($direction == h, '0.004 0.9', '0.9 0.004');
+  $intercept: 0.5 - 0.5 * $contrast;
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='#{$freq}' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='#{$contrast}' intercept='#{$intercept}'/%3E%3CfeFuncG type='linear' slope='#{$contrast}' intercept='#{$intercept}'/%3E%3CfeFuncB type='linear' slope='#{$contrast}' intercept='#{$intercept}'/%3E%3CfeFuncA type='linear' slope='0' intercept='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
-@mixin brushed-metal-grey {
-  background-image: -webkit-repeating-linear-gradient(
-      top,
-      hsla(0, 0%, 100%, 0) 0%,
-      hsla(0, 0%, 100%, 0) 3%,
-      hsla(0, 0%, 100%, 0.04) 4.5%
-    ),
-    -webkit-repeating-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(
-            0,
-            0%,
-            0%,
-            0
-          )
-          2%, hsla(0, 0%, 0%, 0.01) 2.5%),
-    -webkit-repeating-linear-gradient(top, hsla(0, 0%, 100%, 0) 0%, hsla(
-            0,
-            0%,
-            100%,
-            0
-          )
-          0.6%, hsla(0, 0%, 100%, 0.05) 1.2%),
+@mixin _metal($edge, $mid, $peak, $sheen, $contrast, $direction: h, $angle: 80deg) {
+  background-image:
+    _metal-grain($direction, $contrast),
     linear-gradient(
-      80deg,
-      #797979 0%,
-      #898989 40%,
-      #9e9e9e 55%,
-      #9e9e9e 65%,
-      #898989 75%,
-      #797979 100%
+      $angle,
+      $edge 0%,
+      $mid $sheen - 28%,
+      $peak $sheen,
+      $mid $sheen + 18%,
+      $edge 100%
     );
-  background-size: 4px 4px, 2px 2px, 100% 100%, 100% 100%;
+  background-size: 320px 320px, 100% 100%;
+  background-blend-mode: overlay, normal;
 }
 
-@mixin brushed-metal-dark {
-  background-image: -webkit-repeating-linear-gradient(
-      top,
-      hsla(0, 0%, 100%, 0) 0%,
-      hsla(0, 0%, 100%, 0) 3%,
-      hsla(0, 0%, 100%, 0.04) 4.5%
-    ),
-    -webkit-repeating-linear-gradient(top, hsla(0, 0%, 0%, 0) 0%, hsla(
-            0,
-            0%,
-            0%,
-            0
-          )
-          2%, hsla(0, 0%, 0%, 0.01) 2.5%),
-    -webkit-repeating-linear-gradient(top, hsla(0, 0%, 100%, 0) 0%, hsla(
-            0,
-            0%,
-            100%,
-            0
-          )
-          0.6%, hsla(0, 0%, 100%, 0.05) 1.2%),
-    linear-gradient(
-      80deg,
-      #222222 0%,
-      #6f6f6f 40%,
-      #858585 55%,
-      #858585 65%,
-      #6f6f6f 75%,
-      #222222 100%
-    );
+/// Light brushed aluminium: title bar, plates
+@mixin brushed-metal($sheen: 52%) {
+  @include _metal(#a3a3a3, #cdcdcd, #ececec, $sheen, 0.9);
 }
 
+/// Mid-grey: window body, pills, trays
+@mixin brushed-metal-grey($sheen: 55%) {
+  @include _metal(#747474, #878787, #a3a3a3, $sheen, 0.7);
+}
+
+/// Dark gunmetal
+@mixin brushed-metal-dark($sheen: 55%) {
+  @include _metal(#2a2a2a, #6a6a6a, #858585, $sheen, 0.7);
+}
+
+/// Vertical grain, lit top-to-bottom: buttons
 @mixin brushed-metal-vertical {
-  background-image: -webkit-repeating-linear-gradient(
-      left,
-      hsla(0, 0%, 100%, 0) 0%,
-      hsla(0, 0%, 100%, 0) 6%,
-      hsla(0, 0%, 100%, 0.1) 7.5%
-    ),
-    -webkit-repeating-linear-gradient(left, hsla(0, 0%, 0%, 0) 0%, hsla(
-            0,
-            0%,
-            0%,
-            0
-          )
-          4%, hsla(0, 0%, 0%, 0.03) 4.5%),
-    -webkit-repeating-linear-gradient(left, hsla(0, 0%, 100%, 0) 0%, hsla(
-            0,
-            0%,
-            100%,
-            0
-          )
-          1.2%, hsla(0, 0%, 100%, 0.15) 2.2%),
-    linear-gradient(
-      180deg,
-      hsl(0, 0%, 78%) 0%,
-      hsl(0, 0%, 90%) 47%,
-      hsl(0, 0%, 78%) 53%,
-      hsl(0, 0%, 70%) 100%
-    );
+  @include _metal(#b3b3b3, #d9d9d9, #ececec, 45%, 0.8, v, 180deg);
 }
 
 @mixin cartography-paper {
@@ -605,19 +529,21 @@
   }
 }
 
-/// Recessed engraved nameplate for section titles on metal plates.
+/// Recessed nameplate for section titles on metal plates: a light brushed
+/// plate set into the surface, its title engraved — dark letters with a
+/// light lower edge (≈12:1 contrast).
 /// Identical geometry for centred and left variants — alignment is the
 /// caller's concern (margins), the look is not.
 @mixin metal-nameplate {
-  @include brushed-metal-grey;
+  @include brushed-metal(40%);
   border: 1px solid #3f3f3f;
   border-radius: 4px;
   box-shadow:
-    inset 0 1px 4px 1px rgba(25, 25, 25, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 1px 4px 1px rgba(25, 25, 25, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5),
     0 1px 0 rgba(255, 255, 255, 0.18);
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  color: #232323;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
   margin-top: 0;
   padding: 0.15rem 0.75rem;
 }

@@ -100,4 +100,24 @@ describe('ConfirmDialog', () => {
       expect(onCancel).not.toHaveBeenCalled();
     });
   });
+
+  it('shows only OK when cancelLabel is null, and Esc still dismisses it', () => {
+    const onConfirm = jest.fn();
+    const onCancel = jest.fn();
+    render(
+      <ConfirmDialog
+        title="Notepad"
+        heading="FilmTrack can't read the clipboard"
+        confirmLabel="OK"
+        cancelLabel={null}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+      />
+    );
+    expect(screen.getAllByRole('button', { name: /OK|Cancel/ })).toHaveLength(1);
+    fireEvent.keyDown(window, { key: 'Tab' });
+    expect(screen.getByRole('button', { name: 'OK' })).toHaveFocus();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onCancel).toHaveBeenCalledTimes(1);
+  });
 });

@@ -8,7 +8,14 @@ import ViewsManager from "./ViewsManager";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import { useMovies } from "./useMovies";
 
-const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => {
+const MoviesTable = ({
+  refresh,
+  onMoviesLoaded,
+  hideAddForm,
+  focusTitle,
+  onTitleFocused,
+  onViewPoster,
+}) => {
   const {
     movies,
     loading,
@@ -106,7 +113,12 @@ const MoviesTable = ({ refresh, onMoviesLoaded, hideAddForm, onViewPoster }) => 
         {`[class*="dropdownIndicator"][class*="react-select"], [class*="indicatorSeparator"][class*="react-select"] { height: 24px !important; }`}
         {`.spreadsheet-table td { font-size: 12px !important; }`}
       </style>
-      <AddMovieForm {...addMovieFormProps} hideAddForm={hideAddForm} />
+      <AddMovieForm
+        {...addMovieFormProps}
+        hideAddForm={hideAddForm}
+        focusTitle={focusTitle}
+        onTitleFocused={onTitleFocused}
+      />
       <ViewsManager
         sortConfig={sortConfig}
         searchTerm={searchTerm}
@@ -207,6 +219,8 @@ MoviesTable.propTypes = {
   refresh: PropTypes.number,
   onMoviesLoaded: PropTypes.func,
   hideAddForm: PropTypes.bool,
+  focusTitle: PropTypes.bool,
+  onTitleFocused: PropTypes.func,
   onViewPoster: PropTypes.func,
 };
 

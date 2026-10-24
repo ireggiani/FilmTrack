@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 import WindowIcon from '../ui/WindowIcon';
 import ConfirmDialog from '../ui/ConfirmDialog';
+import NotepadContextMenu from './NotepadContextMenu';
 import API_BASE_URL from '../../config/api.js';
 
 const FORE_COLORS = [
@@ -37,8 +38,13 @@ const Notepad = ({
   isOpen,
   isMinimized,
   icon,
+  newNoteRequested,
+  onNewNoteHandled,
 }) => {
   const nodeRef = useRef(null);
+  // Opened by the desktop's "New Note": start blank instead of showing the
+  // first saved note
+  const openedForNewNote = useRef(newNoteRequested);
   const [notes, setNotes] = useState([]);
   const [currentNote, setCurrentNote] = useState(null);
   const [title, setTitle] = useState('Untitled');
@@ -48,6 +54,13 @@ const Notepad = ({
   // Action waiting on the Save / Don't Save / Cancel prompt
   const [pendingAction, setPendingAction] = useState(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [editorMenu, setEditorMenu] = useState(null); // { x, y } while open
+  const [clipboardBlocked, setClipboardBlocked] = useState(false);
+  // The editor selection when the context menu opened. Focus moves into the
+  // menu, so each command puts this back before running.
+  const menuRangeRef = useRef(null);
+  // Stable: the menu re-runs its setup whenever onClose changes
+  const closeEditorMenu = useCallback(() => setEditorMenu(null), []);
   const editorRef = useRef(null);
 
   const updateActiveFormats = useCallback(() => {
@@ -89,7 +102,7 @@ const Notepad = ({
   }, [openPalette]);
 
   useEffect(() => {
-    loadNotes(true);
+    loadNotes(!openedForNewNote.current);
   }, []);
 
   const loadNotes = async (selectFirst = false) => {
@@ -170,6 +183,17 @@ const Notepad = ({
 
   const handleClose = () => guardUnsaved(onClose);
 
+  // "New Note" from the desktop menu — asks to save first if needed, like New.
+  // Through a ref: newNote is recreated every render, but this should only
+  // run when a request arrives.
+  const newNoteRef = useRef(newNote);
+  newNoteRef.current = newNote;
+  useEffect(() => {
+    if (!newNoteRequested) return;
+    newNoteRef.current();
+    onNewNoteHandled?.();
+  }, [newNoteRequested, onNewNoteHandled]);
+
   // Leaving the page (reload, closing the tab) can't use the app dialog —
   // browsers only allow their own generic prompt there
   useEffect(() => {
@@ -233,6 +257,57 @@ const Notepad = ({
       e.preventDefault();
       saveNote();
     }
+  };
+
+  // ---- Editor context menu ----------------------------------------------
+  // Shift+right-click still gives the browser's own menu (spelling
+  // suggestions live there).
+  const handleEditorContextMenu = (e) => {
+    if (e.shiftKey) return;
+    e.preventDefault();
+    setOpenPalette(null);
+    const selection = document.getSelection();
+    menuRangeRef.current =
+      selection.rangeCount && editorRef.current.contains(selection.anchorNode)
+        ? selection.getRangeAt(0).cloneRange()
+        : null;
+    setEditorMenu({ x: e.clientX, y: e.clientY });
+  };
+
+  const restoreMenuSelection = () => {
+    editorRef.current.focus();
+    if (!menuRangeRef.current) return;
+    const selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(menuRangeRef.current);
+  };
+
+  // Wraps a command so it runs on the restored selection
+  const onMenuSelection = (fn) => (...args) => {
+    restoreMenuSelection();
+    fn(...args);
+  };
+
+  // Plain text only: inserting the clipboard's HTML ourselves would skip the
+  // sanitizing a real paste gets (e.g. event-handler attributes would end up
+  // saved in the note). Ctrl+V still pastes with formatting.
+  const pasteFromMenu = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      restoreMenuSelection();
+      document.execCommand('insertText', false, text);
+    } catch {
+      setClipboardBlocked(true); // permission denied or API unavailable
+    }
+  };
+
+  const selectAllFromMenu = () => {
+    editorRef.current.focus();
+    const range = document.createRange();
+    range.selectNodeContents(editorRef.current);
+    const selection = document.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
   };
 
   // In the writing area, Tab indents instead of moving focus; Esc restores
@@ -507,6 +582,7 @@ const Notepad = ({
               placeholder="Start typing..."
               onInput={() => setIsDirty(true)}
               onKeyDown={handleEditorKeyDown}
+              onContextMenu={handleEditorContextMenu}
             />
           </div>
         </div>
@@ -521,6 +597,39 @@ const Notepad = ({
             onCancel={() => setPendingAction(null)}
           >
             Your changes will be lost if you don&apos;t save them.
+          </ConfirmDialog>
+        )}
+        {editorMenu && (
+          <NotepadContextMenu
+            x={editorMenu.x}
+            y={editorMenu.y}
+            hasSelection={Boolean(menuRangeRef.current && !menuRangeRef.current.collapsed)}
+            activeFormats={activeFormats}
+            foreColors={FORE_COLORS}
+            hiliteColors={HILITE_COLORS}
+            onCommand={onMenuSelection(formatText)}
+            onColor={onMenuSelection(applyColor)}
+            onCut={onMenuSelection(() => document.execCommand('cut'))}
+            onCopy={onMenuSelection(() => document.execCommand('copy'))}
+            onPaste={pasteFromMenu}
+            onSelectAll={selectAllFromMenu}
+            onToggleQuote={onMenuSelection(toggleBlockquote)}
+            onSave={saveNote}
+            onClose={closeEditorMenu}
+          />
+        )}
+        {clipboardBlocked && (
+          <ConfirmDialog
+            title="Notepad"
+            icon="info"
+            heading="FilmTrack can't read the clipboard"
+            confirmLabel="OK"
+            cancelLabel={null}
+            onConfirm={() => setClipboardBlocked(false)}
+            onCancel={() => setClipboardBlocked(false)}
+          >
+            Allow clipboard access for this site in your browser, or press
+            Ctrl+V to paste.
           </ConfirmDialog>
         )}
         {confirmingDelete && (
@@ -547,6 +656,8 @@ Notepad.propTypes = {
   onFocus: PropTypes.func,
   zIndex: PropTypes.number,
   icon: PropTypes.string,
+  newNoteRequested: PropTypes.bool,
+  onNewNoteHandled: PropTypes.func,
 };
 
 export default Notepad;
