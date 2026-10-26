@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import WindowIcon from '../ui/WindowIcon';
 import { WINDOW_MAP } from '../../config/windowRegistry';
+import { DESKTOP_ICON_SIZES, DESKTOP_ICON_SIZE_IDS } from '../../config/desktopIconSizes';
 import '../../styles/desktop/_context-menu.scss';
 
 const EDGE = 6; // px kept clear of the viewport edges
@@ -28,6 +29,8 @@ const ARRANGE_OPTIONS = [
   ['rows', 'Rows'],
 ];
 
+const ICON_SIZE_OPTIONS = DESKTOP_ICON_SIZES.map(({ id, label }) => [id, label]);
+
 // Right-click menu for the desktop: smoked glass with a rim light and a
 // one-time shine sweep on open. Flat — check marks instead of submenus.
 // Closes on any outside mousedown, Esc, window blur/resize, or after an item
@@ -37,8 +40,10 @@ const DesktopContextMenu = ({
   y,
   sort,
   arrange,
+  iconSize,
   onSortChange,
   onArrangeChange,
+  onIconSizeChange,
   onNewNote,
   onNewMovie,
   onShowDesktop,
@@ -158,6 +163,8 @@ const DesktopContextMenu = ({
       {command('New Note', 'notepad', onNewNote)}
       {command('New Movie', 'movies', onNewMovie)}
       {separator}
+      {checkGroup('Icon size', ICON_SIZE_OPTIONS, iconSize, onIconSizeChange)}
+      {separator}
       {checkGroup('Sort icons by', SORT_OPTIONS, sort, onSortChange)}
       {separator}
       {checkGroup('Arrange icons in', ARRANGE_OPTIONS, arrange, onArrangeChange)}
@@ -176,8 +183,10 @@ DesktopContextMenu.propTypes = {
   y: PropTypes.number.isRequired,
   sort: PropTypes.oneOf(['default', 'az', 'za']).isRequired,
   arrange: PropTypes.oneOf(['columns', 'rows']).isRequired,
+  iconSize: PropTypes.oneOf(DESKTOP_ICON_SIZE_IDS).isRequired,
   onSortChange: PropTypes.func.isRequired,
   onArrangeChange: PropTypes.func.isRequired,
+  onIconSizeChange: PropTypes.func.isRequired,
   onNewNote: PropTypes.func.isRequired,
   onNewMovie: PropTypes.func.isRequired,
   onShowDesktop: PropTypes.func.isRequired,

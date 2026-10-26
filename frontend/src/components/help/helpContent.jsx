@@ -48,7 +48,7 @@ export const TOPICS = {
 
   desktop: {
     title: "The desktop and taskbar",
-    keywords: ["desktop", "icons", "taskbar", "start menu", "start button", "launch", "right-click", "context menu", "sort icons", "arrange icons", "new note", "new movie", "show desktop", "minimize all"],
+    keywords: ["desktop", "icons", "taskbar", "start menu", "start button", "launch", "right-click", "context menu", "sort icons", "arrange icons", "new note", "new movie", "show desktop", "minimize all", "icon size", "large icons", "small icons", "date", "time", "clock"],
     related: ["desktop-icons", "windows", "shortcuts"],
     body: (
       <>
@@ -72,6 +72,9 @@ export const TOPICS = {
           <li><b>New Note</b> opens Notepad on a blank note.</li>
           <li><b>New Movie</b> opens the Movies Collection, ready to type a title.</li>
           <li>
+            <b>Icon size</b> — Small, Medium, Large or Extra large desktop icons.
+          </li>
+          <li>
             <b>Sort icons by</b> — the order you chose in Desktop Icons, or by
             name from A to Z or Z to A.
           </li>
@@ -85,9 +88,9 @@ export const TOPICS = {
           </li>
         </ul>
         <Callout type="note">
-          Sorting or arranging puts every icon back on the grid, including any
-          you dragged somewhere else. Your sort and arrangement are remembered
-          by this browser.
+          Resizing, sorting or arranging puts every icon back on the grid,
+          including any you dragged somewhere else. Your icon size, sort and
+          arrangement are remembered by this browser.
         </Callout>
         <h2>Start menu</h2>
         <p>
@@ -101,6 +104,10 @@ export const TOPICS = {
         <p>
           Every open window gets a button on the taskbar. Click it to bring
           that window to the front — or to bring it back after minimising it.
+        </p>
+        <p>
+          The right end of the taskbar shows today&apos;s date and the current
+          time. Hover over them to see the full date, including the year.
         </p>
       </>
     ),
@@ -355,23 +362,26 @@ export const TOPICS = {
 
   "movies-views": {
     title: "Saved views",
-    keywords: ["views", "save view", "load view", "presets", "delete view"],
+    keywords: ["views", "save view", "load view", "presets", "delete view", "rename view", "update view", "default view", "star"],
     related: ["movies-filter", "movies-sort"],
     body: (
       <>
-        <p>A view remembers your current filters and sort order, so you can get back to them in one click.</p>
+        <p>A view remembers your current filters and sort order, so you can get back to them in one click. Views live in the <b>🔖 Views</b> button at the start of the filter bar.</p>
         <h2>Saving a view</h2>
         <ol>
           <li>Set up the filters and sorting you want.</li>
-          <li>Type a name in <b>Enter view name</b>.</li>
-          <li>Click <b>Save Current View</b>.</li>
+          <li>Click <b>🔖 Views</b> and choose <b>Save as New View…</b>.</li>
+          <li>Type a name and press <b>Enter</b>.</li>
         </ol>
         <h2>Using views</h2>
         <ul>
-          <li>Pick a view from the <b>Load a View</b> dropdown to apply it.</li>
-          <li>Clear that dropdown with its <b>×</b> to reset all filters and the sort order.</li>
-          <li>With a view selected, <b>Delete View</b> removes it.</li>
+          <li>Pick a view from the menu to apply it. The button turns blue and shows the view&apos;s name (hover it for the full name if it&apos;s cut off).</li>
+          <li>An orange <b>•</b> on the button means you&apos;ve changed the filters or sort since loading the view. <b>Update</b> saves those changes into it.</li>
+          <li><b>All Movies</b> clears every filter and goes back to sorting by title.</li>
+          <li><b>Rename…</b> and <b>Delete…</b> act on the view that&apos;s loaded.</li>
         </ul>
+        <h2>Default view</h2>
+        <p>With a view loaded, tick <b>Open by Default</b> to apply it every time the Movies window opens. It&apos;s marked with ★ in the menu. Only one view can be the default; with none, the window opens on the full list.</p>
       </>
     ),
   },
@@ -563,7 +573,7 @@ export const TOPICS = {
 
   "desktop-icons": {
     title: "Choosing desktop icons",
-    keywords: ["desktop icons", "shortcuts on desktop", "customize desktop", "show icon", "hide icon"],
+    keywords: ["desktop icons", "shortcuts on desktop", "customize desktop", "show icon", "hide icon", "icon size", "large icons", "small icons"],
     related: ["desktop", "wallpaper"],
     body: (
       <>
@@ -578,10 +588,18 @@ export const TOPICS = {
           <li>Newly added icons join the end of the list on the desktop.</li>
           <li><b>Restore Defaults</b> brings back the original set of icons.</li>
         </ul>
+        <h2>Icon size</h2>
+        <p>
+          Under <b>Icon size</b>, pick <b>Small</b>, <b>Medium</b>,{" "}
+          <b>Large</b> or <b>Extra large</b>. The same choice is in the
+          desktop&apos;s right-click menu. Restore Defaults doesn&apos;t
+          change the size.
+        </p>
         <Callout type="note">
-          Whenever you add or remove an icon, the desktop icons line up neatly
-          again, so any you&apos;d dragged elsewhere return to the grid. Like
-          the wallpaper, your choice is remembered by this browser only.
+          Whenever you add or remove an icon or change the icon size, the
+          desktop icons line up neatly again, so any you&apos;d dragged
+          elsewhere return to the grid. Like the wallpaper, your choices are
+          remembered by this browser only.
         </Callout>
         <OpenWindow id="desktopIcons" />
       </>
@@ -705,7 +723,7 @@ export const TOPICS = {
 
   "calendar-clock": {
     title: "Calendar and Clock",
-    keywords: ["calendar", "clock", "date", "time", "month"],
+    keywords: ["calendar", "clock", "date", "time", "month", "24-hour", "12-hour", "am/pm", "digital"],
     related: ["desktop"],
     body: (
       <>
@@ -713,7 +731,15 @@ export const TOPICS = {
         <p>Shows a month at a time with today highlighted. Use the arrow buttons to move between months.</p>
         <OpenWindow id="calendar" />
         <h2>Clock</h2>
-        <p>An analogue clock showing your computer&apos;s local time.</p>
+        <p>
+          An analogue clock showing your computer&apos;s local time. Its title
+          bar shows the same time in digits, with seconds.
+        </p>
+        <Callout type="note">
+          The digital time uses the 24-hour format. Right-click the clock face
+          to switch to 12-hour time (AM/PM). The clock goes back to 24-hour the
+          next time you open it.
+        </Callout>
         <OpenWindow id="clock" />
       </>
     ),

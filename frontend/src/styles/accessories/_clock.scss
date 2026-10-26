@@ -135,3 +135,8 @@
     }
   }
 }
+
+// Fixed-width digits so the title doesn't shift as the seconds tick
+.clock-title-time {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
+import { iconSrcSet } from '../../config/icons';
 
 /**
  * A single skeuomorphic desktop icon: PNG image + label.
@@ -9,10 +10,12 @@ import PropTypes from 'prop-types';
  * - Draggable     → confined to the desktop container via bounds="parent"
  *
  * Visual sizing is driven by CSS custom properties on the container
- * (--desktop-icon-size, --desktop-icon-font-size, --desktop-icon-width)
- * so a future Control Panel can adjust them without touching this file.
+ * (--desktop-icon-size, --desktop-icon-font-size, --desktop-icon-width),
+ * which App sets from the chosen icon size. imageSize (px) only tells the
+ * browser which resized copy of the icon to download.
  */
-const DesktopIcon = ({ icon, label, isSelected, onSelect, onOpen, initialPosition }) => {
+const DesktopIcon = ({ icon, imageSize, label, isSelected, onSelect, onOpen, initialPosition }) => {
+  const srcSet = iconSrcSet(icon);
   const nodeRef = useRef(null);
 
   // Accumulated drag distance since the last mousedown. Used to distinguish
@@ -70,6 +73,8 @@ const DesktopIcon = ({ icon, label, isSelected, onSelect, onOpen, initialPositio
           <img
             className="desktop-icon__img"
             src={icon}
+            srcSet={srcSet}
+            sizes={srcSet ? `${imageSize}px` : undefined}
             alt=""
             draggable={false}
           />
@@ -82,6 +87,7 @@ const DesktopIcon = ({ icon, label, isSelected, onSelect, onOpen, initialPositio
 
 DesktopIcon.propTypes = {
   icon: PropTypes.string.isRequired,
+  imageSize: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,

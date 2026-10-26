@@ -1,8 +1,19 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Draggable from 'react-draggable';
 import '../../styles/accessories/_clock.scss';
 
 import WindowIcon from '../ui/WindowIcon';
+import AquaContextMenu from '../ui/AquaContextMenu';
+
+const pad = (n) => n.toString().padStart(2, '0');
+
+// Digital time for the title bar, e.g. "14:32:07" or "02:32:07 PM"
+const formatTime = (date, use24Hour) => {
+  const rest = `${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  if (use24Hour) return `${pad(date.getHours())}:${rest}`;
+  const hours = date.getHours() % 12 || 12;
+  return `${pad(hours)}:${rest} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
+};
 
 const Clock = ({
   isOpen,
@@ -15,6 +26,12 @@ const Clock = ({
 }) => {
   const nodeRef = useRef(null);
   const [time, setTime] = useState(new Date());
+  // 24-hour by default; the face's right-click menu switches it until the
+  // window closes (App unmounts the Clock then, so it isn't saved)
+  const [use24Hour, setUse24Hour] = useState(true);
+  const [menuPos, setMenuPos] = useState(null); // { x, y } while open
+
+  const closeMenu = useCallback(() => setMenuPos(null), []);
 
   useEffect(() => {
     if (isOpen && !isMinimized) {
@@ -99,7 +116,9 @@ const Clock = ({
             >
               <WindowIcon icon={icon} alt="Clock" />
             </span>
-            <span className="window-title">Clock</span>
+            <span className="window-title">
+              Clock – <span className="clock-title-time">{formatTime(time, use24Hour)}</span>
+            </span>
           </div>
           <div className="titlebar-right">
             <button
@@ -113,7 +132,13 @@ const Clock = ({
             </button>
           </div>
         </div>
-        <div className="clock-content">
+        <div
+          className="clock-content"
+          onContextMenu={(e) => {
+            e.preventDefault();
+            setMenuPos({ x: e.clientX, y: e.clientY });
+          }}
+        >
           <div className="clock-face">
             <div className="clock-bezel">
               <div className="clock-inner">
@@ -135,6 +160,32 @@ const Clock = ({
             </div>
           </div>
         </div>
+        {menuPos && (
+          <AquaContextMenu
+            x={menuPos.x}
+            y={menuPos.y}
+            label="Clock"
+            onClose={closeMenu}
+            items={[
+              {
+                type: 'item',
+                key: '24h',
+                label: '24-hour time',
+                radio: true,
+                checked: use24Hour,
+                onSelect: () => setUse24Hour(true),
+              },
+              {
+                type: 'item',
+                key: '12h',
+                label: '12-hour time',
+                radio: true,
+                checked: !use24Hour,
+                onSelect: () => setUse24Hour(false),
+              },
+            ]}
+          />
+        )}
       </div>
     </Draggable>
   );

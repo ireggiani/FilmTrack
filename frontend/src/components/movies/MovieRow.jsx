@@ -180,7 +180,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
             <span
               className="value"
               onClick={startEditing}
-              style={{ cursor: "pointer" }}
             >
               {movie.title}
             </span>
@@ -204,7 +203,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
             <span
               className="value"
               onClick={startEditing}
-              style={{ cursor: "pointer" }}
             >
               {movie.alternativeTitle || "-"}
             </span>
@@ -229,7 +227,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
             <span
               className="value"
               onClick={startEditing}
-              style={{ cursor: "pointer" }}
             >
               {movie.releaseYear}
             </span>
@@ -251,7 +248,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
             <span
               className="value"
               onClick={startEditing}
-              style={{ cursor: "pointer" }}
             >
               {movie.rating || "-"}
             </span>
@@ -279,7 +275,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
             <span
               className="value"
               onClick={startEditing}
-              style={{ cursor: "pointer" }}
             >
               {formatDate(movie.watchedDate)}
             </span>
@@ -301,7 +296,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
           <span
             className="value"
             onClick={startEditing}
-            style={{ cursor: "pointer" }}
           >
             {movie.Genres?.map((g) => g.name).join(", ") || "-"}
           </span>
@@ -321,7 +315,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
           <span
             className="value"
             onClick={startEditing}
-            style={{ cursor: "pointer" }}
           >
             {movie.Directors?.map((d) => d.name).join(", ") || "-"}
           </span>
@@ -341,7 +334,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
           <span
             className="value"
             onClick={startEditing}
-            style={{ cursor: "pointer" }}
           >
             {movie.Actors?.map((a) => a.name).join(", ") || "-"}
           </span>
@@ -361,7 +353,6 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
           <span
             className="value"
             onClick={startEditing}
-            style={{ cursor: "pointer" }}
             title={movie.Countries?.map((c) => c.name).join(", ") || ""}
           >
             {movie.Countries?.map((c) => c.flagEmoji).join(" ") || "-"}

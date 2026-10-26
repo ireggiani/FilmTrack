@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import orbDefault from "../../assets/icons/orb.png";
-import orbHover from "../../assets/icons/orb-hover.png";
-import orbOpen from "../../assets/icons/orb-open.png";
+import WindowIcon from "./WindowIcon";
+import { iconSrc } from "../../config/icons";
+import orbDefaultIcon from "../../assets/icons/orb.png?icon";
+import orbHoverIcon from "../../assets/icons/orb-hover.png?icon";
+import orbOpenIcon from "../../assets/icons/orb-open.png?icon";
+
+const orbDefault = iconSrc(orbDefaultIcon);
+const orbHover = iconSrc(orbHoverIcon);
+const orbOpen = iconSrc(orbOpenIcon);
 
 const StartButton = ({ onClick, isOpen }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -23,10 +29,11 @@ const StartButton = ({ onClick, isOpen }) => {
       onFocus={() => setIsHovered(true)}
       onBlur={() => setIsHovered(false)}
     >
-      <img 
-        src={getOrbIcon()} 
-        alt="Start" 
-        className="start-button" 
+      <WindowIcon
+        icon={getOrbIcon()}
+        alt="Start"
+        className="start-button"
+        size={38}
       />
     </button>
   );

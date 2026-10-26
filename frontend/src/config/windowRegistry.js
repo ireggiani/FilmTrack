@@ -1,41 +1,42 @@
-import CountriesIcon from '../assets/icons/countries.png';
-import DirectorsIcon from '../assets/icons/directors.png';
-import ActorsIcon from '../assets/icons/actors.png';
-import GenresIcon from '../assets/icons/genres.png';
-import WallpaperIcon from '../assets/icons/wallpaper.png';
-import MoviesIcon from '../assets/icons/movies.png';
-import BackupIcon from '../assets/icons/backup.png';
-import CalculatorIcon from '../assets/icons/calculator.png';
-import CalendarIcon from '../assets/icons/calendar.png';
-import ClockIcon from '../assets/icons/clock.png';
-import notepadIcon from '../assets/icons/notepad.png';
-import StatsIcon from '../assets/icons/stats.png'; // placeholder — replace with a dedicated icon
-import PairsIcon from '../assets/icons/pairs.png';
-import HelpIcon from '../assets/icons/help.png';
-import DesktopIconsIcon from '../assets/icons/desktop-icons.png';
+import CountriesIcon from '../assets/icons/countries.png?icon';
+import DirectorsIcon from '../assets/icons/directors.png?icon';
+import ActorsIcon from '../assets/icons/actors.png?icon';
+import GenresIcon from '../assets/icons/genres.png?icon';
+import WallpaperIcon from '../assets/icons/wallpaper.png?icon';
+import MoviesIcon from '../assets/icons/movies.png?icon';
+import BackupIcon from '../assets/icons/backup.png?icon';
+import CalculatorIcon from '../assets/icons/calculator.png?icon';
+import CalendarIcon from '../assets/icons/calendar.png?icon';
+import ClockIcon from '../assets/icons/clock.png?icon';
+import notepadIcon from '../assets/icons/notepad.png?icon';
+import StatsIcon from '../assets/icons/stats.png?icon'; // placeholder — replace with a dedicated icon
+import PairsIcon from '../assets/icons/pairs.png?icon';
+import HelpIcon from '../assets/icons/help.png?icon';
+import DesktopIconsIcon from '../assets/icons/desktop-icons.png?icon';
+import { iconSrc } from './icons';
 
 export const WINDOWS = [
-  { id: 'movies', title: 'Movies Collection', icon: MoviesIcon },
-  { id: 'genres', title: 'Genres Manager', icon: GenresIcon },
-  { id: 'directors', title: 'Directors Manager', icon: DirectorsIcon },
-  { id: 'actors', title: 'Actors Manager', icon: ActorsIcon },
-  { id: 'countries', title: 'Countries Manager', icon: CountriesIcon },
-  { id: 'stats', title: 'Statistics', icon: StatsIcon },
-  { id: 'backup', title: 'Backup & Restore', icon: BackupIcon },
-  { id: 'wallpaper', title: 'Wallpaper Settings', icon: WallpaperIcon },
-  { id: 'desktopIcons', title: 'Desktop Icons', icon: DesktopIconsIcon },
-  { id: 'calculator', title: 'Calculator', icon: CalculatorIcon },
-  { id: 'calendar', title: 'Calendar', icon: CalendarIcon },
-  { id: 'clock', title: 'Clock', icon: ClockIcon },
-  { id: 'notepad', title: 'Notepad', icon: notepadIcon },
-  { id: 'pairs', title: 'Poster Pairs', icon: PairsIcon },
-  { id: 'help', title: 'FilmTrack Help', icon: HelpIcon },
+  { id: 'movies', title: 'Movies Collection', icon: iconSrc(MoviesIcon) },
+  { id: 'genres', title: 'Genres Manager', icon: iconSrc(GenresIcon) },
+  { id: 'directors', title: 'Directors Manager', icon: iconSrc(DirectorsIcon) },
+  { id: 'actors', title: 'Actors Manager', icon: iconSrc(ActorsIcon) },
+  { id: 'countries', title: 'Countries Manager', icon: iconSrc(CountriesIcon) },
+  { id: 'stats', title: 'Statistics', icon: iconSrc(StatsIcon) },
+  { id: 'backup', title: 'Backup & Restore', icon: iconSrc(BackupIcon) },
+  { id: 'wallpaper', title: 'Wallpaper Settings', icon: iconSrc(WallpaperIcon) },
+  { id: 'desktopIcons', title: 'Desktop Icons', icon: iconSrc(DesktopIconsIcon) },
+  { id: 'calculator', title: 'Calculator', icon: iconSrc(CalculatorIcon) },
+  { id: 'calendar', title: 'Calendar', icon: iconSrc(CalendarIcon) },
+  { id: 'clock', title: 'Clock', icon: iconSrc(ClockIcon) },
+  { id: 'notepad', title: 'Notepad', icon: iconSrc(notepadIcon) },
+  { id: 'pairs', title: 'Poster Pairs', icon: iconSrc(PairsIcon) },
+  { id: 'help', title: 'FilmTrack Help', icon: iconSrc(HelpIcon) },
   // Opened from the Movies Collection poster column — needs a target movie,
   // so it's excluded from the start menu (startMenu: false).
   {
     id: 'posterViewer',
     title: 'Poster Viewer',
-    icon: MoviesIcon,
+    icon: iconSrc(MoviesIcon),
     startMenu: false,
   },
 ];

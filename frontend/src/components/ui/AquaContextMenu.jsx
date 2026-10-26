@@ -19,8 +19,10 @@ const SUBMENU_DELAY = 150; // ms of hover before a submenu opens
 // Choosing anything calls its onSelect, then onClose. Keyboard: ↑/↓ move
 // between rows, ←/→ within a row of icons or swatches, → opens a submenu and
 // ← or Esc leaves it, Home/End jump, Esc closes. Closes on any outside
-// mousedown and on window blur/resize.
-const AquaContextMenu = ({ x, y, items, onClose, label }) => {
+// mousedown and on window blur/resize. A menu opened from a button passes it
+// as anchorRef: mousedowns on it are left alone, so the button's own click
+// can toggle the menu closed instead of closing and reopening it.
+const AquaContextMenu = ({ x, y, items, onClose, label, anchorRef }) => {
   const rootRef = useRef(null);
   const [pos, setPos] = useState({ left: x, top: y });
   const [openSub, setOpenSub] = useState(null); // key of the open submenu
@@ -39,7 +41,9 @@ const AquaContextMenu = ({ x, y, items, onClose, label }) => {
   useEffect(() => {
     rootRef.current?.focus();
     const onMouseDown = (e) => {
-      if (!rootRef.current?.contains(e.target)) onClose();
+      if (rootRef.current?.contains(e.target)) return;
+      if (anchorRef?.current?.contains(e.target)) return;
+      onClose();
     };
     // Capture phase, so a click that something else stops still closes the menu
     window.addEventListener('mousedown', onMouseDown, true);
@@ -51,7 +55,7 @@ const AquaContextMenu = ({ x, y, items, onClose, label }) => {
       window.removeEventListener('blur', onClose);
       window.removeEventListener('resize', onClose);
     };
-  }, [onClose]);
+  }, [onClose, anchorRef]);
 
   // Opened from the keyboard: move focus into the submenu once it renders
   useEffect(() => {
@@ -312,6 +316,7 @@ AquaContextMenu.propTypes = {
   items: PropTypes.arrayOf(itemShape).isRequired,
   onClose: PropTypes.func.isRequired,
   label: PropTypes.string,
+  anchorRef: PropTypes.shape({ current: PropTypes.any }),
 };
 
 export default AquaContextMenu;

@@ -7,6 +7,7 @@ import {
   START_MENU_FOLDERS,
   DEFAULT_DESKTOP_ICON_IDS,
 } from '../../config/windowRegistry';
+import { DESKTOP_ICON_SIZES, DESKTOP_ICON_SIZE_IDS } from '../../config/desktopIconSizes';
 import '../../styles/desktop/_desktop-icons-window.scss';
 
 // Same sections as the Start menu: its folders in the left column, the
@@ -30,8 +31,9 @@ const COLUMNS = [
 
 const sameIds = (a, b) => a.length === b.length && a.every((id, i) => id === b[i]);
 
-// Choose which Start menu entries also appear as desktop icons. Changes apply
-// immediately, like Wallpaper Settings; newly ticked icons join the end.
+// Choose which Start menu entries also appear as desktop icons, and how large
+// they are. Changes apply immediately, like Wallpaper Settings; newly ticked
+// icons join the end.
 const DesktopIconsWindow = ({
   isOpen,
   isMinimized,
@@ -42,6 +44,8 @@ const DesktopIconsWindow = ({
   icon,
   selectedIds,
   onChange,
+  iconSize,
+  onIconSizeChange,
 }) => {
   const nodeRef = useRef(null);
 
@@ -146,6 +150,31 @@ const DesktopIconsWindow = ({
               Restore Defaults
             </button>
           </div>
+
+          <section className="desktop-icons-size">
+            <h3 className="desktop-icons-group" id="desktop-icons-size-label">
+              Icon size
+            </h3>
+            <div
+              className="desktop-icons-size-options"
+              role="radiogroup"
+              aria-labelledby="desktop-icons-size-label"
+            >
+              {DESKTOP_ICON_SIZES.map((size) => (
+                <label key={size.id} className="desktop-icons-size-option">
+                  <input
+                    type="radio"
+                    className="aero-radio"
+                    name="desktopIconSize"
+                    value={size.id}
+                    checked={iconSize === size.id}
+                    onChange={() => onIconSizeChange(size.id)}
+                  />
+                  {size.label}
+                </label>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </Draggable>
@@ -162,6 +191,8 @@ DesktopIconsWindow.propTypes = {
   icon: PropTypes.string,
   selectedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
+  iconSize: PropTypes.oneOf(DESKTOP_ICON_SIZE_IDS).isRequired,
+  onIconSizeChange: PropTypes.func.isRequired,
 };
 
 export default DesktopIconsWindow;

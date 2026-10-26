@@ -41,7 +41,7 @@ const MultiSelectDropdown = ({ options, selectedIds, onChange, placeholder, disp
           padding: "0.25rem",
           width: "100%",
           textAlign: "left",
-          cursor: "pointer",
+          cursor: "default",
           fontSize: "0.8rem",
           minHeight: "30px",
           display: "flex",
@@ -83,7 +83,7 @@ const MultiSelectDropdown = ({ options, selectedIds, onChange, placeholder, disp
               onClick={() => handleToggleOption(option.id)}
               style={{
                 padding: "0.5rem",
-                cursor: "pointer",
+                cursor: "default",
                 color: "white",
                 fontSize: "0.8rem",
                 borderBottom: "1px solid rgba(255, 255, 255, 0.1)",

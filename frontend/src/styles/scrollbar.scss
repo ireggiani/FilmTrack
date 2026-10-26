@@ -21,3 +21,27 @@
 ::-webkit-scrollbar-thumb:active {
   background: rgba(255, 255, 255, 0.5);
 }
+/* Light surfaces (dropdown menus): the glass thumb above is white and
+   vanishes on them, so use a dark one */
+.styled-select__menu-list {
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.42);
+  }
+}
+
+/* Firefox ignores the ::-webkit-scrollbar rules and draws its own thin,
+   auto-hiding bar; scrollbar-color is what it understands */
+@supports not selector(::-webkit-scrollbar) {
+  .styled-select__menu-list {
+    scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.06);
+  }
+}

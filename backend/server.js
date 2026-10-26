@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const path = require('path');
 require('dotenv').config();
+const { DataTypes } = require('sequelize');
 const { sequelize } = require('./models');
 
 const app = express();
@@ -51,8 +52,23 @@ app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// sync() only creates missing tables, so columns added to a model after its
+// table exists (or missing from a restored older backup) are added here
+const addMissingColumns = async () => {
+  const queryInterface = sequelize.getQueryInterface();
+  const viewColumns = await queryInterface.describeTable('views');
+  if (!viewColumns.isDefault) {
+    await queryInterface.addColumn('views', 'isDefault', {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    });
+  }
+};
+
 // Initialize database
 sequelize.sync({ force: false })
+  .then(addMissingColumns)
   .then(() => {
     console.log('Database synced');
     app.listen(PORT, () => {

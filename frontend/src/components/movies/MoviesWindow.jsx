@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from "react";
-import Draggable from "react-draggable";
-import PropTypes from "prop-types";
-import MoviesTable from "./MoviesTable";
-import "../../styles/movies/_movies-table.scss";
-import WindowIcon from "../ui/WindowIcon";
+import { useState, useRef, useEffect } from 'react';
+import Draggable from 'react-draggable';
+import PropTypes from 'prop-types';
+import MoviesTable from './MoviesTable';
+import '../../styles/movies/_movies-table.scss';
+import WindowIcon from '../ui/WindowIcon';
 
 const MoviesWindow = ({
   isOpen,
@@ -47,28 +47,28 @@ const MoviesWindow = ({
     >
       <div
         ref={nodeRef}
-        className={isMaximized ? "window maximized" : "window"}
+        className={isMaximized ? 'window maximized' : 'window'}
         onClick={onFocus}
         style={{
           ...(isMaximized
             ? {
-                position: "fixed",
+                position: 'fixed',
                 top: 0,
                 left: 0,
-                width: "100vw",
-                height: "calc(100vh - 32px)",
-                maxHeight: "calc(100vh - 32px)",
+                width: '100vw',
+                height: 'calc(100vh - 32px)',
+                maxHeight: 'calc(100vh - 32px)',
                 borderRadius: 0,
                 zIndex: 300,
               }
             : {
                 zIndex,
-                width: "90vw",
-                maxWidth: "1200px",
+                width: '90vw',
+                maxWidth: '1300px',
               }),
           ...(isMinimized
             ? {
-                display: "none",
+                display: 'none',
               }
             : {}),
         }}
@@ -89,7 +89,7 @@ const MoviesWindow = ({
               className="titlebar-button"
               onClick={() => setHideAddForm(!hideAddForm)}
               title="Toggle add movie form"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               ➕
             </button>
@@ -97,7 +97,7 @@ const MoviesWindow = ({
               className="titlebar-button"
               onClick={() => setRefreshMovies((prev) => prev + 1)}
               title="Refresh data"
-              style={{ marginRight: "5px" }}
+              style={{ marginRight: '5px' }}
             >
               🔄
             </button>
@@ -111,9 +111,9 @@ const MoviesWindow = ({
             <button
               className="titlebar-button window-maximize"
               onClick={() => setIsMaximized(!isMaximized)}
-              title={isMaximized ? "Restore" : "Maximize"}
+              title={isMaximized ? 'Restore' : 'Maximize'}
             >
-              {isMaximized ? "🗗" : "🗖"}
+              {isMaximized ? '🗗' : '🗖'}
             </button>
             <button className="titlebar-button window-close" onClick={onClose}>
               🗙
@@ -123,15 +123,15 @@ const MoviesWindow = ({
         <div
           className="window-content"
           style={{
-            overflow: "visible",
-            padding: "1rem 0.5rem 0",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
+            overflow: 'visible',
+            padding: '1rem 0.5rem 0',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
             ...(isMaximized
               ? {
-                  maxHeight: "calc(100vh - 64px)",
-                  height: "calc(100vh - 64px)",
+                  maxHeight: 'calc(100vh - 64px)',
+                  height: 'calc(100vh - 64px)',
                 }
               : {}),
           }}

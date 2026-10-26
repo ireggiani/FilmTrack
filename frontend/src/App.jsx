@@ -11,6 +11,11 @@ import {
   START_MENU_WINDOWS,
   DEFAULT_DESKTOP_ICON_IDS,
 } from './config/windowRegistry';
+import {
+  DESKTOP_ICON_SIZE_MAP,
+  DESKTOP_ICON_SIZE_IDS,
+  DEFAULT_DESKTOP_ICON_SIZE,
+} from './config/desktopIconSizes';
 import { useWallpaper } from './components/wallpapers/useWallpaper';
 const GenreWindow = lazy(() => import('./components/genres/GenreWindow'));
 const WallpaperWindow = lazy(
@@ -62,10 +67,15 @@ const loadDesktopIconIds = () => {
   return DEFAULT_DESKTOP_ICON_IDS;
 };
 
-// Desktop icon sort order and arrangement, chosen from the desktop's
-// right-click menu. Kept in this browser like the icon choice.
+// Desktop icon sort order, arrangement and size, chosen from the desktop's
+// right-click menu (size also from the Desktop Icons window). Kept in this
+// browser like the icon choice.
 const DESKTOP_LAYOUT_KEY = 'filmtrack-desktop-layout';
-const DEFAULT_DESKTOP_LAYOUT = { sort: 'default', arrange: 'columns' };
+const DEFAULT_DESKTOP_LAYOUT = {
+  sort: 'default',
+  arrange: 'columns',
+  iconSize: DEFAULT_DESKTOP_ICON_SIZE,
+};
 const loadDesktopLayout = () => {
   try {
     const saved = JSON.parse(localStorage.getItem(DESKTOP_LAYOUT_KEY));
@@ -76,6 +86,9 @@ const loadDesktopLayout = () => {
       arrange: ['columns', 'rows'].includes(saved?.arrange)
         ? saved.arrange
         : DEFAULT_DESKTOP_LAYOUT.arrange,
+      iconSize: DESKTOP_ICON_SIZE_IDS.includes(saved?.iconSize)
+        ? saved.iconSize
+        : DEFAULT_DESKTOP_LAYOUT.iconSize,
     };
   } catch {
     return DEFAULT_DESKTOP_LAYOUT;
@@ -582,6 +595,20 @@ function App() {
     });
   }, []);
 
+  const handleIconSizeChange = useCallback(
+    (iconSize) => updateDesktopLayout({ iconSize }),
+    [updateDesktopLayout],
+  );
+
+  // Icon size drives the --desktop-icon-* custom properties (_desktop-icons.scss)
+  const desktopIconStyle = useMemo(() => {
+    const { image, width } = DESKTOP_ICON_SIZE_MAP[desktopLayout.iconSize];
+    return {
+      '--desktop-icon-size': `${image}px`,
+      '--desktop-icon-width': `${width}px`,
+    };
+  }, [desktopLayout.iconSize]);
+
   // "Default order" is the order chosen in the Desktop Icons window
   const sortedDesktopIconIds = useMemo(() => {
     if (desktopLayout.sort === 'default') return desktopIconIds;
@@ -639,12 +666,14 @@ function App() {
   return (
     <main
       className="container"
+      style={desktopIconStyle}
       onClick={() => setSelectedDesktopIcon(null)}
       onContextMenu={handleDesktopContextMenu}
     >
       <DesktopIconGrid
         ids={sortedDesktopIconIds}
         arrange={desktopLayout.arrange}
+        iconSize={desktopLayout.iconSize}
         selectedId={selectedDesktopIcon}
         onSelect={setSelectedDesktopIcon}
         onOpen={openWindow}
@@ -894,6 +923,8 @@ function App() {
             icon={WINDOW_MAP.desktopIcons.icon}
             selectedIds={desktopIconIds}
             onChange={handleDesktopIconsChange}
+            iconSize={desktopLayout.iconSize}
+            onIconSizeChange={handleIconSizeChange}
           />
         </Suspense>
       )}
@@ -924,8 +955,10 @@ function App() {
           y={desktopMenuPos.y}
           sort={desktopLayout.sort}
           arrange={desktopLayout.arrange}
+          iconSize={desktopLayout.iconSize}
           onSortChange={(sort) => updateDesktopLayout({ sort })}
           onArrangeChange={(arrange) => updateDesktopLayout({ arrange })}
+          onIconSizeChange={handleIconSizeChange}
           onNewNote={handleNewNote}
           onNewMovie={handleNewMovie}
           onShowDesktop={minimizeAllWindows}

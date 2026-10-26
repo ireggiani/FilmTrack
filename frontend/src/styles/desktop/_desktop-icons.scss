@@ -1,6 +1,8 @@
 // Desktop icon styles.
 // Icon and label sizing is driven entirely by CSS custom properties set on
-// .container so a future Control Panel component can change them in one place.
+// .container. The defaults below are the Medium size; App overrides
+// --desktop-icon-size and --desktop-icon-width inline from the icon size chosen
+// by the user (config/desktopIconSizes.js).
 
 .container {
   position: relative; // offset context for absolutely-positioned icons

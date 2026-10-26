@@ -33,6 +33,13 @@ const Taskbar = ({
     return `${hours.toString().padStart(2, "0")}:${minutes} ${ampm}`;
   };
 
+  // e.g. "Mon 26 Oct"; the tooltip spells out the full date with the year
+  const formatDate = (date) =>
+    date.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+
+  const formatFullDate = (date) =>
+    date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
   const handleStartMenuSelect = (windowId) => {
     onOpenWindow(windowId);
     setIsStartMenuOpen(false);
@@ -65,7 +72,10 @@ const Taskbar = ({
             </button>
           ))}
         </div>
-        <div className="taskbar-clock">{formatTime(time)}</div>
+        <div className="taskbar-clock" title={formatFullDate(time)}>
+          <span className="taskbar-date">{formatDate(time)}</span>
+          <span className="taskbar-time">{formatTime(time)}</span>
+        </div>
       </div>
     </>
   );

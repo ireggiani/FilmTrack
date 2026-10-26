@@ -71,7 +71,7 @@ $aero-select-border: #7da2ce;
     color: $aero-text;
     font: inherit;
     font-size: 0.75rem;
-    cursor: pointer;
+    cursor: default;
 
     &:hover:not(:disabled) {
       background: $aero-hover-bg;
@@ -147,7 +147,7 @@ $aero-select-border: #7da2ce;
   color: #333;
   font: inherit;
   font-size: 0.75rem;
-  cursor: pointer;
+  cursor: default;
 
   &:hover:not(.active) {
     background: linear-gradient(to bottom, #f5fbff 0%, #d8eefc 100%);
@@ -188,7 +188,7 @@ $aero-select-border: #7da2ce;
   font: inherit;
   font-size: 0.78rem;
   text-align: left;
-  cursor: pointer;
+  cursor: default;
 
   &:hover {
     background: $aero-hover-bg;
@@ -412,7 +412,7 @@ $aero-select-border: #7da2ce;
   color: #12345e;
   font: inherit;
   font-size: 0.78rem;
-  cursor: pointer;
+  cursor: default;
 
   img {
     width: 16px;

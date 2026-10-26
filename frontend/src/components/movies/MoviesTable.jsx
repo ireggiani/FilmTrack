@@ -119,47 +119,50 @@ const MoviesTable = ({
         focusTitle={focusTitle}
         onTitleFocused={onTitleFocused}
       />
-      <ViewsManager
-        sortConfig={sortConfig}
-        searchTerm={searchTerm}
-        minYear={minYear}
-        maxYear={maxYear}
-        minRating={minRating}
-        maxRating={maxRating}
-        genreTerm={genreTerm}
-        directorTerm={directorTerm}
-        countryTerm={countryTerm}
-        setSortConfig={setSortConfig}
-        setSearchTerm={setSearchTerm}
-        setMinYear={setMinYear}
-        setMaxYear={setMaxYear}
-        setMinRating={setMinRating}
-        setMaxRating={setMaxRating}
-        setGenreTerm={setGenreTerm}
-        setDirectorTerm={setDirectorTerm}
-        setCountryTerm={setCountryTerm}
-      />
-      <MovieFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        minYear={minYear}
-        setMinYear={setMinYear}
-        maxYear={maxYear}
-        setMaxYear={setMaxYear}
-        genreTerm={genreTerm}
-        setGenreTerm={setGenreTerm}
-        directorTerm={directorTerm}
-        setDirectorTerm={setDirectorTerm}
-        countryTerm={countryTerm}
-        setCountryTerm={setCountryTerm}
-        minRating={minRating}
-        setMinRating={setMinRating}
-        maxRating={maxRating}
-        setMaxRating={setMaxRating}
-        memoizedGenreOptions={memoizedGenreOptions}
-        memoizedDirectorOptions={memoizedDirectorOptions}
-        memoizedCountryOptions={memoizedCountryOptions}
-      />
+      {/* One bordered row: the views button, then the filters */}
+      <div className="filter-bar">
+        <ViewsManager
+          sortConfig={sortConfig}
+          searchTerm={searchTerm}
+          minYear={minYear}
+          maxYear={maxYear}
+          minRating={minRating}
+          maxRating={maxRating}
+          genreTerm={genreTerm}
+          directorTerm={directorTerm}
+          countryTerm={countryTerm}
+          setSortConfig={setSortConfig}
+          setSearchTerm={setSearchTerm}
+          setMinYear={setMinYear}
+          setMaxYear={setMaxYear}
+          setMinRating={setMinRating}
+          setMaxRating={setMaxRating}
+          setGenreTerm={setGenreTerm}
+          setDirectorTerm={setDirectorTerm}
+          setCountryTerm={setCountryTerm}
+        />
+        <MovieFilters
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          minYear={minYear}
+          setMinYear={setMinYear}
+          maxYear={maxYear}
+          setMaxYear={setMaxYear}
+          genreTerm={genreTerm}
+          setGenreTerm={setGenreTerm}
+          directorTerm={directorTerm}
+          setDirectorTerm={setDirectorTerm}
+          countryTerm={countryTerm}
+          setCountryTerm={setCountryTerm}
+          minRating={minRating}
+          setMinRating={setMinRating}
+          maxRating={maxRating}
+          setMaxRating={setMaxRating}
+          memoizedGenreOptions={memoizedGenreOptions}
+          memoizedDirectorOptions={memoizedDirectorOptions}
+          memoizedCountryOptions={memoizedCountryOptions}
+        />
+      </div>
       <MoviesList
         sortedMovies={sortedMovies}
         requestSort={requestSort}

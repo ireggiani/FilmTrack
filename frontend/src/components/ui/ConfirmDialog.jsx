@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
-import WarningIcon from "../../assets/icons/warning.png";
+import WindowIcon from "./WindowIcon";
+import { iconSrc } from "../../config/icons";
+import WarningIcon from "../../assets/icons/warning.png?icon";
 
 // Image icons where we have artwork; emoji otherwise
 const ICONS = {
-  warning: <img src={WarningIcon} alt="" />,
+  warning: <WindowIcon icon={iconSrc(WarningIcon)} alt="" size={36} />,
   question: "❓",
   info: "ℹ️",
 };
@@ -16,7 +18,9 @@ const ICONS = {
 // outside doesn't dismiss it; like a real modal dialog, an answer is required.
 // Passing extraLabel + onExtra adds a middle button (e.g. Save / Don't Save /
 // Cancel); cancelLabel={null} drops the Cancel button for a plain message
-// (Esc and ✕ still call onCancel).
+// (Esc and ✕ still call onCancel). initialFocusRef points at a field passed
+// in as children (e.g. a name input) to focus instead of the confirm button;
+// it joins the Tab cycle, and Enter inside it confirms.
 const ConfirmDialog = ({
   title,
   heading,
@@ -28,6 +32,7 @@ const ConfirmDialog = ({
   onConfirm,
   onExtra,
   onCancel,
+  initialFocusRef,
 }) => {
   const confirmRef = useRef(null);
   const extraRef = useRef(null);
@@ -36,8 +41,8 @@ const ConfirmDialog = ({
   const hasCancel = cancelLabel !== null;
 
   useEffect(() => {
-    confirmRef.current?.focus();
-  }, []);
+    (initialFocusRef ?? confirmRef).current?.focus();
+  }, [initialFocusRef]);
 
   // Capture phase, so nothing underneath (other windows' shortcuts, menus)
   // reacts to these keys while the dialog is up
@@ -57,6 +62,7 @@ const ConfirmDialog = ({
       } else if (e.key === "Tab") {
         e.preventDefault();
         const order = [
+          initialFocusRef,
           confirmRef,
           hasExtra && extraRef,
           hasCancel && cancelRef,
@@ -71,7 +77,7 @@ const ConfirmDialog = ({
     };
     window.addEventListener("keydown", onKeyDown, true);
     return () => window.removeEventListener("keydown", onKeyDown, true);
-  }, [onConfirm, onExtra, onCancel, hasExtra, hasCancel]);
+  }, [onConfirm, onExtra, onCancel, hasExtra, hasCancel, initialFocusRef]);
 
   return createPortal(
     <div
@@ -80,7 +86,7 @@ const ConfirmDialog = ({
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) {
           e.preventDefault();
-          confirmRef.current?.focus();
+          (initialFocusRef ?? confirmRef).current?.focus();
         }
       }}
       onClick={(e) => e.stopPropagation()}
@@ -161,6 +167,7 @@ ConfirmDialog.propTypes = {
   onConfirm: PropTypes.func.isRequired,
   onExtra: PropTypes.func,
   onCancel: PropTypes.func.isRequired,
+  initialFocusRef: PropTypes.shape({ current: PropTypes.any }),
 };
 
 export default ConfirmDialog;

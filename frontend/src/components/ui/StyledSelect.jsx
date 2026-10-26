@@ -148,6 +148,8 @@ const StyledSelect = ({
       styles={styles}
       menuShouldBlockScroll={false}
       menuPortalTarget={document.body}
+      // Stable class names (styled-select__menu-list, …) for the stylesheets
+      classNamePrefix="styled-select"
       {...props}
     />
   );

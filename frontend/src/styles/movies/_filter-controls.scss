@@ -1,4 +1,5 @@
-.filter-controls {
+// The bordered row holding the views button and the filters
+.filter-bar {
   width: 100%;
 
   background: rgba(100, 100, 255, 0.1);
@@ -10,7 +11,14 @@
   padding: 0.5rem;
   display: flex;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem;
+}
+
+.filter-controls {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 
   input {

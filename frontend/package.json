@@ -37,13 +37,14 @@
     "jest-environment-jsdom": "^29.7.0",
     "sass": "^1.90.0",
     "serve": "^14.2.5",
-    "vite": "^7.1.2"
+    "vite": "^7.1.2",
+    "vite-imagetools": "^10.0.1"
   },
   "jest": {
     "testEnvironment": "jsdom",
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/styleMock.js",
-      "\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/fileMock.js"
+      "\\.(png|jpg|jpeg|gif|svg)(\\?.*)?$": "<rootDir>/fileMock.js"
     }
   }
 }

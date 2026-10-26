@@ -1,37 +1,55 @@
-.views-manager {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.25rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  margin-bottom: 1rem;
+// Views button at the start of the filter bar. Shows "Views" with nothing
+// applied, or the loaded view's name (lit blue, with a dot once the filters
+// or sort have changed since it was loaded).
+.views-button {
+  flex-shrink: 0;
+  max-width: 170px;
+  gap: 4px;
+  padding: 0 6px;
 
-  background: rgba(100, 100, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
-
-  .save-view-section,
-  .load-view-section {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+  .views-button-icon {
+    font-size: 0.85rem;
   }
 
-  .load-view-section {
-    .css-b62m3t-container {
-      flex-grow: 1;
-    }
+  .views-button-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .delete-view-button {
-    background-color: #dc3545; // A red color for delete buttons
-
-    &:hover {
-      background-color: #c82333;
-    }
+  .views-button-modified {
+    color: #d07000;
+    font-size: 1.1rem;
+    line-height: 0;
   }
+
+  .views-button-caret {
+    font-size: 0.65rem;
+    opacity: 0.7;
+  }
+
+  &.loaded {
+    filter: none;
+    color: #fff;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+    background-image: linear-gradient(0deg, #2e5eec, #8aa6f8);
+    border-color: #2a4aa8;
+  }
+
+  &.open {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+}
+
+// Name field inside the Save / Rename dialogs
+.view-name-input {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+}
+
+.view-name-error {
+  margin: 6px 0 0;
+  color: #c00;
+  font-size: 0.75rem;
 }

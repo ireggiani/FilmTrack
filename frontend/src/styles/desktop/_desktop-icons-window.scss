@@ -75,7 +75,7 @@
   border-radius: 3px;
   color: #1e1e1e;
   font-size: 0.8rem;
-  cursor: pointer;
+  cursor: default;
   user-select: none;
 
   &:hover {
@@ -102,7 +102,7 @@
   border-radius: 3px;
   background: linear-gradient(to bottom, #fdfeff 0%, #e6edf6 50%, #d6e1ee 51%, #eef3f9 100%);
   box-shadow: inset 0 1px 0 #fff;
-  cursor: pointer;
+  cursor: default;
 
   &:hover {
     border-color: #3c8fd6;
@@ -145,6 +145,71 @@
   font-size: 0.75rem;
 }
 
+// Icon size: a row of radio buttons under its own group header
+.desktop-icons-size {
+  padding-top: 2px;
+
+  .desktop-icons-group {
+    margin: 0 2px 6px;
+  }
+}
+
+.desktop-icons-size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding: 0 4px;
+}
+
+.desktop-icons-size-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #1e1e1e;
+  font-size: 0.8rem;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+  cursor: default;
+  user-select: none;
+}
+
+// Glossy radio button: same gel well as .aero-check, with a blue gel dot
+.aero-radio {
+  appearance: none;
+  flex-shrink: 0;
+  position: relative;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1px solid #6f87a8;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #fdfeff 0%, #e6edf6 50%, #d6e1ee 51%, #eef3f9 100%);
+  box-shadow: inset 0 1px 0 #fff;
+  cursor: default;
+
+  &:hover {
+    border-color: #3c8fd6;
+    background: linear-gradient(to bottom, #f7fcff 0%, #def1fd 50%, #c6e6fb 51%, #e4f4fd 100%);
+  }
+
+  &:checked {
+    border-color: #1f5ea8;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 30%, #bfe6ff 0%, #3d9ae8 55%, #1f6fc4 100%);
+      box-shadow: 0 0 2px rgba(31, 94, 168, 0.6);
+    }
+  }
+
+  &:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: 2px;
+  }
+}
+
 // Standard Aero push button (same anatomy as the confirm dialog's buttons)
 .aero-push-btn {
   height: 24px;
@@ -157,7 +222,7 @@
   font: inherit;
   font-size: 0.78rem;
   font-weight: normal;
-  cursor: pointer;
+  cursor: default;
   transition: none;
 
   &:hover:not(:disabled) {

@@ -1,14 +1,14 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import API_BASE_URL from '../../config/api.js';
 
+// Sort order with no view applied
+export const DEFAULT_SORT = { key: "title", direction: "ascending" };
+
 export const useMovies = (refresh, onMoviesLoaded) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sortConfig, setSortConfig] = useState({
-    key: "title",
-    direction: "ascending",
-  });
+  const [sortConfig, setSortConfig] = useState(DEFAULT_SORT);
   const [searchTerm, setSearchTerm] = useState("");
   const [minYear, setMinYear] = useState("");
   const [maxYear, setMaxYear] = useState("");

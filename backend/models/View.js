@@ -18,7 +18,18 @@ const View = sequelize.define('View', {
   },
   sorting: {
     type: DataTypes.JSON,
-    allowNull: true
+    allowNull: true,
+    // SQLite hands this nullable JSON column back as its raw text
+    get() {
+      const raw = this.getDataValue('sorting');
+      return typeof raw === 'string' ? JSON.parse(raw) : raw;
+    }
+  },
+  // The starred view, applied when the Movies window opens. At most one.
+  isDefault: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   }
 }, {
   tableName: 'views',
