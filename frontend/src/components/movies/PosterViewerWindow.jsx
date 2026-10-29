@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import Draggable from "react-draggable";
 import PropTypes from "prop-types";
 import WindowIcon from "../ui/WindowIcon";
-import { ASSETS_BASE_URL } from "../../config/api.js";
 import "../../styles/movies/_poster-viewer.scss";
 
 const MIN_SCALE = 0.1;
@@ -207,7 +206,7 @@ const PosterViewerWindow = ({
           onMouseDown={handlePanStart}
         >
           <img
-            src={`${ASSETS_BASE_URL}${movie.posterUrl}`}
+            src={movie.posterUrl}
             alt={`${movie.title} poster`}
             onLoad={handleImageLoad}
             onDoubleClick={toggleFit}

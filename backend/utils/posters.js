@@ -1,8 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
+const { POSTERS_DIR } = require('../config/paths');
 
-const POSTERS_DIR = path.join(__dirname, '..', 'uploads', 'posters');
 const THUMBS_DIR = path.join(POSTERS_DIR, 'thumbs');
 // 2x the 200px hover-preview display size, crisp on hidpi screens
 const THUMB_WIDTH = 400;

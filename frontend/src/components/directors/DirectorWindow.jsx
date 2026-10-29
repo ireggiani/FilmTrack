@@ -57,7 +57,7 @@ const DirectorWindow = ({
   const handleDirectorDelete = async (directorId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/directors/${directorId}`,
+        `/api/directors/${directorId}`,
         {
           method: 'DELETE',
         },

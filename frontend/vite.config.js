@@ -22,6 +22,13 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
+  // Dev requests go through Vite to the backend, so dev is same-origin like production
+  server: {
+    proxy: {
+      '/api': 'http://localhost:5000',
+      '/posters': 'http://localhost:5000',
+    },
+  },
   build: {
     outDir: '../backend/public',
     emptyOutDir: false,

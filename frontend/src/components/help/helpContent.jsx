@@ -550,16 +550,28 @@ export const TOPICS = {
         <Callout type="note">
           Poster images aren&apos;t included in the backup file.
         </Callout>
+        <h2>Automatic backups</h2>
+        <p>
+          FilmTrack also makes a backup by itself the first time it starts
+          each day. It keeps the last 14 days in the <b>backups</b> folder
+          inside FilmTrack&apos;s <b>data</b> folder (<code>data/backups</code>).
+        </p>
         <h2>Restoring a backup</h2>
         <ol>
           <li>Click <b>Select File</b> and choose a backup file.</li>
           <li>Click <b>🧰 Restore Database</b>.</li>
+          <li>Reload the page to see the restored data.</li>
         </ol>
         <Callout type="caution">
           Restoring <b>replaces all your current data</b> with the
-          backup&apos;s, without asking first. Make a fresh backup before
-          restoring if you might want today&apos;s data back.
+          backup&apos;s, without asking first. Your current data isn&apos;t
+          lost, though: it&apos;s saved first in the <b>backups</b> folder as
+          a file whose name starts with <code>before-restore</code>.
         </Callout>
+        <p>
+          A file that isn&apos;t a FilmTrack backup, or that is damaged, is
+          refused, and your data stays as it was.
+        </p>
         <h2>Exporting to a spreadsheet</h2>
         <p>
           Tick the columns you want under <b>Select columns to include</b>,

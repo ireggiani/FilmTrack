@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import WindowIcon from '../ui/WindowIcon';
-import API_BASE_URL, { ASSETS_BASE_URL } from '../../config/api.js';
+import API_BASE_URL from '../../config/api.js';
 import '../../styles/games/_pairs.scss';
 
 const MAX_PAIRS = 8;
@@ -187,7 +187,7 @@ const PairsGame = ({
                         <span className="pairs-card-back">🎬</span>
                         <span className="pairs-card-front">
                           <img
-                            src={`${ASSETS_BASE_URL}${card.thumbUrl}`}
+                            src={card.thumbUrl}
                             alt={
                               matched.has(card.movieId) ? card.title : 'Poster'
                             }

@@ -7,12 +7,9 @@
 .env
 /backend/.env
 
-# Databases
-database.sqlite
-/backend/database.sqlite
-
-# User uploads (DB restore temp files, movie posters)
-/backend/uploads/
+# User data: database, backups and posters (see backend/config/paths.js)
+/data/
+*.sqlite
 
 # Build output
 /frontend/dist

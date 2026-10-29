@@ -3,66 +3,51 @@ const { UniqueConstraintError } = require('sequelize');
 const { sequelize, View } = require('../models');
 const router = express.Router();
 
-// Names are unique; report a clash as 409 so the UI can say so
-const sendError = (res, error) => {
-  if (error instanceof UniqueConstraintError) {
-    return res.status(409).json({ error: 'A view with that name already exists' });
-  }
-  res.status(500).json({ error: error.message });
-};
-
 // Get all views
 router.get('/', async (req, res) => {
-  try {
-    const views = await View.findAll();
-    res.json(views);
-  } catch (error) {
-    sendError(res, error);
-  }
+  const views = await View.findAll();
+  res.json(views);
 });
 
 // Create a new view
 router.post('/', async (req, res) => {
-  try {
-    const view = await View.create(req.body);
-    res.status(201).json(view);
-  } catch (error) {
-    sendError(res, error);
-  }
+  const view = await View.create(req.body);
+  res.status(201).json(view);
 });
 
 // Update a view. Starring one (isDefault: true) unstars the rest.
 router.put('/:id', async (req, res) => {
-  try {
-    const view = await sequelize.transaction(async (transaction) => {
-      const found = await View.findByPk(req.params.id, { transaction });
-      if (!found) return null;
-      if (req.body.isDefault === true) {
-        await View.update({ isDefault: false }, { where: {}, transaction });
-      }
-      return found.update(req.body, { transaction });
-    });
-    if (!view) {
-      return res.status(404).json({ error: 'View not found' });
+  const view = await sequelize.transaction(async (transaction) => {
+    const found = await View.findByPk(req.params.id, { transaction });
+    if (!found) return null;
+    if (req.body.isDefault === true) {
+      await View.update({ isDefault: false }, { where: {}, transaction });
     }
-    res.json(view);
-  } catch (error) {
-    sendError(res, error);
+    return found.update(req.body, { transaction });
+  });
+  if (!view) {
+    return res.status(404).json({ error: 'View not found' });
   }
+  res.json(view);
 });
 
 // Delete a view
 router.delete('/:id', async (req, res) => {
-  try {
-    const view = await View.findByPk(req.params.id);
-    if (!view) {
-      return res.status(404).json({ error: 'View not found' });
-    }
-    await view.destroy();
-    res.status(204).send();
-  } catch (error) {
-    sendError(res, error);
+  const view = await View.findByPk(req.params.id);
+  if (!view) {
+    return res.status(404).json({ error: 'View not found' });
   }
+  await view.destroy();
+  res.status(204).send();
+});
+
+// Names are unique; report a clash as 409 with a message the UI can show.
+// Everything else goes on to the app-wide error handler.
+router.use((err, req, res, next) => {
+  if (err instanceof UniqueConstraintError) {
+    return res.status(409).json({ error: 'A view with that name already exists' });
+  }
+  next(err);
 });
 
 module.exports = router;

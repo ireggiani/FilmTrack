@@ -32,8 +32,8 @@ const BackupWindow = ({
       setMessage('Starting backup...');
       const response = await fetch(`${API_BASE_URL}/database/backup`);
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Backup failed');
+        const body = await response.json().catch(() => null);
+        throw new Error(body?.error || 'Backup failed');
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -73,8 +73,12 @@ const BackupWindow = ({
         method: 'POST',
         body: formData,
       });
-      const result = await response.text();
-      setMessage(result);
+      const body = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(body?.error || 'Restore failed');
+      setMessage(
+        `☑️ ${body.message} Your previous data was saved as ${body.previousData}. ` +
+          'Reload the page to see the restored data.',
+      );
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }

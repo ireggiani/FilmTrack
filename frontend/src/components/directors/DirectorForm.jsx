@@ -43,8 +43,8 @@ const DirectorForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/directors/${editingDirector.id}`
-        : "http://localhost:5000/api/directors";
+        ? `/api/directors/${editingDirector.id}`
+        : "/api/directors";
 
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",

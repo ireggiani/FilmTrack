@@ -17,7 +17,7 @@ const DirectorList = ({
 
   const fetchDirectors = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/directors');
+      const response = await fetch('/api/directors');
       const data = await response.json();
       setDirectors(data);
       onDirectorsLoaded?.(data);

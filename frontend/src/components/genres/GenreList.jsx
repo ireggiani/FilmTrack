@@ -12,7 +12,7 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
 
   const fetchGenres = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/genres');
+      const response = await fetch('/api/genres');
       const data = await response.json();
       setGenres(data);
       onGenresLoaded?.(data);

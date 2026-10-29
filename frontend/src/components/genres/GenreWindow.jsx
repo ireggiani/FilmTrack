@@ -32,7 +32,7 @@ const GenreWindow = ({
   const handleGenreDelete = async (genreId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/genres/${genreId}`,
+        `/api/genres/${genreId}`,
         {
           method: 'DELETE',
         },

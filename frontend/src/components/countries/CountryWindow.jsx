@@ -34,7 +34,7 @@ const CountryWindow = ({
     async (countryId) => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/countries/${countryId}`,
+          `/api/countries/${countryId}`,
           {
             method: 'DELETE',
           },

@@ -42,8 +42,8 @@ const ActorForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/actors/${editingActor.id}`
-        : "http://localhost:5000/api/actors";
+        ? `/api/actors/${editingActor.id}`
+        : "/api/actors";
 
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",

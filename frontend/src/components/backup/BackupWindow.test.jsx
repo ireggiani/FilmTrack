@@ -95,7 +95,7 @@ describe('BackupWindow', () => {
     expect(await screen.findByText('Starting backup...')).toBeInTheDocument();
 
     // Check that fetch was called
-    expect(global.fetch).toHaveBeenCalledWith('http://localhost:5000/api/database/backup');
+    expect(global.fetch).toHaveBeenCalledWith('/api/database/backup');
 
     // Wait for the success message
     await waitFor(() => {
@@ -112,6 +112,32 @@ describe('BackupWindow', () => {
 
     // Restore the spy
     createElementSpy.mockRestore();
+  });
+
+  it('shows the server\'s reason when a restore is rejected', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve({ error: "This file isn't a FilmTrack backup." }),
+      })
+    );
+    const { container } = render(
+      <BackupWindow
+        isOpen={true}
+        isMinimized={false}
+        onClose={mockOnClose}
+        onMinimize={mockOnMinimize}
+        onFocus={mockOnFocus}
+        zIndex={100}
+      />
+    );
+
+    const file = new File(['not a database'], 'notes.txt');
+    fireEvent.change(container.querySelector('input[type="file"]'), { target: { files: [file] } });
+    fireEvent.click(screen.getByText('🧰 Restore Database'));
+
+    expect(await screen.findByText("Error: This file isn't a FilmTrack backup.")).toBeInTheDocument();
+    expect(global.fetch).toHaveBeenCalledWith('/api/database/restore', expect.objectContaining({ method: 'POST' }));
   });
 
   it('does not render when closed', () => {

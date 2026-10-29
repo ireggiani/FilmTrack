@@ -47,8 +47,8 @@ const CountryForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/countries/${editingCountry.id}`
-        : "http://localhost:5000/api/countries";
+        ? `/api/countries/${editingCountry.id}`
+        : "/api/countries";
 
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",

@@ -1,56 +1,23 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
+const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
 const { DataTypes } = require('sequelize');
+const { DATA_DIR, DB_PATH } = require('./config/paths');
+
+// Data used to live inside backend/. If it's still there and the data folder has
+// no database, stop rather than start on a new, empty one.
+const LEGACY_DB = path.join(__dirname, 'database.sqlite');
+if (!fs.existsSync(DB_PATH) && fs.existsSync(LEGACY_DB)) {
+  console.error(`No database at ${DB_PATH}, but ${LEGACY_DB} exists.`);
+  console.error('Move it (and uploads/posters) into the data folder; see docs/backend.md.');
+  process.exit(1);
+}
+fs.mkdirSync(DATA_DIR, { recursive: true });
+
 const { sequelize } = require('./models');
+const { createApp } = require('./app');
+const { autoBackup } = require('./utils/backup');
 
-const app = express();
 const PORT = process.env.PORT || 5000;
-
-app.use(compression());
-// cross-origin CORP so the dev frontend (:5173) can load poster images from :5000
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
-const corsOptions = {
-  origin: 'http://localhost:5173',
-  optionsSuccessStatus: 200
-};
-
-app.use(cors(corsOptions));
-app.use(express.json());
-
-// API Routes - must come before static files
-app.use('/api/movies', require('./routes/movies'));
-app.use('/api/genres', require('./routes/genres'));
-app.use('/api/countries', require('./routes/countries'));
-app.use('/api/directors', require('./routes/directors'));
-app.use('/api/actors', require('./routes/actors'));
-app.use('/api/database', require('./routes/database'));
-app.use('/api/views', require('./routes/views'));
-app.use('/api/notes', require('./routes/notes'));
-app.use('/api/tmdb', require('./routes/tmdb'));
-
-app.get('/api/health', (req, res) => {
-  res.json({ message: 'Server is running!' });
-});
-
-// Movie posters (originals + on-demand thumbnails)
-app.use('/posters', require('./routes/posters'));
-
-// Serve static files from public directory with fallback to index.html for SPA
-app.use(express.static(path.join(__dirname, 'public'), {
-  index: false
-}));
-
-// SPA fallback: serve index.html for non-API routes
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ error: 'API endpoint not found' });
-  }
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // sync() only creates missing tables, so columns added to a model after its
 // table exists (or missing from a restored older backup) are added here
@@ -66,12 +33,23 @@ const addMissingColumns = async () => {
   }
 };
 
+// A failed backup shouldn't keep the app from starting
+const runAutoBackup = async () => {
+  try {
+    const file = await autoBackup();
+    if (file) console.log(`Daily backup written to ${file}`);
+  } catch (err) {
+    console.error('Daily backup failed:', err);
+  }
+};
+
 // Initialize database
 sequelize.sync({ force: false })
   .then(addMissingColumns)
+  .then(runAutoBackup)
   .then(() => {
     console.log('Database synced');
-    app.listen(PORT, () => {
+    createApp().listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   })

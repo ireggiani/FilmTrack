@@ -12,7 +12,7 @@ const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
 
   const fetchActors = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/actors');
+      const response = await fetch('/api/actors');
       const data = await response.json();
       setActors(data);
       onActorsLoaded?.(data);

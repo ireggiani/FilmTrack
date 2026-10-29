@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import StyledSelect from "../ui/StyledSelect";
-import { ASSETS_BASE_URL } from "../../config/api";
 import { parseWatchedDate, toDateInput, tidyDateInput, DATE_HINT } from "./watchedDate";
 
 // Edit-mode copy of a movie: relation ids, and the date as DD/MM/YYYY text
@@ -448,7 +447,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
               style={{ top: posterPreviewPos.top, left: posterPreviewPos.left }}
             >
               <img
-                src={`${ASSETS_BASE_URL}${movie.posterThumbUrl || movie.posterUrl}`}
+                src={movie.posterThumbUrl || movie.posterUrl}
                 alt={`${movie.title} poster`}
               />
             </div>,

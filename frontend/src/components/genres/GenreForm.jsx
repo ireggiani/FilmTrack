@@ -44,8 +44,8 @@ const GenreForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/genres/${editingGenre.id}`
-        : "http://localhost:5000/api/genres";
+        ? `/api/genres/${editingGenre.id}`
+        : "/api/genres";
 
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",
