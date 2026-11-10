@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import PropTypes from "prop-types";
-import API_BASE_URL from "../../config/api.js";
+import api from "../../services/api.js";
 import "../../styles/movies/_poster-search.scss";
 
 const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
@@ -21,10 +21,7 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
     try {
       const params = new URLSearchParams({ query: searchQuery.trim() });
       if (searchYear) params.set("year", searchYear);
-      const response = await fetch(`${API_BASE_URL}/tmdb/search?${params}`);
-      const body = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(body?.error || "Search failed");
-      setResults(body);
+      setResults(await api.get(`/tmdb/search?${params}`, "Search failed"));
     } catch (err) {
       setError(err.message);
       setResults(null);

@@ -59,7 +59,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
     try {
       await onUploadPoster(movie.id, file);
     } catch {
-      // error is surfaced through the useMovies error state
+      // error is shown in the Movies window's error dialog
     } finally {
       setIsUploadingPoster(false);
     }
@@ -117,8 +117,12 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
       setDateError(true);
       return;
     }
-    onUpdate(movie.id, { ...editedMovie, watchedDate: date.iso });
-    setIsEditing(false);
+    onUpdate(movie.id, { ...editedMovie, watchedDate: date.iso })
+      .then(() => setIsEditing(false))
+      .catch(() => {
+        // error is shown in the Movies window's error dialog; the row stays
+        // in edit mode so the changes can be corrected
+      });
   };
 
   const cancelEditing = () => {
@@ -236,9 +240,14 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
         <div style={{ position: "relative" }}>
           {isEditing ? (
             <input
-              type="text"
+              type="number"
+              min="1"
+              max="10"
+              step="1"
               value={editedMovie.rating || ""}
-              onChange={(e) => handleInputChange("rating", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("rating", parseInt(e.target.value) || "")
+              }
               onKeyDown={handleKeyDown}
               className="text-field"
               style={{ width: "100%" }}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import GlassCheckbox from '../ui/GlassCheckbox';
 import FilterInput from '../ui/FilterInput';
 import PillItem from '../ui/PillItem';
+import api from '../../services/api.js';
 
 const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
   const [genres, setGenres] = useState([]);
@@ -12,8 +13,7 @@ const GenreList = ({ refresh, onGenresLoaded, onGenreEdit, onGenreDelete }) => {
 
   const fetchGenres = useCallback(async () => {
     try {
-      const response = await fetch('/api/genres');
-      const data = await response.json();
+      const data = await api.get('/genres');
       setGenres(data);
       onGenresLoaded?.(data);
     } catch (error) {

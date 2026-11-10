@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import GlassCheckbox from '../ui/GlassCheckbox';
 import FilterInput from '../ui/FilterInput';
 import PillItem from '../ui/PillItem';
+import api from '../../services/api.js';
 
 const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
   const [actors, setActors] = useState([]);
@@ -12,8 +13,7 @@ const ActorList = ({ refresh, onActorsLoaded, onActorEdit, onActorDelete }) => {
 
   const fetchActors = useCallback(async () => {
     try {
-      const response = await fetch('/api/actors');
-      const data = await response.json();
+      const data = await api.get('/actors');
       setActors(data);
       onActorsLoaded?.(data);
     } catch (error) {

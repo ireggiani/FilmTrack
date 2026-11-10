@@ -20,6 +20,8 @@ const MoviesTable = ({
     movies,
     loading,
     error,
+    saveError,
+    clearSaveError,
     sortConfig,
     searchTerm,
     minYear,
@@ -186,6 +188,18 @@ const MoviesTable = ({
           onClose={() => setPosterSearchMovie(null)}
         />
       )}
+      {saveError && (
+        <ConfirmDialog
+          title="Movies"
+          heading="The change couldn't be saved"
+          icon="info"
+          cancelLabel={null}
+          onConfirm={clearSaveError}
+          onCancel={clearSaveError}
+        >
+          {saveError}
+        </ConfirmDialog>
+      )}
       {pendingDeleteMovie && (
         <ConfirmDialog
           title="Delete Movie"
@@ -193,7 +207,7 @@ const MoviesTable = ({
           confirmLabel="Delete"
           onConfirm={() => {
             handleDeleteMovie(pendingDeleteMovie.id).catch(() => {
-              // error is surfaced through the useMovies error state
+              // error is shown in the Movies window's error dialog
             });
             setPendingDeleteId(null);
           }}

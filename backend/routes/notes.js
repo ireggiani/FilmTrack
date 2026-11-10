@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { fn, col } = require('sequelize');
 const { Note } = require('../models');
+const { validate } = require('../validation/validate');
+const schemas = require('../validation/schemas');
 
 // Get all notes
 router.get('/', async (req, res) => {
@@ -13,14 +15,14 @@ router.get('/', async (req, res) => {
 });
 
 // Create new note
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.note), async (req, res) => {
   const { title, content } = req.body;
   const note = await Note.create({ title, content });
   res.status(201).json(note);
 });
 
 // Update note
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(schemas.note), async (req, res) => {
   const { title, content } = req.body;
   const [updated] = await Note.update(
     { title, content },

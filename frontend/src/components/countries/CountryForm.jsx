@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
 import PropTypes from "prop-types";
+import api from "../../services/api.js";
 
 const CountryForm = ({
   onCountryAdded,
@@ -47,31 +48,25 @@ const CountryForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `/api/countries/${editingCountry.id}`
-        : "/api/countries";
+        ? `/countries/${editingCountry.id}`
+        : "/countries";
 
-      const response = await fetch(url, {
-        method: isEditing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: trimmedName, flagEmoji: trimmedFlag }),
-      });
-
-      if (response.ok) {
-        const country = await response.json();
-        setName("");
-        setFlagEmoji("");
-        if (isEditing) {
-          onEditComplete?.();
-        } else {
-          onCountryAdded?.(country);
-          requestAnimationFrame(() => inputRef.current?.focus());
-        }
+      const save = isEditing ? api.put : api.post;
+      const country = await save(url, { name: trimmedName, flagEmoji: trimmedFlag }, "Could not save the country");
+      setName("");
+      setFlagEmoji("");
+      if (isEditing) {
+        onEditComplete?.();
+      } else {
+        onCountryAdded?.(country);
+        requestAnimationFrame(() => inputRef.current?.focus());
       }
     } catch (error) {
       console.error(
         `Error ${isEditing ? "updating" : "creating"} country:`,
         error
       );
+      setError(`🚫 Error: ${error.message}`);
     } finally {
       setLoading(false);
     }

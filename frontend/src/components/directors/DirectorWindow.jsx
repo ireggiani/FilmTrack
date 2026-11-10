@@ -8,6 +8,7 @@ import '../../styles/directors/_director-form.scss';
 import '../../styles/directors/_director-list.scss';
 
 import WindowIcon from '../ui/WindowIcon';
+import api from '../../services/api.js';
 
 // Horizontal repeat of the metal sheen (700px bands at 80deg in _metal.scss)
 const SHEEN_PERIOD = 700 / Math.sin((80 * Math.PI) / 180);
@@ -56,15 +57,8 @@ const DirectorWindow = ({
 
   const handleDirectorDelete = async (directorId) => {
     try {
-      const response = await fetch(
-        `/api/directors/${directorId}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (response.ok) {
-        onDirectorAdded(); // Refresh the list
-      }
+      await api.del(`/directors/${directorId}`);
+      onDirectorAdded(); // Refresh the list
     } catch (error) {
       console.error('Error deleting director:', error);
     }

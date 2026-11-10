@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import api from "../../services/api.js";
 
 const ActorForm = ({
   onActorAdded,
@@ -42,30 +43,24 @@ const ActorForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `/api/actors/${editingActor.id}`
-        : "/api/actors";
+        ? `/actors/${editingActor.id}`
+        : "/actors";
 
-      const response = await fetch(url, {
-        method: isEditing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: trimmedName }),
-      });
-
-      if (response.ok) {
-        const actor = await response.json();
-        setName("");
-        if (isEditing) {
-          onEditComplete?.();
-        } else {
-          onActorAdded?.(actor);
-          requestAnimationFrame(() => inputRef.current?.focus());
-        }
+      const save = isEditing ? api.put : api.post;
+      const actor = await save(url, { name: trimmedName }, "Could not save the actor");
+      setName("");
+      if (isEditing) {
+        onEditComplete?.();
+      } else {
+        onActorAdded?.(actor);
+        requestAnimationFrame(() => inputRef.current?.focus());
       }
     } catch (error) {
       console.error(
         `Error ${isEditing ? "updating" : "creating"} actor:`,
         error
       );
+      setError(error.message);
     } finally {
       setLoading(false);
     }

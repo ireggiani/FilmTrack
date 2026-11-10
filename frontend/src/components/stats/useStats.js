@@ -1,13 +1,5 @@
 import { useMemo } from 'react';
 
-// rating is stored as DataTypes.STRING in the DB, so all values arrive as
-// strings. Also handles the edge case of comma decimal separators ("7,5").
-const parseRating = r => {
-  if (r == null) return null;
-  const n = parseFloat(String(r).replace(',', '.'));
-  return isFinite(n) ? n : null;
-};
-
 export function useStats(movies) {
   const moviesByGenre = useMemo(() => {
     const counts = {};
@@ -33,11 +25,7 @@ export function useStats(movies) {
     const buckets = {};
     for (let i = 1; i <= 10; i++) buckets[i] = 0;
     movies.forEach(m => {
-      const r = parseRating(m.rating);
-      if (r !== null) {
-        const bucket = Math.min(10, Math.max(1, Math.round(r)));
-        buckets[bucket]++;
-      }
+      if (m.rating !== null) buckets[m.rating]++;
     });
     return Object.entries(buckets).map(([rating, count]) => ({ rating: `${rating}★`, count }));
   }, [movies]);
@@ -45,7 +33,7 @@ export function useStats(movies) {
   const avgRatingByGenre = useMemo(() => {
     const data = {};
     movies.forEach(m => {
-      const r = parseRating(m.rating);
+      const r = m.rating;
       if (r === null) return;
       m.Genres?.forEach(g => {
         if (!data[g.name]) data[g.name] = { sum: 0, count: 0 };
@@ -87,12 +75,12 @@ export function useStats(movies) {
 
   const ratingVsYear = useMemo(() => {
     return movies
-      .filter(m => m.releaseYear && parseRating(m.rating) !== null)
-      .map(m => ({ x: m.releaseYear, y: parseRating(m.rating), label: m.title }));
+      .filter(m => m.releaseYear && m.rating !== null)
+      .map(m => ({ x: m.releaseYear, y: m.rating, label: m.title }));
   }, [movies]);
 
   const summary = useMemo(() => {
-    const ratings = movies.map(m => parseRating(m.rating)).filter(r => r !== null);
+    const ratings = movies.map(m => m.rating).filter(r => r !== null);
     const avgRating = ratings.length > 0
       ? Math.round((ratings.reduce((s, r) => s + r, 0) / ratings.length) * 10) / 10
       : null;

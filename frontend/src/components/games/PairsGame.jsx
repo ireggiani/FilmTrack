@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import WindowIcon from '../ui/WindowIcon';
-import API_BASE_URL from '../../config/api.js';
+import api from '../../services/api.js';
 import '../../styles/games/_pairs.scss';
 
 const MAX_PAIRS = 8;
@@ -55,11 +55,7 @@ const PairsGame = ({
     if (!isOpen) return;
     setPool(null);
     setFetchError(null);
-    fetch(`${API_BASE_URL}/movies`)
-      .then((r) => {
-        if (!r.ok) throw new Error('Failed to load movies');
-        return r.json();
-      })
+    api.get('/movies', 'Failed to load movies')
       .then((movies) => {
         const withPosters = movies.filter((m) => m.posterThumbUrl);
         setPool(withPosters);

@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
 const { POSTERS_DIR } = require('../config/paths');
+const { Movie, sequelize } = require('../models');
 
 const THUMBS_DIR = path.join(POSTERS_DIR, 'thumbs');
 // 2x the 200px hover-preview display size, crisp on hidpi screens
@@ -27,21 +28,39 @@ function getPosterMap() {
   return map;
 }
 
-// Build the public URLs for a poster file, with an mtime cache-buster derived
-// from the original (so replacing a poster busts the thumb URL too).
-function buildPosterUrls(filename) {
+// What the Movies row stores about a poster file. The version is the file's
+// mtime, so replacing a poster busts the thumb URL too.
+function posterFields(filename) {
   const { mtimeMs } = fs.statSync(path.join(POSTERS_DIR, filename));
-  const version = Math.round(mtimeMs);
-  return {
-    posterUrl: `/posters/${filename}?v=${version}`,
-    posterThumbUrl: `/posters/thumbs/${filename}?v=${version}`
-  };
+  return { posterExt: path.extname(filename).slice(1), posterVersion: Math.round(mtimeMs) };
 }
 
-// URL for a single movie's poster, or null if it has none
-function getPosterUrl(movieId) {
-  const filename = getPosterMap().get(Number(movieId));
-  return filename ? buildPosterUrls(filename).posterUrl : null;
+const NO_POSTER = { posterExt: null, posterVersion: null };
+
+// silent: a new poster doesn't count as editing the movie, so updatedAt stays
+async function recordPoster(movie, ext) {
+  await movie.update(posterFields(`${movie.id}.${ext}`), { silent: true });
+}
+
+async function clearPoster(movie) {
+  await movie.update(NO_POSTER, { silent: true });
+}
+
+// Make every Movies row match the posters folder. Backups hold no images, so a
+// restored row can claim a file that's gone or miss one that's there, and a
+// failed save can leave the two apart. The folder wins: runs at startup and
+// after a restore, and writes only the rows that differ.
+async function reconcilePosters() {
+  const files = getPosterMap();
+  const movies = await Movie.findAll({ attributes: ['id', 'posterExt', 'posterVersion'] });
+  await sequelize.transaction(async (transaction) => {
+    for (const movie of movies) {
+      const filename = files.get(movie.id);
+      const fields = filename ? posterFields(filename) : NO_POSTER;
+      if (fields.posterExt === movie.posterExt && fields.posterVersion === movie.posterVersion) continue;
+      await movie.update(fields, { silent: true, transaction });
+    }
+  });
 }
 
 // Delete any poster file(s) and thumbnail(s) for a movie. Safe to call when none exist.
@@ -72,17 +91,20 @@ async function ensureThumb(filename) {
   return thumb;
 }
 
-// Attach virtual posterUrl/posterThumbUrl fields to a movie instance or an array of them
+// Replace the stored poster fields with posterUrl/posterThumbUrl on a movie
+// instance or an array of them
 function withPosterUrl(movieOrMovies) {
-  const posterMap = getPosterMap();
   const attach = (movie) => {
-    const filename = posterMap.get(movie.id);
-    const urls = filename
-      ? buildPosterUrls(filename)
-      : { posterUrl: null, posterThumbUrl: null };
-    return { ...movie.toJSON(), ...urls };
+    const { posterExt, posterVersion, ...fields } = movie.toJSON();
+    if (!posterExt) return { ...fields, posterUrl: null, posterThumbUrl: null };
+    const filename = `${movie.id}.${posterExt}`;
+    return {
+      ...fields,
+      posterUrl: `/posters/${filename}?v=${posterVersion}`,
+      posterThumbUrl: `/posters/thumbs/${filename}?v=${posterVersion}`
+    };
   };
   return Array.isArray(movieOrMovies) ? movieOrMovies.map(attach) : attach(movieOrMovies);
 }
 
-module.exports = { POSTERS_DIR, MIME_EXTENSIONS, getPosterUrl, deletePoster, ensureThumb, withPosterUrl };
+module.exports = { POSTERS_DIR, MIME_EXTENSIONS, recordPoster, clearPoster, reconcilePosters, deletePoster, ensureThumb, withPosterUrl };

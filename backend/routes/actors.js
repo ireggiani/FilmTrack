@@ -1,5 +1,7 @@
 const express = require('express');
 const { Actor } = require('../models');
+const { validate } = require('../validation/validate');
+const schemas = require('../validation/schemas');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -7,12 +9,12 @@ router.get('/', async (req, res) => {
   res.json(actors);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.actor.create), async (req, res) => {
   const actor = await Actor.create(req.body);
   res.status(201).json(actor);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(schemas.actor.update), async (req, res) => {
   const actor = await Actor.findByPk(req.params.id);
   if (!actor) return res.status(404).json({ error: 'Actor not found' });
 

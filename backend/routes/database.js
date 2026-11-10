@@ -5,7 +5,8 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const { BACKUPS_DIR } = require('../config/paths');
-const { writeSnapshot, validateBackup, restoreFrom } = require('../utils/backup');
+const { writeSnapshot, validateBackup, upgradeBackup, restoreFrom } = require('../utils/backup');
+const { reconcilePosters } = require('../utils/posters');
 
 const MAX_BACKUP_MB = 100;
 const upload = multer({
@@ -31,7 +32,7 @@ router.get('/backup', async (req, res) => {
   }
 });
 
-// Restore route: check the upload, keep a copy of the current data, then swap the rows in
+// Restore route: check and upgrade the upload, keep a copy of the current data, then swap the rows in
 router.post('/restore', upload.single('db-file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded.' });
@@ -39,8 +40,10 @@ router.post('/restore', upload.single('db-file'), async (req, res) => {
 
   try {
     await validateBackup(req.file.path);
+    await upgradeBackup(req.file.path);
     const snapshot = await writeSnapshot(path.join(BACKUPS_DIR, `before-restore-${timestamp()}.sqlite`));
     await restoreFrom(req.file.path);
+    await reconcilePosters();
     res.json({
       message: 'Database restored successfully.',
       previousData: path.basename(snapshot)

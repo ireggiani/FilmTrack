@@ -3,8 +3,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { Movie, Genre, Country, Director, Actor } = require('../models');
-const { POSTERS_DIR, MIME_EXTENSIONS, deletePoster, withPosterUrl } = require('../utils/posters');
+const { POSTERS_DIR, MIME_EXTENSIONS, recordPoster, clearPoster, deletePoster, withPosterUrl } = require('../utils/posters');
 const tmdb = require('../utils/tmdb');
+const { validate } = require('../validation/validate');
+const schemas = require('../validation/schemas');
 const router = express.Router();
 
 // Poster upload: images only, stored as <movieId>.<ext> with ext derived from mimetype
@@ -40,17 +42,11 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create movie
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.movie), async (req, res) => {
+  // Already checked and cleaned by the schema (a blank date arrives as null)
   const { title, alternativeTitle, releaseYear, rating, watchedDate, genreIds, countryIds, directorIds, actorIds } = req.body;
 
-  if (!String(title ?? '').trim() || !releaseYear) {
-    return res.status(400).json({ error: 'Title and release year are required' });
-  }
-
-  const movie = await Movie.create({
-    // A blank date must be null — Sequelize stores "" as "Invalid date"
-    title, alternativeTitle, releaseYear, rating, watchedDate: watchedDate || null
-  });
+  const movie = await Movie.create({ title, alternativeTitle, releaseYear, rating, watchedDate });
 
   if (genreIds) await movie.setGenres(genreIds);
   if (countryIds) await movie.setCountries(countryIds);
@@ -65,17 +61,13 @@ router.post('/', async (req, res) => {
 });
 
 // Update movie
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(schemas.movie), async (req, res) => {
   const { title, alternativeTitle, releaseYear, rating, watchedDate, genreIds, countryIds, directorIds, actorIds } = req.body;
-
-  if (!String(title ?? '').trim() || !releaseYear) {
-    return res.status(400).json({ error: 'Title and release year are required' });
-  }
 
   const movie = await Movie.findByPk(req.params.id);
   if (!movie) return res.status(404).json({ error: 'Movie not found' });
 
-  await movie.update({ title, alternativeTitle, releaseYear, rating, watchedDate: watchedDate || null });
+  await movie.update({ title, alternativeTitle, releaseYear, rating, watchedDate });
 
   if (genreIds) await movie.setGenres(genreIds);
   if (countryIds) await movie.setCountries(countryIds);
@@ -100,7 +92,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Upload/replace poster
-router.post('/:id/poster', async (req, res) => {
+router.post('/:id/poster', async (req, res, next) => {
   // The id becomes a filename — reject anything non-numeric before touching the filesystem
   if (!/^\d+$/.test(req.params.id)) return res.status(404).json({ error: 'Movie not found' });
 
@@ -118,8 +110,9 @@ router.post('/:id/poster', async (req, res) => {
     }
     if (!req.file) return res.status(400).json({ error: 'No image uploaded' });
     // Purge any old poster stored under a different extension
-    deletePoster(req.params.id, MIME_EXTENSIONS[req.file.mimetype]);
-    res.json(withPosterUrl(movie));
+    const ext = MIME_EXTENSIONS[req.file.mimetype];
+    deletePoster(req.params.id, ext);
+    recordPoster(movie, ext).then(() => res.json(withPosterUrl(movie))).catch(next);
   });
 });
 
@@ -140,6 +133,7 @@ router.post('/:id/poster/tmdb', async (req, res) => {
     fs.writeFileSync(path.join(POSTERS_DIR, `${req.params.id}.${ext}`), buffer);
     // Purge any old poster stored under a different extension
     deletePoster(req.params.id, ext);
+    await recordPoster(movie, ext);
     res.json(withPosterUrl(movie));
   } catch (error) {
     if (error.badRequest) return res.status(400).json({ error: error.message });
@@ -153,6 +147,7 @@ router.delete('/:id/poster', async (req, res) => {
   if (!movie) return res.status(404).json({ error: 'Movie not found' });
 
   deletePoster(req.params.id);
+  await clearPoster(movie);
   res.status(204).send();
 });
 

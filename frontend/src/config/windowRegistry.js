@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import CountriesIcon from '../assets/icons/countries.png?icon';
 import DirectorsIcon from '../assets/icons/directors.png?icon';
 import ActorsIcon from '../assets/icons/actors.png?icon';
@@ -15,28 +16,112 @@ import HelpIcon from '../assets/icons/help.png?icon';
 import DesktopIconsIcon from '../assets/icons/desktop-icons.png?icon';
 import { iconSrc } from './icons';
 
+// Everything App.jsx needs to run a window: `component` is what it renders, and
+// `focusSelector` is a field to put the cursor in whenever the window is focused.
+// Props only one window takes go in windowProps in App.jsx.
 export const WINDOWS = [
-  { id: 'movies', title: 'Movies Collection', icon: iconSrc(MoviesIcon) },
-  { id: 'genres', title: 'Genres Manager', icon: iconSrc(GenresIcon) },
-  { id: 'directors', title: 'Directors Manager', icon: iconSrc(DirectorsIcon) },
-  { id: 'actors', title: 'Actors Manager', icon: iconSrc(ActorsIcon) },
-  { id: 'countries', title: 'Countries Manager', icon: iconSrc(CountriesIcon) },
-  { id: 'stats', title: 'Statistics', icon: iconSrc(StatsIcon) },
-  { id: 'backup', title: 'Backup & Restore', icon: iconSrc(BackupIcon) },
-  { id: 'wallpaper', title: 'Wallpaper Settings', icon: iconSrc(WallpaperIcon) },
-  { id: 'desktopIcons', title: 'Desktop Icons', icon: iconSrc(DesktopIconsIcon) },
-  { id: 'calculator', title: 'Calculator', icon: iconSrc(CalculatorIcon) },
-  { id: 'calendar', title: 'Calendar', icon: iconSrc(CalendarIcon) },
-  { id: 'clock', title: 'Clock', icon: iconSrc(ClockIcon) },
-  { id: 'notepad', title: 'Notepad', icon: iconSrc(notepadIcon) },
-  { id: 'pairs', title: 'Poster Pairs', icon: iconSrc(PairsIcon) },
-  { id: 'help', title: 'FilmTrack Help', icon: iconSrc(HelpIcon) },
+  {
+    id: 'movies',
+    title: 'Movies Collection',
+    icon: iconSrc(MoviesIcon),
+    component: lazy(() => import('../components/movies/MoviesWindow')),
+  },
+  {
+    id: 'genres',
+    title: 'Genres Manager',
+    icon: iconSrc(GenresIcon),
+    component: lazy(() => import('../components/genres/GenreWindow')),
+    focusSelector: '#genreName',
+  },
+  {
+    id: 'directors',
+    title: 'Directors Manager',
+    icon: iconSrc(DirectorsIcon),
+    component: lazy(() => import('../components/directors/DirectorWindow')),
+    focusSelector: '#directorName',
+  },
+  {
+    id: 'actors',
+    title: 'Actors Manager',
+    icon: iconSrc(ActorsIcon),
+    component: lazy(() => import('../components/actors/ActorWindow')),
+    focusSelector: '#actorName',
+  },
+  {
+    id: 'countries',
+    title: 'Countries Manager',
+    icon: iconSrc(CountriesIcon),
+    component: lazy(() => import('../components/countries/CountryWindow')),
+    focusSelector: '[id^="countryName-"]',
+  },
+  {
+    id: 'stats',
+    title: 'Statistics',
+    icon: iconSrc(StatsIcon),
+    component: lazy(() => import('../components/stats/StatsWindow')),
+  },
+  {
+    id: 'backup',
+    title: 'Backup & Restore',
+    icon: iconSrc(BackupIcon),
+    component: lazy(() => import('../components/backup/BackupWindow')),
+  },
+  {
+    id: 'wallpaper',
+    title: 'Wallpaper Settings',
+    icon: iconSrc(WallpaperIcon),
+    component: lazy(() => import('../components/wallpapers/WallpaperWindow')),
+    focusSelector: '.wallpaper-thumb.selected',
+  },
+  {
+    id: 'desktopIcons',
+    title: 'Desktop Icons',
+    icon: iconSrc(DesktopIconsIcon),
+    component: lazy(() => import('../components/desktop/DesktopIconsWindow')),
+  },
+  {
+    id: 'calculator',
+    title: 'Calculator',
+    icon: iconSrc(CalculatorIcon),
+    component: lazy(() => import('../components/accessories/Calculator')),
+  },
+  {
+    id: 'calendar',
+    title: 'Calendar',
+    icon: iconSrc(CalendarIcon),
+    component: lazy(() => import('../components/accessories/Calendar')),
+  },
+  {
+    id: 'clock',
+    title: 'Clock',
+    icon: iconSrc(ClockIcon),
+    component: lazy(() => import('../components/accessories/Clock')),
+  },
+  {
+    id: 'notepad',
+    title: 'Notepad',
+    icon: iconSrc(notepadIcon),
+    component: lazy(() => import('../components/accessories/Notepad')),
+  },
+  {
+    id: 'pairs',
+    title: 'Poster Pairs',
+    icon: iconSrc(PairsIcon),
+    component: lazy(() => import('../components/games/PairsGame')),
+  },
+  {
+    id: 'help',
+    title: 'FilmTrack Help',
+    icon: iconSrc(HelpIcon),
+    component: lazy(() => import('../components/help/HelpWindow')),
+  },
   // Opened from the Movies Collection poster column — needs a target movie,
   // so it's excluded from the start menu (startMenu: false).
   {
     id: 'posterViewer',
     title: 'Poster Viewer',
     icon: iconSrc(MoviesIcon),
+    component: lazy(() => import('../components/movies/PosterViewerWindow')),
     startMenu: false,
   },
 ];

@@ -6,6 +6,8 @@ const Actor = sequelize.define('Actor', {
     type: DataTypes.STRING,
     allowNull: false
   }
+}, {
+  indexes: [{ name: 'actors_name_unique', unique: true, fields: [{ name: 'name', collate: 'NOCASE' }] }]
 });
 
 module.exports = Actor;

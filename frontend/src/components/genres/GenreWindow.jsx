@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import GenreForm from './GenreForm';
 import GenreList from './GenreList';
 import WindowIcon from '../ui/WindowIcon';
+import api from '../../services/api.js';
 
 const GenreWindow = ({
   isOpen,
@@ -31,15 +32,8 @@ const GenreWindow = ({
 
   const handleGenreDelete = async (genreId) => {
     try {
-      const response = await fetch(
-        `/api/genres/${genreId}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (response.ok) {
-        onGenreAdded(); // Refresh the list
-      }
+      await api.del(`/genres/${genreId}`);
+      onGenreAdded(); // Refresh the list
     } catch (error) {
       console.error('Error deleting genre:', error);
     }

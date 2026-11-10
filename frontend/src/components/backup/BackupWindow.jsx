@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import Draggable from 'react-draggable';
-import API_BASE_URL from '../../config/api.js';
+import api from '../../services/api.js';
 import WindowIcon from '../ui/WindowIcon';
 
 const BackupWindow = ({
@@ -30,12 +30,7 @@ const BackupWindow = ({
   const handleBackup = async () => {
     try {
       setMessage('Starting backup...');
-      const response = await fetch(`${API_BASE_URL}/database/backup`);
-      if (!response.ok) {
-        const body = await response.json().catch(() => null);
-        throw new Error(body?.error || 'Backup failed');
-      }
-      const blob = await response.blob();
+      const blob = await api.blob('/database/backup', 'Backup failed');
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -69,12 +64,7 @@ const BackupWindow = ({
 
     try {
       setMessage('Restoring database... This may take a moment.');
-      const response = await fetch(`${API_BASE_URL}/database/restore`, {
-        method: 'POST',
-        body: formData,
-      });
-      const body = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(body?.error || 'Restore failed');
+      const body = await api.post('/database/restore', formData, 'Restore failed');
       setMessage(
         `☑️ ${body.message} Your previous data was saved as ${body.previousData}. ` +
           'Reload the page to see the restored data.',
@@ -87,10 +77,7 @@ const BackupWindow = ({
   const handleCsvExport = async () => {
     try {
       setMessage('Generating CSV export...');
-      const response = await fetch(`${API_BASE_URL}/movies`);
-      if (!response.ok) throw new Error('Failed to fetch movies');
-
-      const movies = await response.json();
+      const movies = await api.get('/movies', 'Failed to fetch movies');
       movies.sort((a, b) => a.title.localeCompare(b.title));
       const selectedColumns = Object.keys(csvColumns).filter(
         (col) => csvColumns[col],

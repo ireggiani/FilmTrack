@@ -3,7 +3,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const multer = require('multer');
 const path = require('path');
-const { ValidationError, UniqueConstraintError } = require('sequelize');
+const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
 // Builds the Express app without starting it, so tests can drive it with supertest
 function createApp() {
@@ -54,8 +54,15 @@ function createApp() {
     if (err instanceof UniqueConstraintError) {
       status = 409;
       message = 'That name is already in use';
+    } else if (err instanceof ForeignKeyConstraintError) {
+      // e.g. a movie linked to a genre id that no longer exists
+      status = 400;
+      message = 'One of the linked items no longer exists';
     } else if (err instanceof ValidationError) {
       status = 400;
+    } else if (err.type === 'entity.too.large') {
+      // express.json's 100 KB limit, which a long note can reach
+      message = 'That is too large to save (the limit is 100 KB)';
     } else if (err instanceof multer.MulterError) {
       status = 400;
       if (err.code === 'LIMIT_FILE_SIZE') message = 'The file is too large';

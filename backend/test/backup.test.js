@@ -110,3 +110,29 @@ test('restore accepts an older backup that lacks newer columns', async () => {
   const views = (await request(app).get('/api/views')).body;
   assert.equal(views.find((v) => v.name === 'Old view').isDefault, false);
 });
+
+test('restore keeps showing posters, even from a backup without poster columns', async () => {
+  const sharp = require('sharp');
+  const movie = (await request(app).post('/api/movies').send({ title: 'Mirror', releaseYear: 1975 })).body;
+  const png = await sharp({ create: { width: 4, height: 6, channels: 3, background: '#00a' } }).png().toBuffer();
+  const { posterUrl } = (await request(app).post(`/api/movies/${movie.id}/poster`).attach('poster', png, 'm.png').expect(200)).body;
+
+  const backup = path.join(dataDir, 'no-poster-columns.sqlite');
+  fs.writeFileSync(backup, await downloadBackup());
+  const sqlite3 = require('sqlite3');
+  await new Promise((resolve, reject) => {
+    const db = new sqlite3.Database(backup);
+    db.exec(`ALTER TABLE Movies DROP COLUMN posterExt; ALTER TABLE Movies DROP COLUMN posterVersion;
+      PRAGMA user_version = 3`, (err) => db.close(() => (err ? reject(err) : resolve())));
+  });
+
+  await request(app).post('/api/database/restore').attach('db-file', backup).expect(200);
+  assert.equal((await request(app).get(`/api/movies/${movie.id}`)).body.posterUrl, posterUrl);
+
+  // The poster was deleted after the backup: the restored row can't claim it
+  const current = path.join(dataDir, 'current.sqlite');
+  fs.writeFileSync(current, await downloadBackup());
+  await request(app).delete(`/api/movies/${movie.id}/poster`).expect(204);
+  await request(app).post('/api/database/restore').attach('db-file', current).expect(200);
+  assert.equal((await request(app).get(`/api/movies/${movie.id}`)).body.posterUrl, null);
+});

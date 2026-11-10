@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import API_BASE_URL from '../../config/api.js';
+import api from '../../services/api.js';
 
 // Sort order with no view applied
 export const DEFAULT_SORT = { key: "title", direction: "ascending" };
@@ -7,7 +7,10 @@ export const DEFAULT_SORT = { key: "title", direction: "ascending" };
 export const useMovies = (refresh, onMoviesLoaded) => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Loading failed: the table can't be shown at all
   const [error, setError] = useState(null);
+  // A save, delete or poster change was refused: shown in a dialog over the table
+  const [saveError, setSaveError] = useState(null);
   const [sortConfig, setSortConfig] = useState(DEFAULT_SORT);
   const [searchTerm, setSearchTerm] = useState("");
   const [minYear, setMinYear] = useState("");
@@ -76,9 +79,7 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const fetchMovies = useCallback(async () => {
     try {
       setError(null);
-      const response = await fetch(`${API_BASE_URL}/movies`);
-      if (!response.ok) throw new Error('Failed to fetch movies');
-      const data = await response.json();
+      const data = await api.get('/movies', 'Failed to fetch movies');
       setMovies(data);
       onMoviesLoaded?.(data);
     } catch (error) {
@@ -91,18 +92,17 @@ export const useMovies = (refresh, onMoviesLoaded) => {
 
   const fetchReferenceData = useCallback(async () => {
     try {
-      const [genresRes, countriesRes, directorsRes, actorsRes] =
-        await Promise.all([
-          fetch(`${API_BASE_URL}/genres`),
-          fetch(`${API_BASE_URL}/countries`),
-          fetch(`${API_BASE_URL}/directors`),
-          fetch(`${API_BASE_URL}/actors`),
-        ]);
+      const [genres, countries, directors, actors] = await Promise.all([
+        api.get('/genres'),
+        api.get('/countries'),
+        api.get('/directors'),
+        api.get('/actors'),
+      ]);
 
-      setGenres(await genresRes.json());
-      setCountries(await countriesRes.json());
-      setDirectors(await directorsRes.json());
-      setActors(await actorsRes.json());
+      setGenres(genres);
+      setCountries(countries);
+      setDirectors(directors);
+      setActors(actors);
     } catch (error) {
       console.error("Error fetching reference data:", error);
       setError('Failed to load reference data');
@@ -118,64 +118,38 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     if (!newMovie.title.trim() || !newMovie.releaseYear) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/movies`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newMovie),
-      });
-
-      if (!response.ok) throw new Error('Failed to add movie');
-      const addedMovie = await response.json();
+      const addedMovie = await api.post('/movies', newMovie, 'Failed to add movie');
       setMovies((prevMovies) => [...prevMovies, addedMovie]);
-      setError(null);
       return addedMovie;
     } catch (error) {
       console.error("Error adding movie:", error);
-      setError(error.message);
+      setSaveError(error.message);
       throw error;
     }
   }, []);
 
   const handleUpdateMovie = useCallback(async (movieId, movieData) => {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/movies/${movieId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(movieData),
-        }
-      );
-
-      if (!response.ok) throw new Error('Failed to update movie');
-      const updatedMovieFromServer = await response.json();
+      const updatedMovieFromServer = await api.put(`/movies/${movieId}`, movieData, 'Failed to update movie');
       setMovies((prevMovies) =>
         prevMovies.map((m) =>
           m.id === movieId ? updatedMovieFromServer : m
         )
       );
-      setError(null);
     } catch (error) {
       console.error("Error updating movie:", error);
-      setError(error.message);
+      setSaveError(error.message);
       throw error;
     }
   }, []);
 
   const handleDeleteMovie = useCallback(async (movieId) => {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/movies/${movieId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) throw new Error('Failed to delete movie');
+      await api.del(`/movies/${movieId}`, 'Failed to delete movie');
       setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movieId));
-      setError(null);
     } catch (error) {
       console.error("Error deleting movie:", error);
-      setError(error.message);
+      setSaveError(error.message);
       throw error;
     }
   }, []);
@@ -184,67 +158,39 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     try {
       const formData = new FormData();
       formData.append("poster", file);
-      const response = await fetch(`${API_BASE_URL}/movies/${movieId}/poster`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => null);
-        throw new Error(body?.error || "Failed to upload poster");
-      }
-      const updatedMovieFromServer = await response.json();
+      const updatedMovieFromServer = await api.post(`/movies/${movieId}/poster`, formData, 'Failed to upload poster');
       setMovies((prevMovies) =>
         prevMovies.map((m) => (m.id === movieId ? updatedMovieFromServer : m))
       );
-      setError(null);
     } catch (error) {
       console.error("Error uploading poster:", error);
-      setError(error.message);
+      setSaveError(error.message);
       throw error;
     }
   }, []);
 
   const handleSetPosterFromTmdb = useCallback(async (movieId, posterPath) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/movies/${movieId}/poster/tmdb`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ posterPath }),
-      });
-
-      if (!response.ok) {
-        const body = await response.json().catch(() => null);
-        throw new Error(body?.error || "Failed to set poster from TMDB");
-      }
-      const updatedMovieFromServer = await response.json();
+      const updatedMovieFromServer = await api.post(`/movies/${movieId}/poster/tmdb`, { posterPath }, 'Failed to set poster from TMDB');
       setMovies((prevMovies) =>
         prevMovies.map((m) => (m.id === movieId ? updatedMovieFromServer : m))
       );
-      setError(null);
     } catch (error) {
       console.error("Error setting poster from TMDB:", error);
-      setError(error.message);
+      setSaveError(error.message);
       throw error;
     }
   }, []);
 
   const handleDeletePoster = useCallback(async (movieId) => {
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/movies/${movieId}/poster`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) throw new Error('Failed to delete poster');
+      await api.del(`/movies/${movieId}/poster`, 'Failed to delete poster');
       setMovies((prevMovies) =>
         prevMovies.map((m) => (m.id === movieId ? { ...m, posterUrl: null } : m))
       );
-      setError(null);
     } catch (error) {
       console.error("Error deleting poster:", error);
-      setError(error.message);
+      setSaveError(error.message);
       throw error;
     }
   }, []);
@@ -292,10 +238,10 @@ export const useMovies = (refresh, onMoviesLoaded) => {
         return false;
       }
 
-      if (minRating && movie.rating < parseFloat(minRating)) {
+      if (minRating && movie.rating < Number(minRating)) {
         return false;
       }
-      if (maxRating && movie.rating > parseFloat(maxRating)) {
+      if (maxRating && movie.rating > Number(maxRating)) {
         return false;
       }
 
@@ -338,13 +284,12 @@ export const useMovies = (refresh, onMoviesLoaded) => {
         if (aValue === null || aValue === undefined) aValue = "";
         if (bValue === null || bValue === undefined) bValue = "";
 
-        // rating and releaseYear are stored as strings in the DB but must sort numerically.
-        const NUMERIC_SORT_KEYS = new Set(['rating', 'releaseYear', 'id']);
         let comparison;
-        if (NUMERIC_SORT_KEYS.has(sortConfig.key)) {
-          const aNum = parseFloat(String(aValue).replace(',', '.'));
-          const bNum = parseFloat(String(bValue).replace(',', '.'));
-          comparison = (isFinite(aNum) ? aNum : -Infinity) - (isFinite(bNum) ? bNum : -Infinity);
+        if (typeof aValue === "number" || typeof bValue === "number") {
+          // A blank (a movie with no rating) sorts before any number
+          const aNum = aValue === "" ? -Infinity : aValue;
+          const bNum = bValue === "" ? -Infinity : bValue;
+          comparison = aNum === bNum ? 0 : aNum - bNum;
         } else {
           comparison = String(aValue).localeCompare(String(bValue));
         }
@@ -380,6 +325,8 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     movies,
     loading,
     error,
+    saveError,
+    clearSaveError: () => setSaveError(null),
     sortConfig,
     searchTerm,
     minYear,

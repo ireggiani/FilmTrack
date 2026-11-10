@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import api from "../../services/api.js";
 import "../../styles/genres/_genre-form.scss";
 import "../../styles/genres/_genre-list.scss";
 
@@ -44,30 +45,24 @@ const GenreForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `/api/genres/${editingGenre.id}`
-        : "/api/genres";
+        ? `/genres/${editingGenre.id}`
+        : "/genres";
 
-      const response = await fetch(url, {
-        method: isEditing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: trimmedName }),
-      });
-
-      if (response.ok) {
-        const genre = await response.json();
-        setName("");
-        if (isEditing) {
-          onEditComplete?.();
-        } else {
-          onGenreAdded?.(genre);
-          requestAnimationFrame(() => inputRef.current?.focus());
-        }
+      const save = isEditing ? api.put : api.post;
+      const genre = await save(url, { name: trimmedName }, "Could not save the genre");
+      setName("");
+      if (isEditing) {
+        onEditComplete?.();
+      } else {
+        onGenreAdded?.(genre);
+        requestAnimationFrame(() => inputRef.current?.focus());
       }
     } catch (error) {
       console.error(
         `Error ${isEditing ? "updating" : "creating"} genre:`,
         error
       );
+      setError(error.message);
     } finally {
       setLoading(false);
     }

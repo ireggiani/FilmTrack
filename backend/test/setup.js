@@ -10,9 +10,10 @@ process.env.FILMTRACK_DATA_DIR = dataDir;
 
 const { sequelize } = require('../models');
 const { createApp } = require('../app');
+const { prepareDatabase } = require('../utils/prepareDatabase');
 
 async function setup() {
-  await sequelize.sync();
+  await prepareDatabase();
   return createApp();
 }
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import LedSwitch from '../ui/LedSwitch';
 import FilterInput from '../ui/FilterInput';
 import PillItem from '../ui/PillItem';
+import api from '../../services/api.js';
 
 const DirectorList = ({
   refresh,
@@ -17,8 +18,7 @@ const DirectorList = ({
 
   const fetchDirectors = useCallback(async () => {
     try {
-      const response = await fetch('/api/directors');
-      const data = await response.json();
+      const data = await api.get('/directors');
       setDirectors(data);
       onDirectorsLoaded?.(data);
     } catch (error) {

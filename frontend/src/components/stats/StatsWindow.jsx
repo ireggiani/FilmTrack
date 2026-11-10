@@ -10,7 +10,7 @@ import {
 import { useStats } from './useStats';
 import ChartCard from './ChartCard';
 import WindowIcon from '../ui/WindowIcon';
-import API_BASE_URL from '../../config/api.js';
+import api from '../../services/api.js';
 import '../../styles/windows/_stats.scss';
 
 const PALETTE = [
@@ -60,8 +60,7 @@ const StatsWindow = ({ isOpen, isMinimized, onClose, onMinimize, onFocus, zIndex
     if (!isOpen) return;
     setLoading(true);
     setFetchError(null);
-    fetch(`${API_BASE_URL}/movies`)
-      .then(r => { if (!r.ok) throw new Error('Failed to load'); return r.json(); })
+    api.get('/movies', 'Failed to load')
       .then(data => { setMovies(data); setLoading(false); })
       .catch(err => { setFetchError(err.message); setLoading(false); });
   }, [isOpen]);

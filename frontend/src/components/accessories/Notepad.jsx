@@ -4,7 +4,9 @@ import Draggable from 'react-draggable';
 import WindowIcon from '../ui/WindowIcon';
 import ConfirmDialog from '../ui/ConfirmDialog';
 import NotepadContextMenu from './NotepadContextMenu';
-import API_BASE_URL from '../../config/api.js';
+import api, { ApiError } from '../../services/api.js';
+
+const NO_SERVER_MESSAGE = "FilmTrack's server didn't answer. It may have stopped.";
 
 const FORE_COLORS = [
   { name: 'Black', value: '#1a1a1a' },
@@ -54,6 +56,7 @@ const Notepad = ({
   // Action waiting on the Save / Don't Save / Cancel prompt
   const [pendingAction, setPendingAction] = useState(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   const [editorMenu, setEditorMenu] = useState(null); // { x, y } while open
   const [clipboardBlocked, setClipboardBlocked] = useState(false);
   // The editor selection when the context menu opened. Focus moves into the
@@ -107,8 +110,7 @@ const Notepad = ({
 
   const loadNotes = async (selectFirst = false) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/notes`);
-      const data = await response.json();
+      const data = await api.get('/notes');
       setNotes(data);
       if (selectFirst) {
         if (data.length > 0) {
@@ -136,18 +138,9 @@ const Notepad = ({
     const content = editorRef.current.innerHTML;
     try {
       if (currentNote) {
-        await fetch(`${API_BASE_URL}/notes/${currentNote.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content }),
-        });
+        await api.put(`/notes/${currentNote.id}`, { title, content }, NO_SERVER_MESSAGE);
       } else {
-        const response = await fetch(`${API_BASE_URL}/notes`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, content }),
-        });
-        const newNoteFromServer = await response.json();
+        const newNoteFromServer = await api.post('/notes', { title, content }, NO_SERVER_MESSAGE);
         setCurrentNote(newNoteFromServer);
       }
       setIsDirty(false);
@@ -155,6 +148,8 @@ const Notepad = ({
       return true;
     } catch (error) {
       console.error('Error saving note:', error);
+      // Anything else is the browser's own "Failed to fetch"
+      setSaveError(error instanceof ApiError ? error.message : NO_SERVER_MESSAGE);
       return false;
     }
   };
@@ -222,9 +217,7 @@ const Notepad = ({
   const confirmDelete = async () => {
     setConfirmingDelete(false);
     try {
-      await fetch(`${API_BASE_URL}/notes/${currentNote.id}`, {
-        method: 'DELETE',
-      });
+      await api.del(`/notes/${currentNote.id}`);
       loadNotes(true);
     } catch (error) {
       console.error('Error deleting note:', error);
@@ -597,6 +590,19 @@ const Notepad = ({
             onCancel={() => setPendingAction(null)}
           >
             Your changes will be lost if you don&apos;t save them.
+          </ConfirmDialog>
+        )}
+        {saveError && (
+          <ConfirmDialog
+            title="Notepad"
+            heading="The note couldn't be saved"
+            icon="info"
+            cancelLabel={null}
+            onConfirm={() => setSaveError(null)}
+            onCancel={() => setSaveError(null)}
+          >
+            {saveError} Your text is still here, as long as this window stays
+            open.
           </ConfirmDialog>
         )}
         {editorMenu && (

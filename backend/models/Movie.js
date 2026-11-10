@@ -15,11 +15,19 @@ const Movie = sequelize.define('Movie', {
     allowNull: false
   },
   rating: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: true
   },
   watchedDate: {
     type: DataTypes.DATEONLY,
+    allowNull: true
+  },
+  posterExt: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  posterVersion: {
+    type: DataTypes.INTEGER,
     allowNull: true
   }
 });

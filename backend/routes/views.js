@@ -1,6 +1,8 @@
 const express = require('express');
 const { UniqueConstraintError } = require('sequelize');
 const { sequelize, View } = require('../models');
+const { validate } = require('../validation/validate');
+const schemas = require('../validation/schemas');
 const router = express.Router();
 
 // Get all views
@@ -10,13 +12,13 @@ router.get('/', async (req, res) => {
 });
 
 // Create a new view
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.view.create), async (req, res) => {
   const view = await View.create(req.body);
   res.status(201).json(view);
 });
 
 // Update a view. Starring one (isDefault: true) unstars the rest.
-router.put('/:id', async (req, res) => {
+router.put('/:id', validate(schemas.view.update), async (req, res) => {
   const view = await sequelize.transaction(async (transaction) => {
     const found = await View.findByPk(req.params.id, { transaction });
     if (!found) return null;

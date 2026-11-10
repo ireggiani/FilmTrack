@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { DataTypes } = require('sequelize');
 const { DATA_DIR, DB_PATH } = require('./config/paths');
 
 // Data used to live inside backend/. If it's still there and the data folder has
@@ -13,25 +12,11 @@ if (!fs.existsSync(DB_PATH) && fs.existsSync(LEGACY_DB)) {
 }
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-const { sequelize } = require('./models');
 const { createApp } = require('./app');
 const { autoBackup } = require('./utils/backup');
+const { prepareDatabase } = require('./utils/prepareDatabase');
 
 const PORT = process.env.PORT || 5000;
-
-// sync() only creates missing tables, so columns added to a model after its
-// table exists (or missing from a restored older backup) are added here
-const addMissingColumns = async () => {
-  const queryInterface = sequelize.getQueryInterface();
-  const viewColumns = await queryInterface.describeTable('views');
-  if (!viewColumns.isDefault) {
-    await queryInterface.addColumn('views', 'isDefault', {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    });
-  }
-};
 
 // A failed backup shouldn't keep the app from starting
 const runAutoBackup = async () => {
@@ -44,8 +29,7 @@ const runAutoBackup = async () => {
 };
 
 // Initialize database
-sequelize.sync({ force: false })
-  .then(addMissingColumns)
+prepareDatabase()
   .then(runAutoBackup)
   .then(() => {
     console.log('Database synced');
@@ -54,5 +38,6 @@ sequelize.sync({ force: false })
     });
   })
   .catch(err => {
-    console.error('Database sync failed:', err);
+    console.error('Database setup failed, not starting:', err);
+    process.exitCode = 1;
   });

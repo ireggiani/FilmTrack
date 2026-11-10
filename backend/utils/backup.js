@@ -1,8 +1,9 @@
 const path = require('path');
 const fs = require('fs');
-const sqlite3 = require('sqlite3');
 const sequelize = require('../config/database');
 const { DB_PATH, BACKUPS_DIR } = require('../config/paths');
+const { sqlite3, open, all, exec, close, quote, tableColumns } = require('./sqlite');
+const { LATEST_VERSION, schemaVersion, migrateFile } = require('./migrate');
 
 // Tables a file must have to count as a FilmTrack backup. Views and notes are
 // left out on purpose: backups made before those features existed lack them.
@@ -12,20 +13,6 @@ const REQUIRED_TABLES = [
 ];
 
 const AUTO_BACKUPS_KEPT = 14;
-
-// Small promise wrappers over the raw sqlite3 driver
-const open = (file, mode) => new Promise((resolve, reject) => {
-  const db = new sqlite3.Database(file, mode, (err) => (err ? reject(err) : resolve(db)));
-});
-const all = (db, sql, params = []) => new Promise((resolve, reject) => {
-  db.all(sql, params, (err, rows) => (err ? reject(err) : resolve(rows)));
-});
-const exec = (db, sql) => new Promise((resolve, reject) => {
-  db.exec(sql, (err) => (err ? reject(err) : resolve()));
-});
-const close = (db) => new Promise((resolve) => db.close(() => resolve()));
-
-const quote = (name) => `"${name.replace(/"/g, '""')}"`;
 
 const badRequest = (message) => Object.assign(new Error(message), { status: 400 });
 
@@ -69,6 +56,10 @@ async function validateBackup(file) {
     const [{ integrity_check: result }] = await all(db, 'PRAGMA integrity_check');
     if (result !== 'ok') throw badRequest('The backup file is damaged.');
 
+    if (await schemaVersion(db) > LATEST_VERSION) {
+      throw badRequest('This backup was made by a newer version of FilmTrack.');
+    }
+
     const tables = new Set(
       (await all(db, "SELECT name FROM sqlite_master WHERE type = 'table'"))
         .map((t) => t.name.toLowerCase())
@@ -83,6 +74,17 @@ async function validateBackup(file) {
     throw badRequest("This file isn't a FilmTrack backup.");
   } finally {
     if (db) await close(db);
+  }
+}
+
+// Bring an uploaded backup up to the current schema, so old data is converted
+// the same way the live database was. Only touches the uploaded copy.
+async function upgradeBackup(file) {
+  try {
+    await migrateFile(file);
+  } catch (err) {
+    console.error('Backup upgrade failed:', err);
+    throw badRequest("This backup couldn't be upgraded to the current version.");
   }
 }
 
@@ -112,8 +114,8 @@ async function restoreFrom(file) {
         const srcTable = srcTables.get(table.toLowerCase());
         if (!srcTable) continue;
 
-        const liveCols = (await all(db, `PRAGMA main.table_info(${quote(table)})`)).map((c) => c.name);
-        const srcCols = new Set((await all(db, `PRAGMA src.table_info(${quote(srcTable)})`)).map((c) => c.name));
+        const liveCols = await tableColumns(db, table);
+        const srcCols = new Set(await tableColumns(db, srcTable, 'src'));
         const cols = liveCols.filter((c) => srcCols.has(c)).map(quote).join(', ');
 
         await exec(db, `DELETE FROM main.${quote(table)}`);
@@ -130,4 +132,4 @@ async function restoreFrom(file) {
   }
 }
 
-module.exports = { writeSnapshot, autoBackup, validateBackup, restoreFrom };
+module.exports = { writeSnapshot, autoBackup, validateBackup, upgradeBackup, restoreFrom };

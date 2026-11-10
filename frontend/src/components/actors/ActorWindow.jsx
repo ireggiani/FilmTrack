@@ -8,6 +8,7 @@ import "../../styles/actors/_actor-form.scss";
 import "../../styles/actors/_actor-list.scss";
 
 import WindowIcon from "../ui/WindowIcon";
+import api from "../../services/api.js";
 
 const ActorWindow = ({
   isOpen,
@@ -35,15 +36,8 @@ const ActorWindow = ({
 
   const handleActorDelete = async (actorId) => {
     try {
-      const response = await fetch(
-        `/api/actors/${actorId}`,
-        {
-          method: "DELETE",
-        },
-      );
-      if (response.ok) {
-        onActorAdded(); // Refresh the list
-      }
+      await api.del(`/actors/${actorId}`);
+      onActorAdded(); // Refresh the list
     } catch (error) {
       console.error("Error deleting actor:", error);
     }

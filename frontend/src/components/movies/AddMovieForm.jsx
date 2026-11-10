@@ -143,14 +143,21 @@ const AddMovieForm = ({
     const posterToAttach = stagedPoster;
     handleAddMovie(validatedMovie)
       .then((addedMovie) => {
-        if (!addedMovie || !posterToAttach) return undefined;
+        if (!addedMovie) return undefined;
+        // Cleared only once the server accepts the movie, so a refused one
+        // (e.g. a rating above 10) keeps what was typed
+        resetForm();
+        if (!posterToAttach) return undefined;
         return posterToAttach.file
           ? handleUploadPoster(addedMovie.id, posterToAttach.file)
           : handleSetPosterFromTmdb(addedMovie.id, posterToAttach.posterPath);
       })
       .catch(() => {
-        // error is surfaced through the useMovies error state
+        // error is shown in the Movies window's error dialog
       });
+  };
+
+  const resetForm = () => {
     setStagedPoster(null);
     setNewMovie({
       title: "",
@@ -163,7 +170,7 @@ const AddMovieForm = ({
       directorIds: [],
       actorIds: [],
     });
-    titleInputRef.current.focus();
+    titleInputRef.current?.focus();
   };
 
   const handleCountryKeyDown = (e) => {
@@ -202,9 +209,14 @@ const AddMovieForm = ({
         className="text-field"
       />
       <input
-        type="text"
+        type="number"
+        min="1"
+        max="10"
+        step="1"
         value={newMovie.rating}
-        onChange={(e) => handleNewMovieChange("rating", e.target.value)}
+        onChange={(e) =>
+          handleNewMovieChange("rating", parseInt(e.target.value) || "")
+        }
         placeholder="Rating"
         className="text-field"
       />

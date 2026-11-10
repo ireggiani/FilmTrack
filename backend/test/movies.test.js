@@ -75,3 +75,55 @@ test('uploaded posters are stored in the data folder', async () => {
 
   await request(app).get(`/posters/thumbs/${movie.id}.png`).expect(200);
 });
+
+test('the movie row keeps track of its poster', async () => {
+  const sharp = require('sharp');
+  const { Movie } = require('../models');
+
+  const movie = (await request(app).post('/api/movies').send({ title: 'Ikiru', releaseYear: 1952 })).body;
+  assert.equal(movie.posterUrl, null);
+  assert.ok(!('posterExt' in movie) && !('posterVersion' in movie));
+  const image = sharp({ create: { width: 4, height: 6, channels: 3, background: '#0a0' } });
+
+  await request(app).post(`/api/movies/${movie.id}/poster`).attach('poster', await image.clone().png().toBuffer(), 'a.png').expect(200);
+  const row = await Movie.findByPk(movie.id);
+  assert.equal(row.posterExt, 'png');
+  assert.ok(row.posterVersion > 0);
+  // A poster isn't an edit to the movie
+  assert.equal(row.updatedAt.toISOString(), movie.updatedAt);
+
+  const listed = (await request(app).get('/api/movies')).body.find((m) => m.id === movie.id);
+  assert.equal(listed.posterUrl, `/posters/${movie.id}.png?v=${row.posterVersion}`);
+  assert.equal(listed.posterThumbUrl, `/posters/thumbs/${movie.id}.png?v=${row.posterVersion}`);
+
+  // Replacing it with another format moves the row along with the file
+  const replaced = await request(app).post(`/api/movies/${movie.id}/poster`).attach('poster', await image.clone().webp().toBuffer(), 'a.webp').expect(200);
+  assert.match(replaced.body.posterUrl, new RegExp(`^/posters/${movie.id}\\.webp\\?v=`));
+
+  await request(app).delete(`/api/movies/${movie.id}/poster`).expect(204);
+  const cleared = (await request(app).get(`/api/movies/${movie.id}`)).body;
+  assert.equal(cleared.posterUrl, null);
+  assert.equal(cleared.posterThumbUrl, null);
+});
+
+test('reconciling makes the rows match the posters folder', async () => {
+  const fs = require('fs');
+  const path = require('path');
+  const { dataDir } = require('./setup');
+  const { Movie } = require('../models');
+  const { reconcilePosters } = require('../utils/posters');
+
+  const a = (await request(app).post('/api/movies').send({ title: 'Added by hand', releaseYear: 2001 })).body;
+  const b = (await request(app).post('/api/movies').send({ title: 'File gone', releaseYear: 2002 })).body;
+  const file = path.join(dataDir, 'posters', `${a.id}.jpg`);
+  fs.writeFileSync(file, 'image');
+  await Movie.update({ posterExt: 'jpg', posterVersion: 123 }, { where: { id: b.id }, silent: true });
+
+  await reconcilePosters();
+
+  const version = Math.round(fs.statSync(file).mtimeMs);
+  assert.equal((await request(app).get(`/api/movies/${a.id}`)).body.posterUrl, `/posters/${a.id}.jpg?v=${version}`);
+  assert.equal((await request(app).get(`/api/movies/${b.id}`)).body.posterUrl, null);
+  // A reconcile that finds nothing to fix isn't an edit either
+  assert.equal((await Movie.findByPk(a.id)).updatedAt.toISOString(), a.updatedAt);
+});

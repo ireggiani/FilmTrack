@@ -95,7 +95,7 @@ describe('BackupWindow', () => {
     expect(await screen.findByText('Starting backup...')).toBeInTheDocument();
 
     // Check that fetch was called
-    expect(global.fetch).toHaveBeenCalledWith('/api/database/backup');
+    expect(global.fetch).toHaveBeenCalledWith('/api/database/backup', { method: 'GET' });
 
     // Wait for the success message
     await waitFor(() => {

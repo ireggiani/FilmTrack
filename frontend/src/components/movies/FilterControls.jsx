@@ -132,7 +132,7 @@ const FilterControls = ({ ...props }) => {
         onKeyDown={clearOnEscape(props.setMinRating)}
         placeholder="Min Rating"
         className="text-field rating-input"
-        min="0"
+        min="1"
         max="10"
       />
       <input
@@ -142,7 +142,7 @@ const FilterControls = ({ ...props }) => {
         onKeyDown={clearOnEscape(props.setMaxRating)}
         placeholder="Max Rating"
         className="text-field rating-input"
-        min="0"
+        min="1"
         max="10"
       />
       <button

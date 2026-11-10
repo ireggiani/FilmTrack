@@ -6,6 +6,7 @@ import CountryList from './CountryList';
 import '../../styles/countries/_country-form.scss';
 import '../../styles/countries/_country-list.scss';
 import WindowIcon from '../ui/WindowIcon';
+import api from '../../services/api.js';
 
 const CountryWindow = ({
   isOpen,
@@ -33,15 +34,8 @@ const CountryWindow = ({
   const handleCountryDelete = useCallback(
     async (countryId) => {
       try {
-        const response = await fetch(
-          `/api/countries/${countryId}`,
-          {
-            method: 'DELETE',
-          },
-        );
-        if (response.ok) {
-          onCountryAdded(); // Refresh the list
-        }
+        await api.del(`/countries/${countryId}`);
+        onCountryAdded(); // Refresh the list
       } catch (error) {
         console.error('Error deleting country:', error);
       }

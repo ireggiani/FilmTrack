@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+import api from "../../services/api.js";
 
 const DirectorForm = ({
   onDirectorAdded,
@@ -43,30 +44,24 @@ const DirectorForm = ({
     setLoading(true);
     try {
       const url = isEditing
-        ? `/api/directors/${editingDirector.id}`
-        : "/api/directors";
+        ? `/directors/${editingDirector.id}`
+        : "/directors";
 
-      const response = await fetch(url, {
-        method: isEditing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: trimmedName }),
-      });
-
-      if (response.ok) {
-        const director = await response.json();
-        setName("");
-        if (isEditing) {
-          onEditComplete?.();
-        } else {
-          onDirectorAdded?.(director);
-          requestAnimationFrame(() => inputRef.current?.focus());
-        }
+      const save = isEditing ? api.put : api.post;
+      const director = await save(url, { name: trimmedName }, "Could not save the director");
+      setName("");
+      if (isEditing) {
+        onEditComplete?.();
+      } else {
+        onDirectorAdded?.(director);
+        requestAnimationFrame(() => inputRef.current?.focus());
       }
     } catch (error) {
       console.error(
         `Error ${isEditing ? "updating" : "creating"} director:`,
         error
       );
+      setError(`🚫 Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -84,6 +79,7 @@ const DirectorForm = ({
       <div className="form-group">
         <input
           ref={inputRef}
+          id="directorName"
           type="text"
           value={name}
           onChange={(e) => {

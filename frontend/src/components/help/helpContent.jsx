@@ -223,7 +223,7 @@ export const TOPICS = {
       <>
         <ol>
           <li>Type the <b>Movie title</b>. An <b>Alternative title</b> (e.g. the original-language title) is optional.</li>
-          <li>Enter the <b>Release year</b> and, optionally, your <b>Rating</b> (0–10).</li>
+          <li>Enter the <b>Release year</b> and, optionally, your <b>Rating</b>: a whole number from 1 to 10.</li>
           <li>
             Optionally, enter the date you watched it. Type <b>DD/MM</b> for
             this year (e.g. <code>14/10</code>) or <b>DD/MM/YYYY</b> for
@@ -237,7 +237,9 @@ export const TOPICS = {
         </ol>
         <p>
           The form then clears and puts the cursor back in the title box,
-          ready for the next movie.
+          ready for the next movie. If FilmTrack can&apos;t save the movie (for
+          example, the rating is above 10), a message says why and the
+          form keeps what you typed so you can fix it.
         </p>
         <Callout type="note">
           <b>Add Movie</b> stays greyed out until there is a title and a
@@ -289,7 +291,9 @@ export const TOPICS = {
         </Callout>
         <Callout type="note">
           If the date can&apos;t be read, its box turns red and the row stays in
-          edit mode until you fix or clear it.
+          edit mode until you fix or clear it. If a change can&apos;t be saved
+          (for example, a rating that isn&apos;t a whole number from 1 to 10), a
+          message says why and the row stays in edit mode.
         </Callout>
         <h2>Deleting</h2>
         <p>
@@ -339,7 +343,7 @@ export const TOPICS = {
             <tr><td>Title</td><td>Matches part of the title <i>or</i> the alternative title.</td></tr>
             <tr><td>Min / Max Year</td><td>Release year range. Fill in one or both.</td></tr>
             <tr><td>Genres, Directors, Countries</td><td>Shows movies with <i>any</i> of the selected entries.</td></tr>
-            <tr><td>Min / Max Rating</td><td>Rating range, 0–10.</td></tr>
+            <tr><td>Min / Max Rating</td><td>Rating range, 1–10.</td></tr>
           </tbody>
         </table>
         <h2>Clearing filters</h2>
@@ -464,14 +468,19 @@ export const TOPICS = {
         <h2>Adding</h2>
         <p>
           Type a name and press <Kbd>Enter</Kbd> or click the <b>Add</b>{" "}
-          button. Names that already exist are rejected, so you won&apos;t get
-          duplicates.
+          button. Names that already exist in that manager are rejected,
+          whatever their capitalization, so you won&apos;t get duplicates. The
+          managers are separate: someone who both acts and directs can be in
+          Actors and in Directors. Clicking a manager window puts the cursor
+          in its name box, ready to type.
         </p>
         <h2>Editing</h2>
         <p>
           Click a name in the list. The form switches to <b>Edit</b> mode;
           change the name and click <b>Update</b>, or{" "}
           <b>← Cancel Edit</b>. The new name shows on every movie that uses it.
+          If the name is already taken, the form tells you and keeps what you
+          typed.
         </p>
         <h2>Deleting</h2>
         <p>Click the <b>×</b> on a name and confirm.</p>
@@ -668,7 +677,8 @@ export const TOPICS = {
         <p>
           A <b>●</b> dot means there are unsaved changes. If you switch notes,
           start a new one or close Notepad, FilmTrack asks whether to save
-          them first.
+          them first. If a save fails, a message says why and the note stays
+          open with your text; keep the window open until it saves.
         </p>
         <h2>Formatting</h2>
         <p>

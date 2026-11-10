@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import GlassCheckbox from '../ui/GlassCheckbox';
 import FilterInput from '../ui/FilterInput';
 import PillItem from '../ui/PillItem';
+import api from '../../services/api.js';
 
 const CountryList = ({
   refresh,
@@ -17,8 +18,7 @@ const CountryList = ({
 
   const fetchCountries = useCallback(async () => {
     try {
-      const response = await fetch('/api/countries');
-      const data = await response.json();
+      const data = await api.get('/countries');
       setCountries(data);
       onCountriesLoaded?.(data);
     } catch (error) {
