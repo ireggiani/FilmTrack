@@ -5,6 +5,10 @@ const multer = require('multer');
 const path = require('path');
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require('sequelize');
 
+const { Genre, Country, Director, Actor } = require('./models');
+const { lookupRouter } = require('./routes/lookup');
+const schemas = require('./validation/schemas');
+
 // Builds the Express app without starting it, so tests can drive it with supertest
 function createApp() {
   const app = express();
@@ -16,10 +20,11 @@ function createApp() {
 
   // API Routes - must come before static files
   app.use('/api/movies', require('./routes/movies'));
-  app.use('/api/genres', require('./routes/genres'));
-  app.use('/api/countries', require('./routes/countries'));
-  app.use('/api/directors', require('./routes/directors'));
-  app.use('/api/actors', require('./routes/actors'));
+  app.use('/api/series', require('./routes/series'));
+  app.use('/api/genres', lookupRouter(Genre, schemas.genre, 'Genre'));
+  app.use('/api/countries', lookupRouter(Country, schemas.country, 'Country'));
+  app.use('/api/directors', lookupRouter(Director, schemas.director, 'Director'));
+  app.use('/api/actors', lookupRouter(Actor, schemas.actor, 'Actor'));
   app.use('/api/database', require('./routes/database'));
   app.use('/api/views', require('./routes/views'));
   app.use('/api/notes', require('./routes/notes'));
@@ -29,7 +34,7 @@ function createApp() {
     res.json({ message: 'Server is running!' });
   });
 
-  // Movie posters (originals + on-demand thumbnails)
+  // Movie and series posters (originals + on-demand thumbnails)
   app.use('/posters', require('./routes/posters'));
 
   // Serve static files from public directory with fallback to index.html for SPA
@@ -55,7 +60,7 @@ function createApp() {
       status = 409;
       message = 'That name is already in use';
     } else if (err instanceof ForeignKeyConstraintError) {
-      // e.g. a movie linked to a genre id that no longer exists
+      // e.g. a movie or series linked to a genre id that no longer exists
       status = 400;
       message = 'One of the linked items no longer exists';
     } else if (err instanceof ValidationError) {

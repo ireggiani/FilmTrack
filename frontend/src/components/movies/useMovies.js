@@ -1,14 +1,18 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import api from '../../services/api.js';
+import { updateList, useList } from '../../services/lists.js';
+import { MOVIE_KIND } from './kinds';
 
 // Sort order with no view applied
 export const DEFAULT_SORT = { key: "title", direction: "ascending" };
 
-export const useMovies = (refresh, onMoviesLoaded) => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  // Loading failed: the table can't be shown at all
-  const [error, setError] = useState(null);
+// `kind` picks the list: movies by default, or series (see kinds.js). The
+// list and the dropdowns' contents are shared with the other windows
+// (services/lists.js), so a genre renamed in its manager changes here too.
+export const useMovies = (kind = MOVIE_KIND) => {
+  const { list, path, noun } = kind;
+  const { items: movies, loading, error: loadError } = useList(list);
+  const setMovies = useCallback((change) => updateList(list, change), [list]);
   // A save, delete or poster change was refused: shown in a dialog over the table
   const [saveError, setSaveError] = useState(null);
   const [sortConfig, setSortConfig] = useState(DEFAULT_SORT);
@@ -22,10 +26,16 @@ export const useMovies = (refresh, onMoviesLoaded) => {
   const [countryTerm, setCountryTerm] = useState([]);
 
   // Reference data
-  const [genres, setGenres] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [directors, setDirectors] = useState([]);
-  const [actors, setActors] = useState([]);
+  const { items: genres, error: genresError } = useList('genres');
+  const { items: countries, error: countriesError } = useList('countries');
+  const { items: directors, error: directorsError } = useList('directors');
+  const { items: actors, error: actorsError } = useList('actors');
+  // Loading failed: the table can't be shown at all
+  const error =
+    loadError ??
+    (genresError || countriesError || directorsError || actorsError
+      ? 'Failed to load reference data'
+      : null);
 
   const formatDate = useCallback((dateString) => {
     if (!dateString || !dateString.includes("-")) return "—";
@@ -76,49 +86,11 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     }));
   }, [countries]);
 
-  const fetchMovies = useCallback(async () => {
-    try {
-      setError(null);
-      const data = await api.get('/movies', 'Failed to fetch movies');
-      setMovies(data);
-      onMoviesLoaded?.(data);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [onMoviesLoaded]);
-
-  const fetchReferenceData = useCallback(async () => {
-    try {
-      const [genres, countries, directors, actors] = await Promise.all([
-        api.get('/genres'),
-        api.get('/countries'),
-        api.get('/directors'),
-        api.get('/actors'),
-      ]);
-
-      setGenres(genres);
-      setCountries(countries);
-      setDirectors(directors);
-      setActors(actors);
-    } catch (error) {
-      console.error("Error fetching reference data:", error);
-      setError('Failed to load reference data');
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchMovies();
-    fetchReferenceData();
-  }, [refresh, fetchMovies, fetchReferenceData]);
-
   const handleAddMovie = useCallback(async (newMovie) => {
     if (!newMovie.title.trim() || !newMovie.releaseYear) return;
 
     try {
-      const addedMovie = await api.post('/movies', newMovie, 'Failed to add movie');
+      const addedMovie = await api.post(path, newMovie, `Failed to add ${noun}`);
       setMovies((prevMovies) => [...prevMovies, addedMovie]);
       return addedMovie;
     } catch (error) {
@@ -126,11 +98,11 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       setSaveError(error.message);
       throw error;
     }
-  }, []);
+  }, [path, noun, setMovies]);
 
   const handleUpdateMovie = useCallback(async (movieId, movieData) => {
     try {
-      const updatedMovieFromServer = await api.put(`/movies/${movieId}`, movieData, 'Failed to update movie');
+      const updatedMovieFromServer = await api.put(`${path}/${movieId}`, movieData, `Failed to update ${noun}`);
       setMovies((prevMovies) =>
         prevMovies.map((m) =>
           m.id === movieId ? updatedMovieFromServer : m
@@ -141,24 +113,24 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       setSaveError(error.message);
       throw error;
     }
-  }, []);
+  }, [path, noun, setMovies]);
 
   const handleDeleteMovie = useCallback(async (movieId) => {
     try {
-      await api.del(`/movies/${movieId}`, 'Failed to delete movie');
+      await api.del(`${path}/${movieId}`, `Failed to delete ${noun}`);
       setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movieId));
     } catch (error) {
       console.error("Error deleting movie:", error);
       setSaveError(error.message);
       throw error;
     }
-  }, []);
+  }, [path, noun, setMovies]);
 
   const handleUploadPoster = useCallback(async (movieId, file) => {
     try {
       const formData = new FormData();
       formData.append("poster", file);
-      const updatedMovieFromServer = await api.post(`/movies/${movieId}/poster`, formData, 'Failed to upload poster');
+      const updatedMovieFromServer = await api.post(`${path}/${movieId}/poster`, formData, 'Failed to upload poster');
       setMovies((prevMovies) =>
         prevMovies.map((m) => (m.id === movieId ? updatedMovieFromServer : m))
       );
@@ -167,11 +139,11 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       setSaveError(error.message);
       throw error;
     }
-  }, []);
+  }, [path, setMovies]);
 
   const handleSetPosterFromTmdb = useCallback(async (movieId, posterPath) => {
     try {
-      const updatedMovieFromServer = await api.post(`/movies/${movieId}/poster/tmdb`, { posterPath }, 'Failed to set poster from TMDB');
+      const updatedMovieFromServer = await api.post(`${path}/${movieId}/poster/tmdb`, { posterPath }, 'Failed to set poster from TMDB');
       setMovies((prevMovies) =>
         prevMovies.map((m) => (m.id === movieId ? updatedMovieFromServer : m))
       );
@@ -180,20 +152,22 @@ export const useMovies = (refresh, onMoviesLoaded) => {
       setSaveError(error.message);
       throw error;
     }
-  }, []);
+  }, [path, setMovies]);
 
   const handleDeletePoster = useCallback(async (movieId) => {
     try {
-      await api.del(`/movies/${movieId}/poster`, 'Failed to delete poster');
+      await api.del(`${path}/${movieId}/poster`, 'Failed to delete poster');
       setMovies((prevMovies) =>
-        prevMovies.map((m) => (m.id === movieId ? { ...m, posterUrl: null } : m))
+        prevMovies.map((m) =>
+          m.id === movieId ? { ...m, posterUrl: null, posterThumbUrl: null } : m
+        )
       );
     } catch (error) {
       console.error("Error deleting poster:", error);
       setSaveError(error.message);
       throw error;
     }
-  }, []);
+  }, [path, setMovies]);
 
   const filteredMovies = useMemo(() => {
     return movies.filter((movie) => {
@@ -345,8 +319,6 @@ export const useMovies = (refresh, onMoviesLoaded) => {
     memoizedDirectorOptions,
     memoizedActorOptions,
     memoizedCountryOptions,
-    fetchMovies,
-    fetchReferenceData,
     handleAddMovie,
     handleUpdateMovie,
     handleDeleteMovie,

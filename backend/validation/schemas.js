@@ -86,6 +86,8 @@ const note = z.object({
 // Movies are the exception: the editor always sends the whole movie.
 module.exports = {
   movie,
+  // A series has the same fields as a movie
+  series: movie,
   genre: { create: named('Genre'), update: named('Genre').partial() },
   director: { create: named('Director'), update: named('Director').partial() },
   actor: { create: named('Actor'), update: named('Actor').partial() },

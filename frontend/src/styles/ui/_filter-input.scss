@@ -40,7 +40,7 @@
     font-style: italic;
   }
 
-  // Metal theme — sits inside brushed-metal surfaces (DirectorList)
+  // Metal theme — sits inside brushed-metal surfaces (Directors)
   &--metal {
     background: linear-gradient(to bottom, #383838 0%, #474747 100%);
     border: 1px solid #1c1c1c;
@@ -63,7 +63,7 @@
     }
   }
 
-  // Atlas theme — brass-framed parchment field, sits inside cartography paper (CountryList)
+  // Atlas theme — brass-framed parchment field, sits inside cartography paper (Countries)
   &--paper {
     background: rgba(255, 244, 188, 0.88);
     border: 1.5px solid #b08820;

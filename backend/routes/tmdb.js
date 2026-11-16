@@ -2,9 +2,10 @@ const express = require('express');
 const tmdb = require('../utils/tmdb');
 const router = express.Router();
 
-// Search TMDB for movies matching a title (and optional year)
+// Search TMDB for movies matching a title (and optional year), or for TV
+// shows with type=tv
 router.get('/search', async (req, res) => {
-  const { query, year } = req.query;
+  const { query, year, type } = req.query;
   if (!query || !query.trim()) {
     return res.status(400).json({ error: 'Missing search query' });
   }
@@ -15,7 +16,7 @@ router.get('/search', async (req, res) => {
   }
 
   try {
-    const results = await tmdb.searchMovies(query.trim(), year);
+    const results = await tmdb.search(query.trim(), year, type === 'tv' ? 'tv' : 'movie');
     res.json(results);
   } catch (error) {
     res.status(502).json({ error: error.message });

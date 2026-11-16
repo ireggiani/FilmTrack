@@ -4,6 +4,7 @@ import MovieRow from "./MovieRow";
 const MoviesList = ({ sortedMovies, getInlineSelectStyles, ...props }) => {
   return (
     <div
+      className="movies-list-scroll"
       style={{
         overflow: "auto",
         width: "100%",

@@ -75,16 +75,6 @@ import './styles/taskbar.scss';
 import './styles/accessories/_notepad.scss';
 
 function App() {
-  const [refreshGenres, setRefreshGenres] = useState(0);
-  const [refreshCountries, setRefreshCountries] = useState(0);
-  const [refreshDirectors, setRefreshDirectors] = useState(0);
-  const [refreshActors, setRefreshActors] = useState(0);
-  const [refreshMovies, setRefreshMovies] = useState(0);
-  const [genres, setGenres] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [directors, setDirectors] = useState([]);
-  const [actors, setActors] = useState([]);
-  const [movies, setMovies] = useState([]);
   const [posterViewerMovie, setPosterViewerMovie] = useState(null);
   const [desktopIconIds, setDesktopIconIds] = useState(loadDesktopIconIds);
   const [desktopLayout, setDesktopLayout] = useState(loadDesktopLayout);
@@ -93,42 +83,6 @@ function App() {
   const [newNoteRequested, setNewNoteRequested] = useState(false);
   const [newMovieRequested, setNewMovieRequested] = useState(false);
   const [selectedDesktopIcon, setSelectedDesktopIcon] = useState(null);
-
-  const handleGenreAdded = useCallback(() => {
-    setRefreshGenres((prev) => prev + 1);
-  }, []);
-
-  const handleGenresLoaded = useCallback((loadedGenres) => {
-    setGenres(loadedGenres);
-  }, []);
-
-  const handleCountryAdded = useCallback(() => {
-    setRefreshCountries((prev) => prev + 1);
-  }, []);
-
-  const handleCountriesLoaded = useCallback((loadedCountries) => {
-    setCountries(loadedCountries);
-  }, []);
-
-  const handleDirectorAdded = useCallback(() => {
-    setRefreshDirectors((prev) => prev + 1);
-  }, []);
-
-  const handleDirectorsLoaded = useCallback((loadedDirectors) => {
-    setDirectors(loadedDirectors);
-  }, []);
-
-  const handleActorAdded = useCallback(() => {
-    setRefreshActors((prev) => prev + 1);
-  }, []);
-
-  const handleActorsLoaded = useCallback((loadedActors) => {
-    setActors(loadedActors);
-  }, []);
-
-  const handleMoviesLoaded = useCallback((loadedMovies) => {
-    setMovies(loadedMovies);
-  }, []);
 
   // Selection, saving and painting the body background all live in the hook
   const wallpaper = useWallpaper();
@@ -244,12 +198,6 @@ function App() {
   // What each window takes beyond the props they all share. Null keeps a window
   // unrendered: the poster viewer has nothing to show until a poster is picked.
   const windowProps = {
-    genres: {
-      genres,
-      onGenreAdded: handleGenreAdded,
-      onGenresLoaded: handleGenresLoaded,
-      refreshGenres,
-    },
     wallpaper: {
       selectedId: wallpaper.selection,
       customImage: wallpaper.customImage,
@@ -260,33 +208,12 @@ function App() {
       onCustomRemove: wallpaper.removeCustomPicture,
       onCustomModeChange: wallpaper.changeCustomMode,
     },
-    countries: {
-      countries,
-      onCountryAdded: handleCountryAdded,
-      onCountriesLoaded: handleCountriesLoaded,
-      refreshCountries,
-    },
-    directors: {
-      directors,
-      onDirectorAdded: handleDirectorAdded,
-      onDirectorsLoaded: handleDirectorsLoaded,
-      refreshDirectors,
-    },
-    actors: {
-      actors,
-      onActorAdded: handleActorAdded,
-      onActorsLoaded: handleActorsLoaded,
-      refreshActors,
-    },
     movies: {
-      movies,
-      onMoviesLoaded: handleMoviesLoaded,
-      refreshMovies,
-      setRefreshMovies,
       onViewPoster: handleViewPoster,
       newMovieRequested,
       onNewMovieHandled: handleNewMovieHandled,
     },
+    series: { onViewPoster: handleViewPoster },
     notepad: { newNoteRequested, onNewNoteHandled: handleNewNoteHandled },
     help: { onOpenWindow: openWindow },
     desktopIcons: {

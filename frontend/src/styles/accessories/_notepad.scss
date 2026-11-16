@@ -11,76 +11,12 @@
   height: 720px;
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
-  @include aq.panel(0.62);
-  color: aq.$text;
   // Segoe UI Variable has no italic face and :root disables synthesis — allow
   // a synthesized slant so the Italic button's "I" actually leans
   font-synthesis: style;
 
-  // ---- Title bar: glossy aqua with bubble buttons ----
-  .window-titlebar {
-    position: relative;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
-    background:
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.25) 50%, transparent 51%),
-      linear-gradient(to bottom, rgba(150, 220, 245, 0.55), rgba(110, 200, 235, 0.35));
-    box-shadow: 0 1px 0 rgba(70, 150, 190, 0.3);
-
-    .window-title {
-      color: aq.$text;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 1px 0 #fff;
-    }
-
-    .titlebar-right {
-      gap: 6px;
-    }
-  }
-
-  .titlebar-button {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    border-radius: 50%;
-    @include aq.glass-button;
-    font-size: 0.55rem;
-    text-shadow: none;
-    transition: none;
-
-    &:hover {
-      @include aq.gel;
-    }
-
-    &:active {
-      @include aq.gel-quiet;
-    }
-  }
-
-  // Close is a red gel bubble
-  .window-close {
-    margin: 0;
-    border-color: #b8332a;
-    background: linear-gradient(to bottom, #ffb3a8 0%, #f0665a 49%, #d63a2e 50%, #f07a6c 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.8),
-      0 0 0 1px rgba(150, 30, 20, 0.25);
-    color: #fff;
-    text-shadow: 0 1px 1px rgba(100, 0, 0, 0.5);
-
-    &:hover {
-      border-color: #b8332a;
-      background: linear-gradient(to bottom, #ffc8bf 0%, #ff7d70 49%, #e8463a 50%, #ff8f80 100%);
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.85),
-        0 0 8px rgba(255, 90, 70, 0.65);
-      color: #fff;
-      text-shadow: 0 1px 1px rgba(100, 0, 0, 0.5);
-    }
-
-    &:active {
-      background: linear-gradient(to bottom, #e0574b, #c8352a);
-    }
-  }
+  // Frame, glossy title bar and bubble buttons, shared with the Series window
+  @include aq.window-chrome;
 }
 
 .notepad-content {

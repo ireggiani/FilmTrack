@@ -61,6 +61,13 @@
     }
   }
 
+  // Title-only filter row (TitleSearch): how many rows are showing
+  .title-search-count {
+    margin-left: auto;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
   .year-input,
   .rating-input {
     max-width: 80px;

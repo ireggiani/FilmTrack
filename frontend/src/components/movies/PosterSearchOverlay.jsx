@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import api from "../../services/api.js";
 import "../../styles/movies/_poster-search.scss";
 
-const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
+// tmdbType: "movie", or "tv" to search series, mini-series and anime
+const PosterSearchOverlay = ({ movie, onPick, onClose, tmdbType = "movie" }) => {
   const [query, setQuery] = useState(movie.title);
   const [year, setYear] = useState(
     movie.releaseYear ? String(movie.releaseYear) : ""
@@ -21,6 +22,7 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
     try {
       const params = new URLSearchParams({ query: searchQuery.trim() });
       if (searchYear) params.set("year", searchYear);
+      if (tmdbType !== "movie") params.set("type", tmdbType);
       setResults(await api.get(`/tmdb/search?${params}`, "Search failed"));
     } catch (err) {
       setError(err.message);
@@ -28,7 +30,7 @@ const PosterSearchOverlay = ({ movie, onPick, onClose }) => {
     } finally {
       setIsSearching(false);
     }
-  }, []);
+  }, [tmdbType]);
 
   // Search immediately with the movie's own title/year on open
   useEffect(() => {
@@ -176,6 +178,7 @@ PosterSearchOverlay.propTypes = {
   }).isRequired,
   onPick: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  tmdbType: PropTypes.oneOf(["movie", "tv"]),
 };
 
 export default PosterSearchOverlay;

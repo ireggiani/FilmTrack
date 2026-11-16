@@ -101,6 +101,13 @@
   }
 }
 
+// Shown under the headers while the list is empty
+.empty-list-message {
+  margin-top: 2rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
 .loading-container {
   margin-bottom: 0.8em;
   padding: 0.3em 0.8em;
@@ -162,6 +169,7 @@
       text-align: center;
 
       .poster-btn {
+        margin: 0 auto;
         &.no-poster {
           opacity: 0.35;
           filter: grayscale(1);

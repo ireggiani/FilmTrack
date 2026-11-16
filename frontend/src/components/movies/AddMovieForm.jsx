@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import StyledSelect from "../ui/StyledSelect";
 import PosterSearchOverlay from "./PosterSearchOverlay";
 import { parseWatchedDate, tidyDateInput, DATE_HINT } from "./watchedDate";
+import { MOVIE_KIND } from "./kinds";
 import "../../styles/movies/_add-movie-form.scss";
 
 const AddMovieForm = ({
@@ -12,6 +13,7 @@ const AddMovieForm = ({
   hideAddForm,
   focusTitle,
   onTitleFocused,
+  kind = MOVIE_KIND,
   ...props
 }) => {
   const [newMovie, setNewMovie] = useState({
@@ -187,7 +189,7 @@ const AddMovieForm = ({
         type="text"
         value={newMovie.title}
         onChange={(e) => handleNewMovieChange("title", e.target.value)}
-        placeholder="Movie title"
+        placeholder={`${kind.label} title`}
         className="text-field"
       />
       <input
@@ -325,13 +327,13 @@ const AddMovieForm = ({
           disabled={!newMovie.title.trim() || !newMovie.releaseYear}
           className="btn add-movie-btn"
         >
-          Add Movie
+          Add {kind.label}
         </button>
       </div>
       {posterMenuPos &&
         createPortal(
           <div
-            className="poster-menu"
+            className={`poster-menu ${kind.popupClass}`}
             style={{ top: posterMenuPos.top, left: posterMenuPos.left }}
           >
             <button
@@ -369,7 +371,7 @@ const AddMovieForm = ({
         stagedPoster &&
         createPortal(
           <div
-            className="poster-preview"
+            className={`poster-preview ${kind.popupClass}`}
             style={{ top: posterPreviewPos.top, left: posterPreviewPos.left }}
           >
             <img src={stagedPoster.previewUrl} alt="Selected poster" />
@@ -379,6 +381,7 @@ const AddMovieForm = ({
       {posterSearchMovie && (
         <PosterSearchOverlay
           movie={posterSearchMovie}
+          tmdbType={kind.tmdbType}
           onPick={(_movieId, posterPath, result) =>
             setStagedPoster({ posterPath, previewUrl: result.thumbUrl })
           }

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import Draggable from 'react-draggable';
 import api from '../../services/api.js';
+import { reloadLists } from '../../services/lists.js';
 import WindowIcon from '../ui/WindowIcon';
 
 const BackupWindow = ({
@@ -65,6 +66,8 @@ const BackupWindow = ({
     try {
       setMessage('Restoring database... This may take a moment.');
       const body = await api.post('/database/restore', formData, 'Restore failed');
+      // Open windows would otherwise keep showing the data from before
+      reloadLists();
       setMessage(
         `☑️ ${body.message} Your previous data was saved as ${body.previousData}. ` +
           'Reload the page to see the restored data.',

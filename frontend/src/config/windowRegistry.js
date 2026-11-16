@@ -5,6 +5,7 @@ import ActorsIcon from '../assets/icons/actors.png?icon';
 import GenresIcon from '../assets/icons/genres.png?icon';
 import WallpaperIcon from '../assets/icons/wallpaper.png?icon';
 import MoviesIcon from '../assets/icons/movies.png?icon';
+import SeriesIcon from '../assets/icons/series.png?icon';
 import BackupIcon from '../assets/icons/backup.png?icon';
 import CalculatorIcon from '../assets/icons/calculator.png?icon';
 import CalendarIcon from '../assets/icons/calendar.png?icon';
@@ -27,32 +28,38 @@ export const WINDOWS = [
     component: lazy(() => import('../components/movies/MoviesWindow')),
   },
   {
+    id: 'series',
+    title: 'Series Collection',
+    icon: iconSrc(SeriesIcon),
+    component: lazy(() => import('../components/series/SeriesWindow')),
+  },
+  {
     id: 'genres',
     title: 'Genres Manager',
     icon: iconSrc(GenresIcon),
-    component: lazy(() => import('../components/genres/GenreWindow')),
+    component: lazy(() => import('../components/lookups/GenresWindow')),
     focusSelector: '#genreName',
   },
   {
     id: 'directors',
     title: 'Directors Manager',
     icon: iconSrc(DirectorsIcon),
-    component: lazy(() => import('../components/directors/DirectorWindow')),
+    component: lazy(() => import('../components/lookups/DirectorsWindow')),
     focusSelector: '#directorName',
   },
   {
     id: 'actors',
     title: 'Actors Manager',
     icon: iconSrc(ActorsIcon),
-    component: lazy(() => import('../components/actors/ActorWindow')),
+    component: lazy(() => import('../components/lookups/ActorsWindow')),
     focusSelector: '#actorName',
   },
   {
     id: 'countries',
     title: 'Countries Manager',
     icon: iconSrc(CountriesIcon),
-    component: lazy(() => import('../components/countries/CountryWindow')),
-    focusSelector: '[id^="countryName-"]',
+    component: lazy(() => import('../components/lookups/CountriesWindow')),
+    focusSelector: '#countryName',
   },
   {
     id: 'stats',

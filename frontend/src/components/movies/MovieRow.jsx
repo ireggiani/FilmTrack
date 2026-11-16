@@ -13,7 +13,7 @@ const toEditable = (movie) => ({
   countryIds: movie.Countries ? movie.Countries.map((c) => c.id) : [],
 });
 
-const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, onSearchPoster, onViewPoster, genres, directors, actors, countries, formatDate }) => {
+const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, onSearchPoster, onViewPoster, genres, directors, actors, countries, formatDate, popupClass = "" }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUploadingPoster, setIsUploadingPoster] = useState(false);
   const [posterPreviewPos, setPosterPreviewPos] = useState(null);
@@ -426,7 +426,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
         {posterMenuPos &&
           createPortal(
             <div
-              className="poster-menu"
+              className={`poster-menu ${popupClass}`}
               style={{ top: posterMenuPos.top, left: posterMenuPos.left }}
             >
               <button
@@ -452,7 +452,7 @@ const MovieRow = ({ movie, onUpdate, onDelete, onUploadPoster, onDeletePoster, o
           movie.posterUrl &&
           createPortal(
             <div
-              className="poster-preview"
+              className={`poster-preview ${popupClass}`}
               style={{ top: posterPreviewPos.top, left: posterPreviewPos.left }}
             >
               <img

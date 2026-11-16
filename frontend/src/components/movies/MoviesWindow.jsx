@@ -4,15 +4,13 @@ import PropTypes from 'prop-types';
 import MoviesTable from './MoviesTable';
 import '../../styles/movies/_movies-table.scss';
 import WindowIcon from '../ui/WindowIcon';
+import { reloadLists } from '../../services/lists.js';
 
 const MoviesWindow = ({
   isOpen,
   isMinimized,
   onClose,
   onMinimize,
-  onMoviesLoaded,
-  refreshMovies,
-  setRefreshMovies,
   onFocus,
   onViewPoster,
   zIndex,
@@ -95,7 +93,7 @@ const MoviesWindow = ({
             </button>
             <button
               className="titlebar-button"
-              onClick={() => setRefreshMovies((prev) => prev + 1)}
+              onClick={reloadLists}
               title="Refresh data"
               style={{ marginRight: '5px' }}
             >
@@ -137,8 +135,6 @@ const MoviesWindow = ({
           }}
         >
           <MoviesTable
-            refresh={refreshMovies}
-            onMoviesLoaded={onMoviesLoaded}
             hideAddForm={hideAddForm}
             focusTitle={focusNewMovieTitle}
             onTitleFocused={() => setFocusNewMovieTitle(false)}
@@ -155,10 +151,6 @@ MoviesWindow.propTypes = {
   isMinimized: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   onMinimize: PropTypes.func,
-  movies: PropTypes.array,
-  onMoviesLoaded: PropTypes.func,
-  refreshMovies: PropTypes.number,
-  setRefreshMovies: PropTypes.func,
   onFocus: PropTypes.func,
   onViewPoster: PropTypes.func,
   zIndex: PropTypes.number,

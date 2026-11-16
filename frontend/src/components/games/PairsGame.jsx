@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import WindowIcon from '../ui/WindowIcon';
-import api from '../../services/api.js';
+import { useList } from '../../services/lists.js';
 import '../../styles/games/_pairs.scss';
 
 const MAX_PAIRS = 8;
@@ -29,8 +29,14 @@ const PairsGame = ({
 }) => {
   const nodeRef = useRef(null);
   const unflipTimer = useRef(null);
-  const [pool, setPool] = useState(null); // movies with posters; null = loading
-  const [fetchError, setFetchError] = useState(null);
+  const { items: movies, loading, error: fetchError } = useList('movies');
+  // Movies with posters; null = loading. Shared with the Movies window, so a
+  // poster added there is in the next deal.
+  const pool = useMemo(
+    () => (loading || fetchError ? null : movies.filter((m) => m.posterThumbUrl)),
+    [movies, loading, fetchError],
+  );
+  const dealt = useRef(false);
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]); // indices of face-up unmatched cards (max 2)
   const [matched, setMatched] = useState(new Set()); // movieIds
@@ -51,18 +57,13 @@ const PairsGame = ({
     clearTimeout(unflipTimer.current);
   }, []);
 
+  // Deal once, when the movies arrive: a change made in another window
+  // mustn't restart a game in progress
   useEffect(() => {
-    if (!isOpen) return;
-    setPool(null);
-    setFetchError(null);
-    api.get('/movies', 'Failed to load movies')
-      .then((movies) => {
-        const withPosters = movies.filter((m) => m.posterThumbUrl);
-        setPool(withPosters);
-        dealCards(withPosters);
-      })
-      .catch((err) => setFetchError(err.message));
-  }, [isOpen, dealCards]);
+    if (!pool || dealt.current) return;
+    dealt.current = true;
+    dealCards(pool);
+  }, [pool, dealCards]);
 
   useEffect(() => () => clearTimeout(unflipTimer.current), []);
 

@@ -1,5 +1,5 @@
 /// Brushed metal theme.
-/// Used by: DirectorWindow.
+/// Used by: DirectorsWindow.
 /// Titlebar buttons form a switch bank of latching keys (paddle-switch).
 @use '../decorative/textures';
 @use './base';
@@ -17,14 +17,14 @@
     0 4px 16px 0 rgba(38, 38, 38, 0.75);
 
   // Sheen that drifts as the window is dragged, as if the light stayed put
-  // while the metal moved under it. DirectorWindow sets this element's
+  // while the metal moved under it. DirectorsWindow sets this element's
   // transform on drag — see the comment there for why it's done this way.
   .metal-sheen {
     position: absolute;
     top: 0;
     bottom: 0;
     // 800px past each side of the window: the drag offset wraps within one
-    // pattern period (~711px horizontally, see DirectorWindow), so this
+    // pattern period (~711px horizontally, see DirectorsWindow), so this
     // always covers the window, at any position and when maximized
     left: -800px;
     width: calc(100% + 1600px);

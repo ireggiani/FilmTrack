@@ -5,16 +5,17 @@ import MovieFilters from "./MovieFilters";
 import MoviesList from "./MoviesList";
 import PosterSearchOverlay from "./PosterSearchOverlay";
 import ViewsManager from "./ViewsManager";
+import TitleSearch from "./TitleSearch";
 import ConfirmDialog from "../ui/ConfirmDialog";
 import { useMovies } from "./useMovies";
+import { MOVIE_KIND } from "./kinds";
 
 const MoviesTable = ({
-  refresh,
-  onMoviesLoaded,
   hideAddForm,
   focusTitle,
   onTitleFocused,
   onViewPoster,
+  kind = MOVIE_KIND,
 }) => {
   const {
     movies,
@@ -58,7 +59,7 @@ const MoviesTable = ({
     setDirectorTerm,
     setCountryTerm,
     setSortConfig,
-  } = useMovies(refresh, onMoviesLoaded);
+  } = useMovies(kind);
 
   const [posterSearchMovie, setPosterSearchMovie] = useState(null);
   // Rows only report which movie to delete; the dialog asks before it happens
@@ -89,7 +90,7 @@ const MoviesTable = ({
   if (loading)
     return (
       <div className="glass loading-container">
-        <span className="loading-text">🎞️ Loading movies... 📽️</span>
+        <span className="loading-text">🎞️ Loading {kind.plural}... 📽️</span>
       </div>
     );
 
@@ -117,53 +118,66 @@ const MoviesTable = ({
       </style>
       <AddMovieForm
         {...addMovieFormProps}
+        kind={kind}
         hideAddForm={hideAddForm}
         focusTitle={focusTitle}
         onTitleFocused={onTitleFocused}
       />
       {/* One bordered row: the views button, then the filters */}
       <div className="filter-bar">
-        <ViewsManager
-          sortConfig={sortConfig}
-          searchTerm={searchTerm}
-          minYear={minYear}
-          maxYear={maxYear}
-          minRating={minRating}
-          maxRating={maxRating}
-          genreTerm={genreTerm}
-          directorTerm={directorTerm}
-          countryTerm={countryTerm}
-          setSortConfig={setSortConfig}
-          setSearchTerm={setSearchTerm}
-          setMinYear={setMinYear}
-          setMaxYear={setMaxYear}
-          setMinRating={setMinRating}
-          setMaxRating={setMaxRating}
-          setGenreTerm={setGenreTerm}
-          setDirectorTerm={setDirectorTerm}
-          setCountryTerm={setCountryTerm}
-        />
-        <MovieFilters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          minYear={minYear}
-          setMinYear={setMinYear}
-          maxYear={maxYear}
-          setMaxYear={setMaxYear}
-          genreTerm={genreTerm}
-          setGenreTerm={setGenreTerm}
-          directorTerm={directorTerm}
-          setDirectorTerm={setDirectorTerm}
-          countryTerm={countryTerm}
-          setCountryTerm={setCountryTerm}
-          minRating={minRating}
-          setMinRating={setMinRating}
-          maxRating={maxRating}
-          setMaxRating={setMaxRating}
-          memoizedGenreOptions={memoizedGenreOptions}
-          memoizedDirectorOptions={memoizedDirectorOptions}
-          memoizedCountryOptions={memoizedCountryOptions}
-        />
+        {kind.savedViews && (
+          <ViewsManager
+            sortConfig={sortConfig}
+            searchTerm={searchTerm}
+            minYear={minYear}
+            maxYear={maxYear}
+            minRating={minRating}
+            maxRating={maxRating}
+            genreTerm={genreTerm}
+            directorTerm={directorTerm}
+            countryTerm={countryTerm}
+            setSortConfig={setSortConfig}
+            setSearchTerm={setSearchTerm}
+            setMinYear={setMinYear}
+            setMaxYear={setMaxYear}
+            setMinRating={setMinRating}
+            setMaxRating={setMaxRating}
+            setGenreTerm={setGenreTerm}
+            setDirectorTerm={setDirectorTerm}
+            setCountryTerm={setCountryTerm}
+          />
+        )}
+        {kind.filters === "full" ? (
+          <MovieFilters
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            minYear={minYear}
+            setMinYear={setMinYear}
+            maxYear={maxYear}
+            setMaxYear={setMaxYear}
+            genreTerm={genreTerm}
+            setGenreTerm={setGenreTerm}
+            directorTerm={directorTerm}
+            setDirectorTerm={setDirectorTerm}
+            countryTerm={countryTerm}
+            setCountryTerm={setCountryTerm}
+            minRating={minRating}
+            setMinRating={setMinRating}
+            maxRating={maxRating}
+            setMaxRating={setMaxRating}
+            memoizedGenreOptions={memoizedGenreOptions}
+            memoizedDirectorOptions={memoizedDirectorOptions}
+            memoizedCountryOptions={memoizedCountryOptions}
+          />
+        ) : (
+          <TitleSearch
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            shown={sortedMovies.length}
+            total={movies.length}
+            plural={kind.plural}
+          />
+        )}
       </div>
       <MoviesList
         sortedMovies={sortedMovies}
@@ -180,17 +194,19 @@ const MoviesTable = ({
         directors={directors}
         actors={actors}
         countries={countries}
+        popupClass={kind.popupClass}
       />
       {posterSearchMovie && (
         <PosterSearchOverlay
           movie={posterSearchMovie}
+          tmdbType={kind.tmdbType}
           onPick={handleSetPosterFromTmdb}
           onClose={() => setPosterSearchMovie(null)}
         />
       )}
       {saveError && (
         <ConfirmDialog
-          title="Movies"
+          title={kind.listTitle}
           heading="The change couldn't be saved"
           icon="info"
           cancelLabel={null}
@@ -202,30 +218,25 @@ const MoviesTable = ({
       )}
       {pendingDeleteMovie && (
         <ConfirmDialog
-          title="Delete Movie"
+          title={`Delete ${kind.label}`}
           heading={`Delete “${pendingDeleteMovie.title}”?`}
           confirmLabel="Delete"
           onConfirm={() => {
             handleDeleteMovie(pendingDeleteMovie.id).catch(() => {
-              // error is shown in the Movies window's error dialog
+              // error is shown in the window's error dialog
             });
             setPendingDeleteId(null);
           }}
           onCancel={() => setPendingDeleteId(null)}
         >
-          The movie{pendingDeleteMovie.posterUrl ? " and its poster" : ""} will
+          The {kind.noun}{pendingDeleteMovie.posterUrl ? " and its poster" : ""} will
           be permanently removed. This can&apos;t be undone.
         </ConfirmDialog>
       )}
       {movies.length === 0 && (
-        <p
-          style={{
-            color: "rgba(255, 255, 255, 0.8)",
-            textAlign: "center",
-            marginTop: "2rem",
-          }}
-        >
-          No movies added yet. Use the form above to add your first movie!
+        <p className="empty-list-message">
+          No {kind.plural} added yet. Use the form above to add your first{" "}
+          {kind.noun}!
         </p>
       )}
     </>
@@ -233,12 +244,11 @@ const MoviesTable = ({
 };
 
 MoviesTable.propTypes = {
-  refresh: PropTypes.number,
-  onMoviesLoaded: PropTypes.func,
   hideAddForm: PropTypes.bool,
   focusTitle: PropTypes.bool,
   onTitleFocused: PropTypes.func,
   onViewPoster: PropTypes.func,
+  kind: PropTypes.object,
 };
 
 export default MoviesTable;

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import {
@@ -10,7 +10,7 @@ import {
 import { useStats } from './useStats';
 import ChartCard from './ChartCard';
 import WindowIcon from '../ui/WindowIcon';
-import api from '../../services/api.js';
+import { useList } from '../../services/lists.js';
 import '../../styles/windows/_stats.scss';
 
 const PALETTE = [
@@ -52,18 +52,8 @@ const ScatterTooltip = ({ active, payload }) => {
 const StatsWindow = ({ isOpen, isMinimized, onClose, onMinimize, onFocus, zIndex, icon }) => {
   const nodeRef = useRef(null);
   const [isMaximized, setIsMaximized] = useState(false);
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [fetchError, setFetchError] = useState(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setLoading(true);
-    setFetchError(null);
-    api.get('/movies', 'Failed to load')
-      .then(data => { setMovies(data); setLoading(false); })
-      .catch(err => { setFetchError(err.message); setLoading(false); });
-  }, [isOpen]);
+  // Shared with the Movies window, so the charts follow every change
+  const { items: movies, loading, error: fetchError } = useList('movies');
 
   const { moviesByGenre, moviesByCountry, ratingDistribution, avgRatingByGenre, topDirectors, topActors, ratingVsYear, summary } = useStats(movies);
 

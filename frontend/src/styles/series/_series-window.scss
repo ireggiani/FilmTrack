@@ -1,0 +1,366 @@
+@use '../decorative/aqua' as aq; // not 'aqua': that's a CSS colour name
+
+/* Series Collection — the Movies Collection's add form, filter row and table
+   in the Notepad's Frutiger Aero "aqua": a pale aqua glass frame, frosted
+   panels for the form and filters, capsule fields, glass-pill buttons that
+   light up as aqua gel, and the table on a white sheet with glossy headers.
+   The markup is the Movies components'; only the look changes here.
+   Selectors are prefixed with .window so they beat the shared glass theme. */
+
+// Capsule field, as the Notepad's title box
+@mixin capsule {
+  border: 1px solid rgba(70, 150, 190, 0.45);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(245, 252, 255, 0.85));
+  box-shadow:
+    inset 0 1px 3px rgba(0, 60, 90, 0.18),
+    0 1px 0 rgba(255, 255, 255, 0.8);
+  color: aq.$text;
+}
+
+@mixin capsule-focus {
+  border-color: #3c9fd0;
+  box-shadow:
+    inset 0 1px 3px rgba(0, 60, 90, 0.18),
+    0 0 0 3px rgba(80, 190, 235, 0.3);
+}
+
+// Frosted aqua panel, as the Notepad's sidebar
+@mixin frosted {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  background: linear-gradient(to bottom, rgba(235, 251, 255, 0.5), rgba(190, 232, 248, 0.32));
+  box-shadow:
+    0 0 0 1px rgba(70, 150, 190, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -4px 10px rgba(120, 210, 240, 0.2);
+}
+
+.series-window.window {
+  &:not(.maximized) {
+    width: 90vw;
+    max-width: 1300px;
+  }
+
+  &.maximized {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 32px);
+    max-height: calc(100vh - 32px);
+    border-radius: 0;
+
+    .window-content {
+      height: calc(100vh - 64px);
+      max-height: calc(100vh - 64px);
+    }
+  }
+
+  .window-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 10px 0;
+    overflow: visible;
+    background: none;
+  }
+
+  // ---- Add form and filter row: frosted panels ----
+  .add-movie-form,
+  .filter-bar {
+    @include frosted;
+    margin-bottom: 10px;
+    padding: 8px;
+  }
+
+  .text-field {
+    height: 26px;
+    padding: 0 11px;
+    border-radius: 13px;
+    @include capsule;
+
+    &:focus {
+      @include capsule-focus;
+    }
+
+    &::placeholder {
+      color: rgba(14, 51, 70, 0.4);
+    }
+
+    &.invalid {
+      border-color: #c8352a;
+      background: linear-gradient(to bottom, #fff, #ffe9e6);
+
+      &:focus {
+        box-shadow:
+          inset 0 1px 3px rgba(90, 0, 0, 0.18),
+          0 0 0 3px rgba(240, 102, 90, 0.3);
+      }
+    }
+  }
+
+  // ---- Buttons: glass pills, aqua gel on hover ----
+  .btn {
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 13px;
+    @include aq.glass-button;
+    background-image: none;
+    filter: none;
+    font-weight: 600;
+    // Redeclared after background-image: none wiped the gradient
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.55) 49%, rgba(225, 245, 252, 0.5) 50%, rgba(240, 251, 255, 0.7) 100%);
+
+    &:not(:disabled):hover {
+      @include aq.gel;
+    }
+
+    &:not(:disabled):active {
+      @include aq.gel-quiet;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(60, 159, 208, 0.8);
+      outline-offset: 1px;
+    }
+  }
+
+  // The one button that commits: gel as soon as it can be pressed
+  .add-movie-btn:not(:disabled) {
+    @include aq.gel;
+
+    &:hover {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        0 0 12px rgba(60, 180, 240, 0.9);
+    }
+  }
+
+  .poster-btn {
+    width: 30px;
+    padding: 0;
+
+    &.no-poster:not(:hover) {
+      opacity: 0.4;
+      filter: grayscale(1);
+    }
+  }
+
+  // ---- Multi-selects (react-select, class prefix styled-select) ----
+  .styled-select__control {
+    min-height: 26px;
+    border-radius: 13px;
+    @include capsule;
+
+    &:hover {
+      border-color: #3c9fd0;
+    }
+
+    &--is-focused {
+      @include capsule-focus;
+    }
+  }
+
+  .styled-select__placeholder {
+    color: rgba(14, 51, 70, 0.4);
+    font-style: italic;
+    font-weight: normal;
+  }
+
+  .styled-select__input-container {
+    color: aq.$text;
+  }
+
+  // Chosen entries as small gel beads
+  .styled-select__multi-value {
+    border: 1px solid rgba(60, 159, 208, 0.6);
+    border-radius: 10px;
+    background: linear-gradient(to bottom, rgba(210, 243, 255, 0.95), rgba(150, 220, 247, 0.8));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    &__label {
+      padding: 0 2px 0 7px;
+      color: #032a40;
+      font-weight: 600;
+    }
+
+    &__remove {
+      color: aq.$accent;
+
+      &:hover {
+        background: rgba(60, 159, 208, 0.35);
+        color: #032a40;
+      }
+    }
+  }
+
+  .styled-select__indicator-separator {
+    background: rgba(70, 150, 190, 0.35);
+    box-shadow: none;
+  }
+
+  .styled-select__dropdown-indicator,
+  .styled-select__clear-indicator {
+    color: aq.$accent;
+  }
+
+  // ---- Filter row ----
+  .filter-controls {
+    .filter-input-group {
+      max-width: 320px;
+    }
+
+    .filter-clear {
+      right: 6px;
+      border-radius: 50%;
+      color: aq.$accent;
+    }
+
+    .title-search-count {
+      padding-right: 6px;
+      color: aq.$muted;
+    }
+  }
+
+  // ---- The table: a white sheet with glossy aqua headers ----
+  .movies-list-scroll {
+    margin-bottom: 10px;
+    border: 1px solid rgba(70, 150, 190, 0.35);
+    border-radius: 12px;
+    background: linear-gradient(to bottom, #fff 0%, #fbfeff 100%);
+    box-shadow:
+      inset 0 1px 4px rgba(0, 60, 90, 0.12),
+      0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .movies-table {
+    border: none;
+    color: #12303f;
+
+    .table-header {
+      padding: 0.4rem 0.35rem;
+      border: none;
+      border-right: 1px solid rgba(70, 150, 190, 0.25);
+      border-bottom: 1px solid rgba(70, 150, 190, 0.5);
+      background: linear-gradient(to bottom, #f6fdff 0%, #d9f3fc 49%, #bfe8f8 50%, #dcf4fd 100%);
+      box-shadow: inset 0 1px 0 #fff;
+      backdrop-filter: none;
+      color: aq.$text;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &:not(.header-poster):not(:last-child):hover {
+        background: linear-gradient(to bottom, #e3f8ff 0%, #b9ecff 49%, #93dbf7 50%, #c2edfc 100%);
+      }
+    }
+
+    tbody td {
+      border-right: 1px solid rgba(70, 150, 190, 0.14);
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    .btn {
+      height: 22px;
+      padding: 0 7px;
+    }
+
+    // Cells are narrow: tighter capsules than the add form's
+    .text-field {
+      height: 24px;
+      padding: 0 7px;
+      border-radius: 10px;
+    }
+
+    .styled-select__control {
+      border-radius: 10px;
+    }
+  }
+
+  .movies-table-row {
+    border-bottom: 1px solid rgba(70, 150, 190, 0.16);
+
+    &.header-row {
+      border-bottom: none;
+    }
+
+    &:nth-child(even):not(.editing) {
+      background: rgba(222, 248, 255, 0.4);
+    }
+
+    // The row being edited: pale aqua glass stripes instead of hazard tape
+    &.editing {
+      background: repeating-linear-gradient(
+        135deg,
+        rgba(185, 236, 255, 0.75),
+        rgba(185, 236, 255, 0.75) 10px,
+        rgba(127, 214, 247, 0.5) 10px,
+        rgba(127, 214, 247, 0.5) 20px
+      );
+      box-shadow:
+        inset 0 1px 0 #fff,
+        inset 0 -1px 0 rgba(60, 159, 208, 0.6);
+
+      .cell {
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+    }
+  }
+
+  .empty-list-message {
+    width: 100%;
+    margin: 1rem 0 1.5rem;
+    color: aq.$muted;
+  }
+
+  .loading-container {
+    @include frosted;
+    backdrop-filter: none;
+
+    .loading-text {
+      color: aq.$text !important;
+    }
+  }
+
+  // Frame, glossy title bar and bubble buttons, shared with the Notepad
+  @include aq.window-chrome;
+}
+
+/* The poster menu and hover preview are drawn on <body>, outside the window,
+   so the list's kind gives them this class (kinds.js: popupClass) */
+.aqua-popup.poster-menu {
+  padding: 5px;
+  border-radius: 12px;
+  @include aq.panel(0.85);
+
+  button {
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: aq.$text;
+    text-shadow: none;
+
+    &:not(:disabled):hover {
+      @include aq.gel;
+    }
+  }
+}
+
+.aqua-popup.poster-preview {
+  padding: 5px;
+  border-radius: 12px;
+  @include aq.panel(0.85);
+
+  img {
+    border-radius: 8px;
+  }
+}

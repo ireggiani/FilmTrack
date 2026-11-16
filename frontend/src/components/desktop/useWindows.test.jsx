@@ -1,9 +1,14 @@
 import React from 'react';
 import { act, render, renderHook, screen } from '@testing-library/react';
-import CountryForm from '../countries/CountryForm';
-import DirectorForm from '../directors/DirectorForm';
+import { COUNTRIES, DIRECTORS } from '../lookups/lookups';
 import { WINDOWS } from '../../config/windowRegistry';
 import { initialWindows, useWindows, windowsReducer } from './useWindows';
+
+// The forms ask for their lists; left unanswered, which they don't need here
+jest.mock('../../services/api.js', () => ({
+  __esModule: true,
+  default: { get: jest.fn(() => new Promise(() => {})) },
+}));
 
 const run = (...actions) => actions.reduce(windowsReducer, initialWindows);
 const open = (id) => ({ type: 'open', id });
@@ -108,6 +113,13 @@ describe('useWindows', () => {
   });
 
   describe('with a real form', () => {
+    const form = (lookup) => {
+      const Form = lookup.theme.Form;
+      return <Form lookup={lookup} editing={null} onDone={() => {}} />;
+    };
+    const DirectorForm = () => form(DIRECTORS);
+    const CountryForm = () => form(COUNTRIES);
+
     beforeEach(() => jest.useFakeTimers());
     afterEach(() => jest.useRealTimers());
 

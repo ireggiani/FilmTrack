@@ -21,11 +21,20 @@ function authorize(url) {
   return { url: withKey.toString(), headers: {} };
 }
 
-async function searchMovies(query, year) {
-  const searchUrl = new URL(`${TMDB_API_BASE}/search/movie`);
+// What differs between TMDB's movie and TV searches: the endpoint, the year
+// filter, and the names of the title and date fields
+const SEARCH_TYPES = {
+  movie: { endpoint: 'search/movie', yearParam: 'year', title: 'title', date: 'release_date' },
+  tv: { endpoint: 'search/tv', yearParam: 'first_air_date_year', title: 'name', date: 'first_air_date' }
+};
+
+// Search for movies, or TV shows with type 'tv' (series, mini-series, anime)
+async function search(query, year, type = 'movie') {
+  const kind = SEARCH_TYPES[type] || SEARCH_TYPES.movie;
+  const searchUrl = new URL(`${TMDB_API_BASE}/${kind.endpoint}`);
   searchUrl.searchParams.set('query', query);
   searchUrl.searchParams.set('include_adult', 'false');
-  if (year) searchUrl.searchParams.set('year', year);
+  if (year) searchUrl.searchParams.set(kind.yearParam, year);
 
   const { url, headers } = authorize(searchUrl.toString());
   const response = await fetch(url, { headers, signal: AbortSignal.timeout(10000) });
@@ -35,13 +44,13 @@ async function searchMovies(query, year) {
   const data = await response.json();
 
   return (data.results || [])
-    .filter((movie) => movie.poster_path)
-    .map((movie) => ({
-      tmdbId: movie.id,
-      title: movie.title,
-      year: movie.release_date ? parseInt(movie.release_date.slice(0, 4), 10) : null,
-      posterPath: movie.poster_path,
-      thumbUrl: `${TMDB_IMAGE_BASE}/w185${movie.poster_path}`
+    .filter((result) => result.poster_path)
+    .map((result) => ({
+      tmdbId: result.id,
+      title: result[kind.title],
+      year: result[kind.date] ? parseInt(result[kind.date].slice(0, 4), 10) : null,
+      posterPath: result.poster_path,
+      thumbUrl: `${TMDB_IMAGE_BASE}/w185${result.poster_path}`
     }));
 }
 
@@ -63,4 +72,4 @@ async function downloadPoster(posterPath) {
   return { buffer, ext };
 }
 
-module.exports = { isConfigured, searchMovies, downloadPoster };
+module.exports = { isConfigured, search, downloadPoster };

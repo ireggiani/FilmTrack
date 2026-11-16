@@ -192,7 +192,7 @@ export const TOPICS = {
   "movies-overview": {
     title: "Movies Collection overview",
     keywords: ["movies", "collection", "table", "list"],
-    related: ["movies-add", "movies-edit", "movies-filter", "movies-posters"],
+    related: ["movies-add", "movies-edit", "movies-filter", "movies-posters", "series"],
     body: (
       <>
         <p>
@@ -208,7 +208,7 @@ export const TOPICS = {
         <p>Title bar extras:</p>
         <ul>
           <li><b>➕</b> hides or shows the add form.</li>
-          <li><b>🔄</b> reloads everything — handy after adding a genre, director, actor or country in another window.</li>
+          <li><b>🔄</b> reloads everything from the database. You rarely need it: changes made in other windows show up by themselves.</li>
         </ul>
         <OpenWindow id="movies" />
       </>
@@ -262,8 +262,8 @@ export const TOPICS = {
         <h2>Missing a genre or person?</h2>
         <p>
           The dropdowns only list what exists in the{" "}
-          <TopicLink to="managers">managers</TopicLink>. Add it there first,
-          then click 🔄 in the Movies title bar if it doesn&apos;t show up.
+          <TopicLink to="managers">managers</TopicLink>. Add it there and
+          it appears in the dropdowns straight away.
         </p>
         <Callout type="tip">
           When you&apos;re in the Countries box, <Kbd>Tab</Kbd> jumps straight
@@ -455,15 +455,62 @@ export const TOPICS = {
     ),
   },
 
+  series: {
+    title: "Series Collection",
+    keywords: ["series", "tv", "television", "mini-series", "miniseries", "anime", "show", "add series", "series poster"],
+    related: ["movies-add", "movies-edit", "movies-sort", "movies-posters", "managers"],
+    body: (
+      <>
+        <p>
+          The Series Collection keeps TV series, mini-series and anime in a
+          list of their own, apart from your movies. It works like the Movies
+          Collection, with the same boxes and the same table:
+        </p>
+        <ul>
+          <li><b>The add form</b> — fill it in as described in <TopicLink to="movies-add">Adding a movie</TopicLink>, then click <b>Add Series</b>.</li>
+          <li><b>The search box</b> — type part of a title or alternative title to narrow the list. The right-hand side shows how many series match. Click <b>×</b> or press <Kbd>Esc</Kbd> to clear it.</li>
+          <li><b>The table</b> — click a value to edit its row, 🗑️ to delete it and a column header to sort (<TopicLink to="movies-edit">Editing and deleting</TopicLink>, <TopicLink to="movies-sort">Sorting</TopicLink>).</li>
+        </ul>
+        <h2>What to enter</h2>
+        <table className="help-table">
+          <tbody>
+            <tr><td>Release year</td><td>The year the series started.</td></tr>
+            <tr><td>Watched date</td><td>The day you finished it.</td></tr>
+            <tr><td>Genres, directors, actors, countries</td><td>The same lists your movies use, from the <TopicLink to="managers">managers</TopicLink>.</td></tr>
+          </tbody>
+        </table>
+        <h2>Posters</h2>
+        <p>
+          The 🖼️ column works as it does for movies (<TopicLink to="movies-posters">Movie posters</TopicLink>).{" "}
+          <b>🔍 Search TMDB…</b> looks through TV shows here instead of films.
+        </p>
+        <p>Title bar extras:</p>
+        <ul>
+          <li><b>➕</b> hides or shows the add form.</li>
+          <li><b>🔄</b> reloads everything from the database. You rarely need it: changes made in other windows show up by themselves.</li>
+        </ul>
+        <Callout type="note">
+          Series aren&apos;t counted in Statistics, don&apos;t appear in Poster
+          Pairs and aren&apos;t part of the CSV export. They are included in
+          backups. The Series Collection has no saved views or extra filters.
+        </Callout>
+        <OpenWindow id="series" />
+      </>
+    ),
+  },
+
   managers: {
     title: "Genres, Directors and Actors",
     keywords: ["genres", "directors", "actors", "manager", "add genre", "add director", "add actor", "rename", "delete genre", "alphabetical"],
-    related: ["countries", "movies-add"],
+    related: ["countries", "movies-add", "series"],
     body: (
       <>
         <p>
           These three managers work the same way. Whatever you add here
-          becomes available in the Movies Collection&apos;s dropdowns.
+          becomes available in the dropdowns of the Movies Collection and
+          the <TopicLink to="series">Series Collection</TopicLink> straight
+          away, and renaming or deleting something updates every movie and
+          series on screen, with no reload.
         </p>
         <h2>Adding</h2>
         <p>
@@ -478,14 +525,15 @@ export const TOPICS = {
         <p>
           Click a name in the list. The form switches to <b>Edit</b> mode;
           change the name and click <b>Update</b>, or{" "}
-          <b>← Cancel Edit</b>. The new name shows on every movie that uses it.
+          <b>← Cancel Edit</b>. The new name shows on every movie and series that uses it.
           If the name is already taken, the form tells you and keeps what you
-          typed.
+          typed. In Directors and Countries, where the form can be hidden,
+          clicking a name brings it back.
         </p>
         <h2>Deleting</h2>
         <p>Click the <b>×</b> on a name and confirm.</p>
         <Callout type="caution">
-          Deleting removes it from every movie that used it.
+          Deleting removes it from every movie and series that used it.
         </Callout>
         <h2>Finding and sorting</h2>
         <ul>
@@ -553,7 +601,7 @@ export const TOPICS = {
       <>
         <h2>Making a backup</h2>
         <p>
-          Click <b>💽 Backup Database</b>. A file containing all your movies,
+          Click <b>💽 Backup Database</b>. A file containing all your movies, series,
           genres, people, countries, views and notes is downloaded.
         </p>
         <Callout type="note">
@@ -585,7 +633,7 @@ export const TOPICS = {
         <p>
           Tick the columns you want under <b>Select columns to include</b>,
           then click <b>📊 Export CSV</b>. The file opens in any spreadsheet
-          program.
+          program. It lists your movies; series aren&apos;t exported.
         </p>
         <OpenWindow id="backup" />
       </>
@@ -810,6 +858,7 @@ export const TOC = [
       "poster-viewer",
     ],
   },
+  "series",
   { book: "Your Library", topics: ["managers", "countries"] },
   "stats",
   { book: "System", topics: ["backup", "wallpaper", "desktop-icons"] },
