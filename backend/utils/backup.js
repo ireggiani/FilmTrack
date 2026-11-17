@@ -1,3 +1,4 @@
+// @ts-check
 const path = require('path');
 const fs = require('fs');
 const sequelize = require('../config/database');
@@ -14,10 +15,15 @@ const REQUIRED_TABLES = [
 
 const AUTO_BACKUPS_KEPT = 14;
 
+/** @param {string} message */
 const badRequest = (message) => Object.assign(new Error(message), { status: 400 });
 
 // Write a complete, consistent copy of the live database to `dest`.
 // VACUUM INTO is safe while the app is running, unlike copying the file.
+/**
+ * @param {string} dest
+ * @returns {Promise<string>} dest
+ */
 async function writeSnapshot(dest) {
   fs.mkdirSync(path.dirname(dest), { recursive: true });
   await sequelize.query('VACUUM INTO ?', { replacements: [dest] });
@@ -27,7 +33,7 @@ async function writeSnapshot(dest) {
 // Local date as YYYY-MM-DD
 const today = () => {
   const d = new Date();
-  const pad = (n) => String(n).padStart(2, '0');
+  const pad = (/** @type {number} */ n) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 };
 
@@ -49,6 +55,7 @@ async function autoBackup() {
 
 // Reject anything that isn't an intact SQLite file with the FilmTrack tables.
 // Throws an error with status 400 describing the problem.
+/** @param {string} file */
 async function validateBackup(file) {
   let db;
   try {
@@ -69,7 +76,7 @@ async function validateBackup(file) {
       throw badRequest(`This isn't a FilmTrack backup (missing: ${missing.join(', ')}).`);
     }
   } catch (err) {
-    if (err.status) throw err;
+    if (/** @type {{ status?: number }} */ (err).status) throw err;
     // SQLITE_NOTADB and friends: not a database at all
     throw badRequest("This file isn't a FilmTrack backup.");
   } finally {
@@ -79,6 +86,7 @@ async function validateBackup(file) {
 
 // Bring an uploaded backup up to the current schema, so old data is converted
 // the same way the live database was. Only touches the uploaded copy.
+/** @param {string} file */
 async function upgradeBackup(file) {
   try {
     await migrateFile(file);
@@ -93,6 +101,7 @@ async function upgradeBackup(file) {
 // Only columns both sides share are copied: a backup from before a column existed
 // gets that column's default. Tables the backup lacks (e.g. notes in very old
 // backups) are left as they are.
+/** @param {string} file */
 async function restoreFrom(file) {
   const db = await open(DB_PATH, sqlite3.OPEN_READWRITE);
   db.configure('busyTimeout', 5000);

@@ -756,7 +756,9 @@ export const TOPICS = {
         <Callout type="note">
           <b>Paste</b> in this menu inserts plain text. To paste with
           formatting, press <Kbd>Ctrl</Kbd> + <Kbd>V</Kbd>. The first time, your
-          browser may ask whether FilmTrack can see the clipboard.
+          browser may ask whether FilmTrack can see the clipboard. Notes keep
+          text formatting, links and tables from what you paste, but not
+          pictures: those are dropped when the note is saved.
         </Callout>
         <Callout type="tip">
           For spelling suggestions, hold <Kbd>Shift</Kbd> while you

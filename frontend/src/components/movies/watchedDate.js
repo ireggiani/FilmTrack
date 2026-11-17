@@ -1,10 +1,17 @@
+// @ts-check
 // Watched-date handling shared by the add form and inline row editing.
 // Users type DD/MM (current year) or DD/MM/YYYY; the backend stores ISO
 // YYYY-MM-DD, or null when no date is given. Older rows may hold the text
 // "Invalid date" (what the backend stored for blank dates) — treated as empty.
 
+/** @param {number} n */
 const pad = (n) => String(n).padStart(2, "0");
 
+/**
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ */
 const isRealDate = (year, month, day) => {
   const date = new Date(Date.UTC(year, month - 1, day));
   return (
@@ -17,6 +24,8 @@ const isRealDate = (year, month, day) => {
 /**
  * Parses what the user typed.
  * Returns { valid: true, iso: "YYYY-MM-DD" | null } or { valid: false }.
+ * @param {string | null | undefined} text
+ * @returns {{ valid: boolean, iso?: string | null }}
  */
 export const parseWatchedDate = (text) => {
   const value = (text ?? "").trim();
@@ -39,7 +48,10 @@ export const parseWatchedDate = (text) => {
   return { valid: true, iso: `${year}-${pad(month)}-${pad(day)}` };
 };
 
-/** Stored ISO date → "DD/MM/YYYY" for an input field ("" when empty) */
+/**
+ * Stored ISO date → "DD/MM/YYYY" for an input field ("" when empty)
+ * @param {string | null | undefined} stored
+ */
 export const toDateInput = (stored) => {
   const { valid, iso } = parseWatchedDate(stored);
   if (!valid || !iso) return "";
@@ -47,7 +59,10 @@ export const toDateInput = (stored) => {
   return `${day}/${month}/${year}`;
 };
 
-/** On blur: expand a valid entry to full DD/MM/YYYY; leave anything else as typed */
+/**
+ * On blur: expand a valid entry to full DD/MM/YYYY; leave anything else as typed
+ * @param {string} text
+ */
 export const tidyDateInput = (text) => {
   const { valid, iso } = parseWatchedDate(text);
   return valid ? toDateInput(iso) : text;

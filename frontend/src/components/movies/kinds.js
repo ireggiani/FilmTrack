@@ -1,3 +1,4 @@
+// @ts-check
 // The two lists built from the same parts (useMovies, AddMovieForm, MoviesTable,
 // MoviesList, MovieRow): what differs between them is described here.
 //
@@ -14,6 +15,21 @@
 //               one list can have them until the views table records which.
 //   popupClass  extra class for the poster menu and preview, which are drawn
 //               outside the window and so can't be themed through it
+/**
+ * @typedef {object} Kind
+ * @property {'movies' | 'series'} list
+ * @property {string} path
+ * @property {string} noun
+ * @property {string} plural
+ * @property {string} label
+ * @property {string} listTitle
+ * @property {'movie' | 'tv'} tmdbType
+ * @property {'full' | 'title'} filters
+ * @property {boolean} savedViews
+ * @property {string} popupClass
+ */
+
+/** @type {Kind} */
 export const MOVIE_KIND = {
   list: 'movies',
   path: '/movies',
@@ -27,6 +43,7 @@ export const MOVIE_KIND = {
   popupClass: '',
 };
 
+/** @type {Kind} */
 export const SERIES_KIND = {
   list: 'series',
   path: '/series',

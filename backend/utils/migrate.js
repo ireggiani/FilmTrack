@@ -1,11 +1,16 @@
+// @ts-check
 const fs = require('fs');
 const path = require('path');
 const { sqlite3, open, all, exec, close } = require('./sqlite');
+
+/** @typedef {import('sqlite3').Database} Database */
+/** @typedef {{ version: number, name: string, up: (db: Database) => Promise<void> }} Migration */
 
 const MIGRATIONS_DIR = path.join(__dirname, '..', 'migrations');
 
 // migrations/NNN-name.js, each exporting up(db), where db is a raw sqlite3
 // connection already inside a transaction. NNN is the schema version it leads to.
+/** @type {Migration[]} */
 const MIGRATIONS = fs.readdirSync(MIGRATIONS_DIR)
   .filter((f) => /^\d{3}-.+\.js$/.test(f))
   .sort()
@@ -15,13 +20,22 @@ const MIGRATIONS = fs.readdirSync(MIGRATIONS_DIR)
     up: require(path.join(MIGRATIONS_DIR, f)).up
   }));
 
-const LATEST_VERSION = MIGRATIONS.at(-1).version;
+const LATEST_VERSION = MIGRATIONS.at(-1)?.version ?? 0;
 
+/**
+ * @param {Database} db
+ * @returns {Promise<number>}
+ */
 const schemaVersion = async (db) => (await all(db, 'PRAGMA user_version'))[0].user_version;
 
 // Bring a database file up to date, one transaction per migration. A failure
 // rolls that migration back and rethrows, leaving the file at the last good
 // version. Used on the live database at startup and on uploaded backups.
+/**
+ * @param {string} file
+ * @param {Migration[]} [migrations]
+ * @returns {Promise<string[]>} The names of the migrations that ran
+ */
 async function migrateFile(file, migrations = MIGRATIONS) {
   const db = await open(file, sqlite3.OPEN_READWRITE);
   db.configure('busyTimeout', 5000);
@@ -64,6 +78,7 @@ async function migrateFile(file, migrations = MIGRATIONS) {
 
 // A brand-new database is created by sync() in the current schema, so it starts
 // at the latest version with nothing to run
+/** @param {string} file */
 async function markAsLatest(file) {
   const db = await open(file, sqlite3.OPEN_READWRITE);
   try {

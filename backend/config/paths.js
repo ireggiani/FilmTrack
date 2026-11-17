@@ -1,3 +1,4 @@
+// @ts-check
 const path = require('path');
 // Loaded here too so FILMTRACK_DATA_DIR can be set in backend/.env
 require('dotenv').config({ path: path.join(__dirname, '..', '.env'), quiet: true });

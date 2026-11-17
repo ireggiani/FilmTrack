@@ -51,7 +51,7 @@ cd "$SCRIPT_DIR/frontend"
 npm run dev &
 
 echo
-echo "FilmTrack dev servers running - close this window or press Ctrl+C to stop."
+echo "FilmTrack dev servers running at http://filmtrack.localhost:5080 - close this window or press Ctrl+C to stop."
 echo
 
 # Wait for all background processes to complete (which they won't, until the script is terminated)

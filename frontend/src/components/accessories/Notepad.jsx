@@ -5,6 +5,7 @@ import WindowIcon from '../ui/WindowIcon';
 import ConfirmDialog from '../ui/ConfirmDialog';
 import NotepadContextMenu from './NotepadContextMenu';
 import api, { ApiError } from '../../services/api.js';
+import { sanitizeNote } from './sanitizeNote';
 
 const NO_SERVER_MESSAGE = "FilmTrack's server didn't answer. It may have stopped.";
 
@@ -117,7 +118,7 @@ const Notepad = ({
           setCurrentNote(data[0]);
           setTitle(data[0].title);
           if (editorRef.current) {
-            editorRef.current.innerHTML = data[0].content;
+            editorRef.current.innerHTML = sanitizeNote(data[0].content);
           }
         } else {
           setCurrentNote(null);
@@ -135,7 +136,8 @@ const Notepad = ({
 
   // Resolves true once saved, false if the save failed
   const saveNote = async () => {
-    const content = editorRef.current.innerHTML;
+    // Cleaned on the way out too: a formatted paste can bring in anything
+    const content = sanitizeNote(editorRef.current.innerHTML);
     try {
       if (currentNote) {
         await api.put(`/notes/${currentNote.id}`, { title, content }, NO_SERVER_MESSAGE);
@@ -202,7 +204,7 @@ const Notepad = ({
     guardUnsaved(() => {
       setCurrentNote(note);
       setTitle(note.title);
-      editorRef.current.innerHTML = note.content;
+      editorRef.current.innerHTML = sanitizeNote(note.content);
       setIsDirty(false);
     });
 

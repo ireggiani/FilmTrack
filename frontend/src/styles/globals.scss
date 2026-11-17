@@ -62,6 +62,26 @@ body {
   }
 }
 
+// The desktop minus the taskbar, holding every window. It exists only for its
+// size: windows are position: fixed, so they sit where they always did, but
+// react-draggable's bounds="parent" reads this box, so a window can't be
+// dragged under the taskbar. When a window is taller than the box, the top
+// limit wins, so its title bar always stays on screen. The box itself is
+// click-through, and it must never get a transform, filter or z-index: any of
+// those would change what the windows are positioned and stacked against.
+.window-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30px; // the taskbar's height (taskbar.scss)
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(10px);

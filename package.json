@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "build": "npm run build --prefix frontend",
-    "test": "npm test --prefix backend && npm test --prefix frontend"
+    "test": "npm test --prefix backend && npm test --prefix frontend && npm run typecheck",
+    "typecheck": "tsc -p frontend/jsconfig.json && tsc -p backend/jsconfig.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "@types/express": "^5.0.6",
+    "concurrently": "^9.2.0",
+    "typescript": "^7.0.2"
   }
 }

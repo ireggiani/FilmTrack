@@ -6,7 +6,7 @@
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-FRONTEND_URL="http://localhost:5000"
+FRONTEND_URL="http://filmtrack.localhost:5000"
 
 # Keep the window open on failure when launched from the .desktop file,
 # so errors stay readable instead of the terminal vanishing

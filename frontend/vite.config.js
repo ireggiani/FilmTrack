@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { imagetools } from 'vite-imagetools'
@@ -11,6 +12,9 @@ const ICON_DIRECTIVES = new URLSearchParams({
   as: 'picture',
 })
 
+// PORT overrides the backend's port, as it does in backend/server.js
+const BACKEND = `http://127.0.0.1:${process.env.PORT ?? 5000}`
+
 export default defineConfig({
   plugins: [
     react(),
@@ -22,11 +26,18 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  // Dev requests go through Vite to the backend, so dev is same-origin like production
   server: {
+    // A fixed port of its own, so FilmTrack never competes for Vite's default
+    // 5173 with other projects. Open it as http://filmtrack.localhost:5080:
+    // browsers send any *.localhost name to this computer, and the name keeps
+    // the app apart from other local servers in the address bar, the history
+    // and its saved settings.
+    port: 5080,
+    strictPort: true, // fail loudly if 5080 is taken, rather than drifting to another port
+    // Dev requests go through Vite to the backend, so dev is same-origin like production
     proxy: {
-      '/api': 'http://localhost:5000',
-      '/posters': 'http://localhost:5000',
+      '/api': BACKEND,
+      '/posters': BACKEND,
     },
   },
   build: {

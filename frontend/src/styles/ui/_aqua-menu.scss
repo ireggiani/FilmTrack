@@ -10,7 +10,8 @@
   z-index: 1600; // above windows (200), the taskbar (400) and poster overlays (1500)
   min-width: 224px;
   padding: 7px;
-  @include aq.panel;
+  // Keeps the panel's 1px rim in the layout; the rim itself is on ::after
+  border: 1px solid transparent;
   border-radius: 14px;
   color: aq.$text;
   font-size: 0.8rem;
@@ -19,7 +20,24 @@
   font-synthesis: style;
   user-select: none;
   outline: none;
-  animation: aqua-menu-open 160ms ease-out;
+  animation: aqua-menu-grow 160ms ease-out;
+
+  // The glass is a layer behind the content rather than the menu's own
+  // background. A submenu is nested inside its parent menu, and in Chrome an
+  // element with a backdrop-filter (or an opacity below 1) stops everything
+  // inside it from blurring the page: with the glass on the menu itself, a
+  // submenu's blur had nothing to work on. So the menu only grows, and this
+  // layer does the blurring and the fading.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -1px; // over the transparent border
+    z-index: -1;
+    border-radius: inherit;
+    @include aq.panel;
+    animation: aqua-menu-fade 160ms ease-out;
+    pointer-events: none;
+  }
 
   // Shine sweep on open
   &::before {
@@ -48,10 +66,15 @@
   }
 }
 
-@keyframes aqua-menu-open {
+@keyframes aqua-menu-grow {
+  from {
+    transform: scale(0.96);
+  }
+}
+
+@keyframes aqua-menu-fade {
   from {
     opacity: 0;
-    transform: scale(0.96);
   }
 }
 
@@ -63,7 +86,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .aqua-menu,
-  .aqua-menu::before {
+  .aqua-menu::before,
+  .aqua-menu::after {
     animation: none;
   }
 

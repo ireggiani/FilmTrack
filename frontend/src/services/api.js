@@ -1,8 +1,13 @@
+// @ts-check
 import API_BASE_URL from '../config/api.js';
 
 // A response outside 2xx. The message is the server's { error } when it sent
 // one, which is written to be shown to the user, otherwise the call's fallback.
 export class ApiError extends Error {
+  /**
+   * @param {string} message
+   * @param {number} status HTTP status code
+   */
   constructor(message, status) {
     super(message);
     this.name = 'ApiError';
@@ -10,7 +15,14 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * @param {string} method
+ * @param {string} path Starts after /api
+ * @param {unknown} body Sent as JSON, or as it is when it's FormData
+ * @param {string} fallback The error message if the server sends none
+ */
 const send = async (method, path, body, fallback) => {
+  /** @type {RequestInit} */
   const options = { method };
   if (body instanceof FormData) {
     // The browser sets the Content-Type itself, with the multipart boundary
@@ -28,21 +40,22 @@ const send = async (method, path, body, fallback) => {
   return response;
 };
 
+/** @param {Response} response */
 const json = async (response) => (response.status === 204 ? null : response.json());
 
 // Paths start after /api. Each call resolves with the parsed body and throws
 // ApiError when refused; the last argument is the message if the server sent none.
 const api = {
-  get: (path, fallback = 'Request failed') =>
+  get: (/** @type {string} */ path, fallback = 'Request failed') =>
     send('GET', path, undefined, fallback).then(json),
   // For downloads
-  blob: (path, fallback = 'Request failed') =>
+  blob: (/** @type {string} */ path, fallback = 'Request failed') =>
     send('GET', path, undefined, fallback).then((response) => response.blob()),
-  post: (path, body, fallback = 'Request failed') =>
+  post: (/** @type {string} */ path, /** @type {unknown} */ body, fallback = 'Request failed') =>
     send('POST', path, body, fallback).then(json),
-  put: (path, body, fallback = 'Request failed') =>
+  put: (/** @type {string} */ path, /** @type {unknown} */ body, fallback = 'Request failed') =>
     send('PUT', path, body, fallback).then(json),
-  del: (path, fallback = 'Request failed') =>
+  del: (/** @type {string} */ path, fallback = 'Request failed') =>
     send('DELETE', path, undefined, fallback).then(json),
 };
 

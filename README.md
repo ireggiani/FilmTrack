@@ -17,9 +17,11 @@ To run both the frontend and backend servers in development mode with hot-reload
 npm run dev
 ```
 
+Then open http://filmtrack.localhost:5080 (no browser is opened for you).
+
 ### Production
 
-To build the frontend for production and start the server (it opens in the browser at http://localhost:5000):
+To build the frontend for production and start the server (it opens in the browser at http://filmtrack.localhost:5000):
 
 ```bash
 ./start_production.sh

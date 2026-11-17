@@ -32,6 +32,12 @@ describe('windowsReducer', () => {
     expect(state.focused).toBe('movies');
   });
 
+  it('returns the same state when the window is already in front', () => {
+    const state = run(open('movies'), open('notepad'));
+    expect(windowsReducer(state, { type: 'focus', id: 'notepad' })).toBe(state);
+    expect(windowsReducer(state, { type: 'focus', id: 'movies' })).not.toBe(state);
+  });
+
   it('keeps a minimized window open, and focus restores it', () => {
     const minimized = run(open('movies'), { type: 'minimize', id: 'movies' });
     expect(minimized.windows.movies).toEqual({ open: true, minimized: true });

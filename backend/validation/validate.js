@@ -1,6 +1,11 @@
+// @ts-check
 // Express middleware: checks req.body against a Zod schema. On success the
 // body is replaced by the parsed result (trimmed, coerced, unknown keys
 // dropped); on failure the request ends with a 400 and a readable message.
+/**
+ * @param {import('zod').ZodType} schema
+ * @returns {import('express').RequestHandler}
+ */
 const validate = (schema) => (req, res, next) => {
   const result = schema.safeParse(req.body ?? {});
   if (!result.success) {

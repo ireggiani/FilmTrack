@@ -80,6 +80,30 @@ describe('Notepad saving', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it('cleans a note when showing it and when saving it', async () => {
+    const note = {
+      id: 7,
+      title: 'Pasted',
+      content: '<div onclick="x()">kept <b>bold</b><img src="http://x/y.png"><script>alert(1)</script></div>',
+    };
+    global.fetch = jest.fn((url, { method }) => ok(method === 'GET' ? [note] : note));
+    const { container } = await renderNotepad();
+    const editor = container.querySelector('[contenteditable]');
+    expect(editor.innerHTML).toBe('<div>kept <b>bold</b></div>');
+
+    // Something unsafe arrives in the editor, as from a formatted paste
+    editor.innerHTML = '<div>new</div><iframe src="http://x"></iframe>';
+    edit(container);
+    save();
+
+    await waitFor(() =>
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/notes/7',
+        expect.objectContaining({ body: JSON.stringify({ title: 'Pasted', content: '<div>new</div>' }) }),
+      )
+    );
+  });
+
   it('shows nothing when the save works', async () => {
     serve(() => ok({ id: 1, title: 'Untitled', content: '' }));
     const { container } = await renderNotepad();

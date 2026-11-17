@@ -94,6 +94,7 @@ function App() {
     zIndexOf,
     openWindow,
     focusWindow,
+    raiseWindow,
     minimizeAllWindows,
     windowHandlers,
   } = useWindows();
@@ -225,6 +226,23 @@ function App() {
     posterViewer: posterViewerMovie && { movie: posterViewerMovie },
   };
 
+  const shownWindows = WINDOWS.filter(
+    ({ id }) => windows[id].open && windowProps[id] !== null,
+  );
+
+  // Pressing anywhere on a window brings it forward at once, before the
+  // button is released, so a window dragged from behind another is on top
+  // while it moves. Each shown window is one child of the area, in the same
+  // order, which is how the pressed element is traced back to its window.
+  // Capture phase: nothing inside a window can stop it. The click that
+  // follows still runs the window's own onFocus (cursor into its field).
+  const handleWindowPress = (e) => {
+    const index = Array.from(e.currentTarget.children).findIndex((child) =>
+      child.contains(e.target),
+    );
+    if (index !== -1) raiseWindow(shownWindows[index].id);
+  };
+
   return (
     <main
       className="container"
@@ -257,23 +275,27 @@ function App() {
         <br />
         Build 3000
       </p>
-      {WINDOWS.filter(({ id }) => windows[id].open && windowProps[id] !== null).map(
-        ({ id, icon, component }) => {
-          const Window = component;
-          return (
-            <Suspense key={id} fallback={<div>Loading...</div>}>
-              <Window
-                isOpen
-                isMinimized={windows[id].minimized}
-                zIndex={zIndexOf(id)}
-                icon={icon}
-                {...windowHandlers[id]}
-                {...windowProps[id]}
-              />
-            </Suspense>
-          );
-        },
-      )}
+      {/* The windows' parent stops at the taskbar, and bounds="parent" keeps
+          a dragged window inside it. See .window-area in globals.scss. */}
+      <div className="window-area" onMouseDownCapture={handleWindowPress}>
+        {shownWindows.map(
+          ({ id, icon, component }) => {
+            const Window = component;
+            return (
+              <Suspense key={id} fallback={<div>Loading...</div>}>
+                <Window
+                  isOpen
+                  isMinimized={windows[id].minimized}
+                  zIndex={zIndexOf(id)}
+                  icon={icon}
+                  {...windowHandlers[id]}
+                  {...windowProps[id]}
+                />
+              </Suspense>
+            );
+          },
+        )}
+      </div>
       <Taskbar
         openWindows={openWindows}
         onWindowFocus={focusWindow}
