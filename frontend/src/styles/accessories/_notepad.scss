@@ -313,36 +313,6 @@
   }
 }
 
-/* The app's scrollbar thumb is white glass (scrollbar.scss), which vanishes on
-   the pale sidebar and the white page, so these two get an aqua one */
-.notes-sidebar,
-.note-editor {
-  &::-webkit-scrollbar-track {
-    background: rgba(40, 130, 170, 0.08);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgba(40, 130, 170, 0.45);
-    border-color: rgba(255, 255, 255, 0.6);
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: rgba(40, 130, 170, 0.6);
-  }
-
-  &::-webkit-scrollbar-thumb:active {
-    background: rgba(40, 130, 170, 0.75);
-  }
-}
-
-// Firefox ignores the rules above; scrollbar-color is what it understands
-@supports not selector(::-webkit-scrollbar) {
-  .notes-sidebar,
-  .note-editor {
-    scrollbar-color: rgba(40, 130, 170, 0.55) rgba(40, 130, 170, 0.08);
-  }
-}
-
 /* The page: white paper with a soft inner shadow, aqua glow when focused */
 .note-editor {
   min-height: 0;

@@ -1,4 +1,5 @@
-/* Glassmorphism Scrollbar */
+/* Default scrollbar: translucent white glass, for the dark themes
+   (metal, paper, backup) and anything outside a window */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -21,26 +22,93 @@
 ::-webkit-scrollbar-thumb:active {
   background: rgba(255, 255, 255, 0.5);
 }
-/* Light surfaces (dropdown menus): the glass thumb above is white and
-   vanishes on them, so use a dark one */
+
+/* Glass windows (every window with the .window class: Movies, Series, Genres,
+   Actors, Statistics, Help, Notepad and the accessories): an aquamarine gel
+   thumb in a pale sky-blue channel. Both are opaque enough to read over any
+   wallpaper showing through the glass. */
+$aqua-thumb: linear-gradient(to right, #b6fbe9 0%, #5fe0c6 45%, #2fbfa8 55%, #6fe6cf 100%);
+$aqua-thumb-hover: linear-gradient(to right, #c8fff0 0%, #74ecd3 45%, #35cdb4 55%, #84eed9 100%);
+$aqua-thumb-active: linear-gradient(to right, #8eeed8 0%, #3fcfb3 45%, #22a893 55%, #52d6bd 100%);
+
+.window,
+.window * {
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: linear-gradient(to right, rgba(205, 236, 252, 0.85), rgba(232, 248, 255, 0.85));
+    border-radius: 10px;
+    box-shadow: inset 0 0 3px rgba(0, 70, 110, 0.3);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $aqua-thumb;
+    border-radius: 10px;
+    border: 1px solid rgba(20, 130, 115, 0.55);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 0 4px rgba(60, 220, 190, 0.5);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $aqua-thumb-hover;
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background: $aqua-thumb-active;
+  }
+
+  // The same gel, turned on its side
+  &::-webkit-scrollbar-track:horizontal {
+    background: linear-gradient(to bottom, rgba(205, 236, 252, 0.85), rgba(232, 248, 255, 0.85));
+  }
+
+  &::-webkit-scrollbar-thumb:horizontal {
+    background: linear-gradient(to bottom, #b6fbe9 0%, #5fe0c6 45%, #2fbfa8 55%, #6fe6cf 100%);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+/* Light surfaces (dropdown menus): a quiet dark thumb. Comes after the glass
+   window rules so it wins for menus that open inside a window. */
 .styled-select__menu-list {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
   &::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.06);
+    box-shadow: none;
   }
 
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: none;
   }
 
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.42);
   }
+
+  &::-webkit-scrollbar-thumb:active {
+    background: rgba(0, 0, 0, 0.5);
+  }
 }
 
 /* Firefox ignores the ::-webkit-scrollbar rules and draws its own thin,
-   auto-hiding bar; scrollbar-color is what it understands */
+   auto-hiding bar; scrollbar-color (inherited) is what it understands */
 @supports not selector(::-webkit-scrollbar) {
+  .window {
+    scrollbar-color: #2fbfa8 rgba(205, 236, 252, 0.85);
+  }
+
   .styled-select__menu-list {
     scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.06);
   }
